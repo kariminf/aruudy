@@ -24,9 +24,6 @@
 #  
 
 import litebase
-import pattern
-import arudquery
-import wazn
 
 if __name__ == '__main__':
 
