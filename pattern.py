@@ -4,10 +4,11 @@
 #  pattern.py
 #  Used to manage Patterns
 #  
+#  Copyright 2015 Abdelkrime Aries <kariminfo0@gmail.com>
 #  Copyright 2014 DzCoding group <dzcoding@googlegroups.com>
 #  
 #  ---- AUTHORS ----
-#  2014	Abdelkrime Aries <kariminfo0@gmail.com>
+#  2014-2015    Abdelkrime Aries <kariminfo0@gmail.com>
 #  
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU Affero General Public License as
