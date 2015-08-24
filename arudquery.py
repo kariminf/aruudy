@@ -48,20 +48,22 @@ class ArQuery(object):
 	
 	def getResult(self):
 		result = []
+		
 		if self.__pattern:
 			patterncode = self.__pattern.getPatternCode()
-			tmp = u"(pattern='%s'" % patterncode
-			pos = self.__pattern.getPos3in()
+			tmp = u"pattern='%s'" % patterncode
+			'''pos = self.__pattern.getPos3in()
 			patterncode = patterncode[0:pos] + u'0' + patterncode[pos+1:]
-			tmp += u" OR pattern='%s')" % patterncode
+			tmp += u" OR pattern='%s')" % patterncode'''
 			result.append(tmp)
-			start = self.__pattern.getStart()
+			'''start = self.__pattern.getStart()
 			beginlen = len(start)
-			if beginlen>0:
+			
+			if beginlen > 0 :
 				tmp = u"substr(%s,1,%s)='%s'" % (WORD, str(beginlen), start)
 				result.append(tmp)
-			
-		if len(self.__end) > 0:
+			'''
+		if len(self.__end) > 0 :
 			endlen = len(self.__end)
 			tmp = u"substr(%s,length(%s) - %s,%s)='%s'" % (WORD, WORD, str(endlen-1), str(endlen), self.__end)
 			result.append(tmp)
@@ -70,7 +72,6 @@ class ArQuery(object):
 
 if __name__ == '__main__':
 	import arudquery
-	import wazn
 	q = ArQuery()
 	q.setPattern(pattern.Pattern(u'مٌسْتَفْعَل'))
 	t = q.getResult()

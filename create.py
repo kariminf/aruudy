@@ -24,7 +24,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #  
 
-import litebase
+import db.litebase
 
 if __name__ == '__main__':
 
