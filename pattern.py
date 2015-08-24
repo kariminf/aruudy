@@ -2,7 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 #  pattern.py
-#  Used to manage Patterns
+#  Used to detect patterns from a fully vocalized word
+#  Kasra = 1
+#  Dhamma = 2
+#  Fatha = 3
+#  Sukuun = 4
+#  Unvocalized = 0
 #  
 #  Copyright 2015 Abdelkrime Aries <kariminfo0@gmail.com>
 #  Copyright 2014 DzCoding group <dzcoding@googlegroups.com>
@@ -34,8 +39,6 @@ class Pattern(object):
 		self.__label = definition
 		self.__unvocal = unvocalize(definition)
 		self.__code = getPattern(definition)
-		self.__start = extractAddition(self.__unvocal)
-		self.__pos3in = self.__unvocal.index(u'ع')
 	
 			
 	def getPatternCode(self):
@@ -46,12 +49,6 @@ class Pattern(object):
 		
 	def getUnvocalized(self):
 		return self.__unvocal
-	
-	def getStart(self):
-		return self.__start
-	
-	def getPos3in(self):
-		return self.__pos3in
 
 		
 def getPattern(word):
@@ -122,16 +119,14 @@ def getPattern(word):
 def unvocalize(word):
 	diac = u'ّ'.join(TASHKIIL).join(TANWIIN)
 	return re.sub(ur'[%s]' % diac, "", word)
-
-
-def extractAddition(unvoclized):
-	add = unvoclized.split(u'ف')
-	return add[0]
 	
 if __name__ == '__main__':
-	import pattern
-	F3A3L = pattern.Pattern(u'انْفَعَل')
-	print F3A3L.getPatternCode()
-	print F3A3L.getUnvocalized()
-	print F3A3L.getStart()
+        from pattern import Pattern
+        import sys
+        from sys import argv 
+        script, word = argv
+        word = unicode(word, 'utf-8')
+        wordpat = Pattern(word)
+        print wordpat.getPatternCode()
+        print wordpat.getUnvocalized()
 	
