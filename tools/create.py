@@ -24,6 +24,9 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #  
 
+import sys
+sys.path.insert(0,'../')
+
 import db.litebase
 
 if __name__ == '__main__':
@@ -34,7 +37,7 @@ if __name__ == '__main__':
 	# in ./lib/qalsadi/data/arabicdictionary.sqlite
 	srcdb = litebase.liteBase('arabicdictionary.sqlite')
 		
-	dstdb = litebase.liteBase('words.db')
+	dstdb = litebase.liteBase('words.sqlite')
 	
 	tab = litebase.liteTable()
 	tab.beginTable("nouns")
