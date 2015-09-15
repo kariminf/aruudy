@@ -55,7 +55,7 @@ class liteBase(object):
 				base = os.path.dirname(os.path.realpath(__file__))
 			filePath=os.path.join(base, filePath)
 
-		print "database: " + filePath
+		# print "database: " + filePath
 		self.__database = db.connect(filePath)
 		self.__cursor = self.__database.cursor()
 		try:
@@ -63,7 +63,7 @@ class liteBase(object):
 			self.__cursor.execute(sql)
 			for row in self.__cursor:
 				tableSql = row[0]
-				#~ print row[0]
+				# print tableSql
 				self.__addTable(tableSql)
 		except:
 			print "database information not found"
@@ -73,13 +73,11 @@ class liteBase(object):
 		sqlQuery = u'' + sqlQuery	
 		theLiteTable = liteTable()
 		tableName = u''
-		
-		matches = re.findall('CREATE TABLE ([^\s]+).*\n',sqlQuery)
+		matches = re.findall('CREATE TABLE "?([^"\s]+)"?.*\n',sqlQuery)
 		for m in matches:
 			tableName = "%s" % m
-
 		theLiteTable.beginTable(tableName)
-		matches = re.findall(ur'^[\s\t]*([^\(\s\n]+)\s+([^\n\s,]+)([^\n,]*).*$',sqlQuery, re.M)
+		matches = re.findall(ur'^[\s\t]*"?([^"\(\s\n]+)"?\s+([^\n\s,]+)([^\n,]*).*$',sqlQuery, re.M)
 		for m in matches:
 			if "CREATE" in m:
 				continue

@@ -23,15 +23,18 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #   
-
-import litebase
+import os
+from db.litebase import liteBase
 import pattern
 import arudquery
 #~ import wazn
 
 if __name__ == '__main__':
 	
-	tab = dstdb.getTable('nouns')
+	dbpath = os.path.realpath('test/arabicdict.sqlite')
+	print dbpath
+	srcdb = liteBase(dbpath)
+	tab = srcdb.getTable('nouns')
 	
 	queryengine = arudquery.ArQuery()
 	arpattern = pattern.Pattern(u'مَفْعَل')
