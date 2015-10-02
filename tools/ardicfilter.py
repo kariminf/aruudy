@@ -27,6 +27,7 @@ import sys
 import os
 sys.path.insert(0,'../')
 
+import re
 from db import litebase
 from trans.buckwalter import Buckwalter
 from Levenshtein import distance
@@ -494,7 +495,6 @@ wazns = [
 "faEolap", 
 "AinofiEAlap", 
 "faEoy", 
-"AisotifAlap", 
 ">ifAlap", 
 "AifotiEAlap", 
 "tafoEiylap", 
@@ -670,28 +670,56 @@ wazns = [
 "Aisotafal~", 
 "AifoEawoEal", 
 "tafaEolal", 
-"AifoEalal~"
+"AifoEalal~",
+"AifotiEAliy~", #Added by Karim
+"AifotiEAliy~ap", #Added by Karim
+"AifotiEAlAt", #Added by Karim
+"AisotifoEAliy~", #Added by Karim
 ]
 
 def deleteDiacritics(word):
-	return word.translate(None, 'auiFNK~_o')
+	#return word.translate(None, 'auiFNK~_o')
+	return re.sub('[auiFNK~_o]', '', word)
+	
+def deleteRoot(word):
+	return re.sub('[fEl]', '.', word)
 	
 def getTemplate(word):
-	templates = ""
+	template = ""
 	minDistance = 1000
 	word_u = deleteDiacritics(word)
 	for wazn in wazns:
 		wazn_u = deleteDiacritics(wazn)
+		wazn_u = deleteRoot(wazn_u)
 		if len(wazn_u) != len(word_u):
 			continue
+		distanceI = distance(word_u, wazn_u)
+		if distanceI < minDistance:
+			if re.match(wazn_u, word_u):
+				minDistance = distanceI
+				template = wazn
+			continue
+		if distanceI == minDistance:
+			if re.match(wazn_u, word_u):
+				template = template + '+' + wazn
+	if not '+' in template:
+		return template
+	
+	#Here, we have a lot of templates, so we will test the diacritics
+	templates = template.split('+')
+	template = ""
+	minDistance = 1000
+	for wazn in templates:
 		distanceI = distance(word, wazn)
 		if distanceI < minDistance:
 			minDistance = distanceI
-			templates = wazn
+			template = wazn
 			continue
 		if distanceI == minDistance:
-			templates = templates + '+' + wazn
-	return templates
+			template = template + '+' + wazn
+	if not '+' in template:
+		template = template + ";"
+	return template
 	
 if __name__ == '__main__':
 
@@ -729,13 +757,15 @@ if __name__ == '__main__':
 		i = i + 1
 		print "processing " + row[unvocalized]
 		wtranslate = Buckwalter.translaterate(row[vocalized])
+		#print deleteDiacritics(deleteRoot(wtranslate))
 		wpattern = getTemplate(wtranslate)
 		wpattern_u = Buckwalter.untranslaterate(wpattern)
+		#print deleteDiacritics(deleteRoot(wpattern))
 		#pattern.getPattern(row[vocalized], row[unvocalized])
 		data = u"'%s', '%s', '%s'" % (row[unvocalized], wpattern_u, row[vocalized])
 		print data
 		tab.insertData(data, u'word, pattern, vocalized')
-		if i == 100:
+		if i == 5000:
 			break
 	
 	dstdb.commit() 
