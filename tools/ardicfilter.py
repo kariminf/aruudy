@@ -685,14 +685,18 @@ def deleteRoot(word):
 	return re.sub('[fEl]', '.', word)
 	
 def getTemplate(word):
-	template = ""
+	template = u""
 	minDistance = 1000
 	word_u = deleteDiacritics(word)
+	word_u = unicode(word_u)
 	for wazn in wazns:
 		wazn_u = deleteDiacritics(wazn)
 		wazn_u = deleteRoot(wazn_u)
+		wazn_u = unicode(wazn_u)
 		if len(wazn_u) != len(word_u):
 			continue
+		
+		#print "distance(" + word_u + "," + wazn_u + ")"
 		distanceI = distance(word_u, wazn_u)
 		if distanceI < minDistance:
 			if re.match(wazn_u, word_u):
@@ -709,8 +713,10 @@ def getTemplate(word):
 	templates = template.split('+')
 	template = ""
 	minDistance = 1000
+	word_u = unicode(word)
 	for wazn in templates:
-		distanceI = distance(word, wazn)
+		wazn_u = unicode(wazn)
+		distanceI = distance(word_u, wazn_u)
 		if distanceI < minDistance:
 			minDistance = distanceI
 			template = wazn
@@ -759,13 +765,14 @@ if __name__ == '__main__':
 		wtranslate = Buckwalter.translaterate(row[vocalized])
 		#print deleteDiacritics(deleteRoot(wtranslate))
 		wpattern = getTemplate(wtranslate)
-		wpattern_u = Buckwalter.untranslaterate(wpattern)
+		#wpattern_u = Buckwalter.untranslaterate(wpattern)
 		#print deleteDiacritics(deleteRoot(wpattern))
 		#pattern.getPattern(row[vocalized], row[unvocalized])
-		data = u"'%s', '%s', '%s'" % (row[unvocalized], wpattern_u, row[vocalized])
+		data = u"'%s', '%s', '%s'" % (row[unvocalized], wpattern, row[vocalized])
 		print data
 		tab.insertData(data, u'word, pattern, vocalized')
 		if i == 5000:
-			break
+			dstdb.commit() 
+			i=0
 	
 	dstdb.commit() 
