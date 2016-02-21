@@ -142,7 +142,8 @@ class liteBase(object):
 	def commit(self):
 		self.__database.commit()	
 		
-		
+	def containTable(self, tableName):
+		return self.__tables.has_key(tableName)
 		
 class liteTable(object):
 	
