@@ -44,30 +44,45 @@ metres =	{
     "u-[u-]u-[u-]u-[u-]u-": "mutaqaarib"
 }
 
-
+def fix_al(text):
+	nwtext = text
+	#Replace al- with C if preceded by fatha, damma or kasra followed by space
+	nwtext = re.sub(ur'([\u064E\u064F\u0650]\s+)\u0627\u0644', ur'\1\u0644', nwtext)
+	#Replace al- with VC if it is in the first line
+	nwtext = re.sub(ur'^\s*\u0627\u0644', ur'\u0627\u064E\u0644', nwtext)
+	return nwtext
+	
+def fix_awy(text):
+	nwtext = text
+	#alif
+	nwtext = re.sub(ur'([^\u064E\u064F\u0650\u0652])\u0627([^\u064E\u064F\u0650\u0652])', ur'\1\u064E\u0627\2', nwtext) 
+	
+	#waw
+	nwtext = re.sub(ur'([^\u064E\u064F\u0650\u0652])\u0648([^\u064E\u064F\u0650\u0652])', ur'\1\u064F\u0648\2', nwtext) 
+	
+	#yaa
+	nwtext = re.sub(ur'([^\u064E\u064F\u0650\u0652])\u064A([^\u064E\u064F\u0650\u0652])', ur'\1\u0650\u064A\2', nwtext) 
+	
+	return nwtext
+	
 def get_cv (ar_word):
 	new_word = ar_word
 	
-	#TODO check 
-	#Replace al- with C if not preceded by V
-	new_word = re.sub(ur'\u0627\u0644', 'C', new_word)
-	
-	#Delete sukuun and tatweel and space
-	new_word = re.sub(ur'[\u0652\u0640\t\s]', '', new_word)
-	
-	#alif waw ya not preceded by a diacretic and not followed by a diacretic
-	new_word = re.sub(ur'[^\u064E\u064F\u0650][\u0627\u0648\u064A][^\u064E\u064F\u0650]', 'VC\1', new_word) 
+	#Delete sukuun and tatweel and spaces
+	new_word = re.sub(ur'[\u0652\u0640\s]', '', new_word)
 	
 	#Shadda don't need to be replaced because it will be replaced after
 	#Replace fatha, damma & kasra with (V) for vowel
 	new_word = re.sub(ur'[^CV][\u064E\u064F\u0650]', 'V', new_word) 
+	
 	#Replace fathatayn, dammatayn, kasratayn with Vowel follewed by Consonent
 	new_word = re.sub(ur'[^CV][\u064B\u064C\u064D]', 'VC', new_word)
-	# alif waw ya => VC
-	#new_word = re.sub(ur'[^CV][\u0627\u0648\u064A]', 'VC', new_word) 
+
 	#Replace all what is left as it was a consonent
 	new_word = re.sub(ur'[^CV]', 'C', new_word)
+	
 	new_word = re.sub(ur'V$', 'VC', new_word)
+	
 	return new_word
 	
 def get_metre (cv):
@@ -86,6 +101,13 @@ def get_metre_name(metre):
 if __name__ == '__main__':
 	
 	r = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
+	r = u'الأُمُّ مَـدْرَسَــةٌ إِذَا أَعْـدَدْتَـهَـا'
+	print(r)
+	
+	r = fix_al(r)
+	print(r)
+	
+	r = fix_awy(r)
 	print(r)
 	
 	r = get_cv(r)
