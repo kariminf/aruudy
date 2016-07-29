@@ -47,7 +47,7 @@ metres =	{
 def fix_al(text):
 	nwtext = text
 	#Replace al- with C if preceded by fatha, damma or kasra followed by space
-	nwtext = re.sub(ur'([\u064E\u064F\u0650]\s+)\u0627\u0644', ur'\1\u0644', nwtext)
+	nwtext = re.sub(ur'([^\s]\s+)\u0627\u0644', ur'\1\u0644', nwtext)
 	#Replace al- with VC if it is in the first line
 	nwtext = re.sub(ur'^\s*\u0627\u0644', ur'\u0627\u064E\u0644', nwtext)
 	return nwtext
@@ -101,7 +101,14 @@ def get_metre_name(metre):
 if __name__ == '__main__':
 	
 	r = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
-	r = u'الأُمُّ مَـدْرَسَــةٌ إِذَا أَعْـدَدْتَـهَـا'
+	#r = u'الأُمُّ مَـدْرَسَــةٌ إِذَا أَعْـدَدْتَـهَـا'
+	r = u'لَيْـسَ يَرْقَـى الأَبْنَـاءُ فِـي أُمَّـةٍ مَـا'
+	r = u'العَيْـشُ مَاضٍ فَأَكْـرِمْ وَالِدَيْـكَ بِـهِ'
+	r = u'أَحِـنُّ إِلَى الكَـأْسِ التِي شَـرِبَتْ بِهَـا'
+	r = u'أَطِــعِ الإِلَــهَ كَـمَـا أَمَــرْ'
+	r = u'أَعْـطِ أَبَـاكَ النِّصْـفَ حَيًّـا وَمَيِّتـاً'
+	r = u'تَحَمَّـلْ عَـنْ أَبِيْـكَ الثِّقْـلَ يَوْمـاً'
+	r = u'إِذَا كَـانَ رَبُّ البَيْـتِ بِالطَّبْـلِ ضَـارِباً'
 	print(r)
 	
 	r = fix_al(r)
