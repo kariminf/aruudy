@@ -39,4 +39,4 @@ nosetests.xml
 .directory
 
 #directories
-test/
+test_ress/
