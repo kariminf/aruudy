@@ -1,8 +1,8 @@
 # ArArud
 
 [![Project](https://img.shields.io/badge/Project-ArArud-0BDA51.svg?style=plastic)](http://ararud.sourceforge.net)
-[![License](https://img.shields.io/badge/License-Apache_2-0BDA51.svg?style=plastic)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Version](https://img.shields.io/badge/Version-0.0.1-0BDA51.svg?style=plastic)](https://github.com/kariminf/ArArud/releases)
+[![License](https://img.shields.io/badge/License-Apache_2-0BDA51.svg?style=plastic)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Travis](https://img.shields.io/travis/kariminf/ArArud.svg?style=plastic)](https://travis-ci.org/kariminf/ArArud)
 
 It is a set of python libraries which aims for Arabic prosody (Arud) or "Science of Poetry".
@@ -56,7 +56,7 @@ print Buckwalter.untranslaterate('h*A AlbrnAmj yETynA nTq AlHrwf')
 @TODO more examples
 
 ## License
-Copyright 2014-2017 Abdelkrime Aries
+Copyright (C) 2014-2017 Abdelkrime Aries
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -69,5 +69,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-For more details about this license, check [LICENSE](./LICENSE) file
