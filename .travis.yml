@@ -2,17 +2,15 @@ language: python
 
 python:
   - '2.7'
-  - '3.4'
 
 install:
   - pip install -r requirements.txt
-  - pip install pypandoc
   - pip install pytest
   - pip install codecov
   - pip install pytest-cov
 
 script:
-  - py.test --cov=aruudy tests/armetre_t.py
+  - py.test --cov=aruudy/poetry tests/armetre_t.py
 
 after_success:
   - codecov

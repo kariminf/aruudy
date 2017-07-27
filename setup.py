@@ -10,13 +10,14 @@ def readme():
 
 setup(
     name = "aruudy",
-    version = "0.1.1",
+    version = "0.1.2",
     author = "Abdelkrime Aries",
     author_email = "kariminfo0@gmail.com",
     description = ("Arabic poetry package"),
     license = "Apache-2.0",
     keywords = "arabic nlp languages poetry",
     url = "https://github.com/kariminf/aruudy",
-    packages=['aruudy'],
+    packages=['aruudy', 'aruudy.poetry'],
+    scripts=['exec/aruudy'],
     long_description=readme()
 )
