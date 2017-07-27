@@ -45,6 +45,7 @@ metres =	{
     "u-[u-]u-[u-]u-[u-]u-": "mutaqaarib"
 }
 
+
 def arfilter(text):
 	nwtext = text
 
@@ -128,33 +129,3 @@ def get_metre_name(metre):
 		if match:
 			return metres.get(reg)
 	return "not found"
-
-if __name__ == '__main__':
-
-	r = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
-	#r = u'الأُمُّ مَـدْرَسَــةٌ إِذَا أَعْـدَدْتَـهَـا'
-	#r = u'لَيْـسَ يَرْقَـى الأَبْنَـاءُ فِـي أُمَّـةٍ مَـا' #pblm
-	#r = u'العَيْـشُ مَاضٍ فَأَكْـرِمْ وَالِدَيْـكَ بِـهِ'
-	#r = u'أَحِـنُّ إِلَى الكَـأْسِ التِي شَـرِبَتْ بِهَـا' #pblm
-	#r = u'أَطِــعِ الإِلَــهَ كَـمَـا أَمَــرْ' #pblm
-	#r = u'أَعْـطِ أَبَـاكَ النِّصْـفَ حَيًّـا وَمَيِّتـاً' #pblm
-	#r = u'تَحَمَّـلْ عَـنْ أَبِيْـكَ الثِّقْـلَ يَوْمـاً'
-	#r = u'إِذَا كَـانَ رَبُّ البَيْـتِ بِالطَّبْـلِ ضَـارِباً'
-	print(r)
-
-	r = ar_filter(r)
-
-	r = fix_al(r)
-	print(r)
-
-	r = fix_awy(r)
-	print(r)
-
-	r = get_cv(r)
-	print(r)
-
-	r = get_metre(r)
-	print(r)
-
-	r = get_metre_name(r)
-	print(r)

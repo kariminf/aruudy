@@ -8,22 +8,18 @@
 
 It is a set of python libraries which aims for Arabic prosody (Arud) or "Science of Poetry".
 
+[Test here](http://ararud.sourceforge.net)
+
 ## Features
 * Detecting Arabic poetry metre
-* Detection of word pattern
-* Search words with pattern, beginning and ending
+* Detection of word pattern [not this version]
+* Search words with pattern, beginning and ending [not this version]
 
 
 ## Use
 
 ### Install
 
-```
-
-### Command line
-
-```
-aruudy -bahr
 ```
 pip install aruudy
 ```
@@ -34,34 +30,48 @@ pip install aruudy
 aruudy -b 'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
 ```
 
-### Python
+### Programming
 
 Arabic poetry meter detection
 
 ```python
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from poetry import ar_metre
+
+from poetry import armetre
 
 r = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
 print("original: " + r)
 
-r = ar_metre.ar_filter(r)
-r = ar_metre.fix_al(r)
+#Filters characters like tatwiil
+r = armetre.ar_filter(r)
 print("filtered: " + r)
 
-r = ar_metre.fix_awy(r)
+# Al has diacretics according to shamsi-qamari characters
+r = armetre.fix_al(r)
+print("al fixed: " + r)
+
+# When there is madd (a, o, i), folks don't put diacritics for the character
+r = armetre.fix_awy(r)
 print("awy fixed: " + r)
 
-r = ar_metre.get_cv(r)
-print("metre desc: " + r)
+# Farahidi metre for poetry
+r = armetre.get_cv(r)
+print("scansion: " + r)
 
-r = ar_metre.get_metre(r)
-print("metre: " + r)
+# Western-like metre
+r = armetre.get_metre(r)
+print("western scansion: " + r)
 
-r = ar_metre.get_metre_name(r)
+# Metre name
+r = armetre.get_metre_name(r)
 print("metre name: " + r)
 ```
+
+## Recommendations
+
+To detect the metre, the poem's part must be fully vocalized (has diacritics).
+To this end, It is recommended to use [Mishkal](https://github.com/linuxscout/mishkal)
 
 @TODO more examples
 
