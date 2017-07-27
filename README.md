@@ -1,21 +1,21 @@
-# ArArud
+# Aruudy
 
-[![Project](https://img.shields.io/badge/Project-ArArud-0BDA51.svg?style=plastic)](http://ararud.sourceforge.net)
-[![Version](https://img.shields.io/badge/Version-0.0.1-0BDA51.svg?style=plastic)](https://github.com/kariminf/ArArud/releases)
+[![Project](https://img.shields.io/badge/Project-Aruudy-0BDA51.svg?style=plastic)](http://ararud.sourceforge.net)
 [![License](https://img.shields.io/badge/License-Apache_2-0BDA51.svg?style=plastic)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Travis](https://img.shields.io/travis/kariminf/ArArud.svg?style=plastic)](https://travis-ci.org/kariminf/ArArud)
+[![PyPI](https://img.shields.io/pypi/v/aruudy.svg?style=plastic)](https://pypi.python.org/pypi/aruudy)
+[![Travis](https://img.shields.io/travis/kariminf/aruudy.svg?style=plastic)](https://travis-ci.org/kariminf/pytransliteration)
+[![Codecov](https://img.shields.io/codecov/c/github/kariminf/aruudy.svg?style=plastic)](https://codecov.io/gh/kariminf/aruudy)
 
 It is a set of python libraries which aims for Arabic prosody (Arud) or "Science of Poetry".
 
 ## Features
-* Detecting Arabic poetry metre
+* Detecting Arabic poetry meter
 * Detection of word pattern
-* Transliteration: currently, Buckwalter
 * Search words with pattern, beginning and ending
 
 ## Use
 
-Arabic poetry metre detection
+Arabic poetry meter detection
 
 ```python
 #!/usr/bin/env python
@@ -40,17 +40,6 @@ print("metre: " + r)
 
 r = ar_metre.get_metre_name(r)
 print("metre name: " + r)
-```
-
-Testing Buckwalter Transliteration
-
-```python
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from trans.buckwalter import Buckwalter
-
-print Buckwalter.translaterate(u'هذا البرنامج يعطينا نطق الحروف')
-print Buckwalter.untranslaterate('h*A AlbrnAmj yETynA nTq AlHrwf')
 ```
 
 @TODO more examples

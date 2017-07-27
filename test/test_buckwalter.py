@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+sys.path.insert(1,'./')
 sys.path.insert(1,'../')
 
 from trans.buckwalter import Buckwalter

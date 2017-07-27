@@ -1,1 +1,2 @@
 python-levenshtein
+lang-trans
