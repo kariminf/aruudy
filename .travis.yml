@@ -12,7 +12,7 @@ install:
   - pip install pytest-cov
 
 script:
-  - py.test --cov=aruudy tests/
+  - py.test --cov=aruudy tests/armetre_t.py
 
 after_success:
   - codecov

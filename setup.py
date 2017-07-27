@@ -10,7 +10,7 @@ def readme():
 
 setup(
     name = "aruudy",
-    version = "0.1.0",
+    version = "0.1.1",
     author = "Abdelkrime Aries",
     author_email = "kariminfo0@gmail.com",
     description = ("Arabic poetry package"),
