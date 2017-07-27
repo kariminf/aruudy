@@ -13,12 +13,36 @@ It is a set of python libraries which aims for Arabic prosody (Arud) or
 Features
 --------
 
--  Detecting Arabic poetry meter
+-  Detecting Arabic poetry metre
 -  Detection of word pattern
 -  Search words with pattern, beginning and ending
 
 Use
 ---
+
+Install
+~~~~~~~
+
+::
+
+
+    ### Command line
+
+aruudy -bahr
+
+::
+
+    pip install aruudy
+
+Command line
+~~~~~~~~~~~~
+
+::
+
+    aruudy -b 'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
+
+Python
+~~~~~~
 
 Arabic poetry meter detection
 

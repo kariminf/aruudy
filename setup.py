@@ -1,11 +1,12 @@
 import os
 from setuptools import setup
 
-try:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
-except(IOError, ImportError):
-    long_description = open('README.md').read()
+def readme():
+    try:
+        with open('README.rst') as f:
+            return f.read()
+    except IOError:
+        return ''
 
 setup(
     name = "aruudy",
@@ -17,5 +18,5 @@ setup(
     keywords = "arabic nlp languages poetry",
     url = "https://github.com/kariminf/aruudy",
     packages=['aruudy'],
-    long_description=long_description
+    long_description=readme()
 )
