@@ -8,10 +8,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from aruudy.poetry import armetre
 
 def help():
-    str = """aruudy -b <string>
+    hlp = """aruudy -b <string>
 aruudy --bahr <string>
     """
-    print(str)
+    print(hlp)
 
 def main(argv):
     input = ""
@@ -20,6 +20,7 @@ def main(argv):
     except getopt.GetoptError:
         help()
         sys.exit(2)
+
     for opt, arg in opts:
         if opt == '-h':
             help()
