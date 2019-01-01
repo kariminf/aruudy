@@ -46,7 +46,20 @@ metres =	{
 }
 
 
-def arfilter(text):
+def filter(text):
+    """Short summary.
+
+    Parameters
+    ----------
+    text : type
+        Description of parameter `text`.
+
+    Returns
+    -------
+    type
+        Description of returned object.
+
+    """
 	nwtext = text
 
 	#delete tatweel
@@ -58,6 +71,20 @@ def arfilter(text):
 	return nwtext
 
 def fix_al(text):
+    """Short summary.
+
+    Parameters
+    ----------
+    text : string
+        Arabic text .
+
+    Returns
+    -------
+    type
+        Description of returned object.
+
+    """
+
 	nwtext = text
 	#al- in the first sentence: add fatha
 	nwtext = re.sub(ur'^\s*\u0627\u0644', ur'\u0627\u064E\u0644', nwtext)
