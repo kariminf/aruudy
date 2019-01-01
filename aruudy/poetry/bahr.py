@@ -32,30 +32,40 @@ class Bahr(object):
             setattr(self, key, info[key])
             self.keys.append(key)
 
-    def test_property(key, value):
-        if not key in keys:
-            raise BahrError(key)
-        return (self[key] == value)
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
 
-    def get_value(key):
-        if not key in keys:
-            raise BahrError(key)
-        return self[key]
+    def test_property(self, key, value):
+        val = self.get_value(key)
+        return val == value
 
-    def to_dict():
+    def get_value(self, key):
+        if not key in self.keys:
+            raise BahrError(key)
+        return getattr(self, key)
+
+    def to_dict(self):
         dict = {}
         for key in self.keys:
-            dict[key] = self[key]
+            dict[key] = getattr(self, key)
         return dict
 
-    def compare(ameter):#use lavenstein distance
+    def compare(self, ameter):#use lavenstein distance
         return 0
+
+# emeter from: https://en.wikipedia.org/wiki/Metre_(poetry)#The_Arabic_metres
+# "–" for 1 long syllable (cv)
+# "u" for 1 short syllable (c)
+# "x" for a position that can contain 1 long or 1 short (cv | c)
+# "o" for a position that can contain 1 long or 2 shorts (cv |cc)
+# "S" for a position that can contain 1 long, 2 shorts, or 1 long + 1 short (cvcc|cvc)
+
 
 buhuur = [
     Bahr({
         "aname": u"طويل",
         "ename": "long",
-        "trans": "ṭawīl",
+        "trans": u"ṭawīl",
         "ameter": "ccvcv ccvcvcv ccvcv ccvccv",
         "emeter": "u-x u-x- u-x u-u-",
         "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
@@ -63,121 +73,121 @@ buhuur = [
     Bahr({
         "aname": u"مديد",
         "ename": "protracted",
-        "trans": "madīd",
-        "ametre": "cvccvcv cvccv cvccvcv",
-        "emetre": "xu-- xu- xu--",
+        "trans": u"madīd",
+        "ameter": "cvccvcv cvccv cvccvcv",
+        "emeter": "xu-- xu- xu--",
         "key": u"لمديد الشعر عندي صفاتُ  فاعلاتن فاعلن فاعلاتن"
     }),
     Bahr({
         "aname": u"بسيط",
         "ename": "spread-out",
-        "trans": "basīṭ",
-        "ametre": "cvcvccv cccv cvcvccv cccv",
-        "emetre": "x-u- xu- --u- w-",
+        "trans": u"basīṭ",
+        "ameter": "cvcvccv cccv cvcvccv cccv",
+        "emeter": "x-u- xu- --u- w-",
         "key": u"إن البسيط لديه يبسط الأملُ  مستفعلن فعلن مستفعلن فعلن"
     }),
     Bahr({
         "aname": u"وافر",
         "ename": "abundant",
-        "trans": "wāfir",
-        "ametre": "u-w- u-w- u--",
-        "emetre": "ccvcccv ccvcccv ccvcv",
+        "trans": u"wāfir",
+        "ametet": "ccvcccv ccvcccv ccvcv",
+        "emeter": "u-o- u-o- u--",
         "key": u"بحور الشعر وافرها جميل  مفاعلتن مفاعلتن فعولن"
     }),
     Bahr({
         "aname": u"كامل",
         "ename": "complete",
-        "trans": "kāmil",
-        "ametre": "cccvccv cccvccv cccvccv",
-        "emetre": "w-u- w-u- w-u-",
+        "trans": u"kāmil",
+        "ameter": "cccvccv cccvccv cccvccv",
+        "emeter": "o-u- o-u- o-u-",
         "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
     }),
     Bahr({
         "aname": u"هزج",
         "ename": "trilling",
-        "trans": "hazaj",
-        "ametre": "ccvcvcv ccvcvcv",
-        "emetre": "u--x u--x",
+        "trans": u"hazaj",
+        "ameter": "ccvcvcv ccvcvcv",
+        "emeter": "u--x u--x",
         "key": u"على الأهزاج تسهيل      مفاعيلن مفاعيلن"
     }),
     Bahr({
         "aname": u"رجز",
         "ename": "trembling",
-        "trans": "rajaz",
-        "ametre": "cvcvccv cvcvccv cvcvccv",
-        "emetre": "x-u- x-u- x-u- x-u-",
+        "trans": u"rajaz",
+        "ameter": "cvcvccv cvcvccv cvcvccv",
+        "emeter": "x-u- x-u- x-u- x-u-",
         "key": u"في أبحر الأرجاز بحرٌ يسهل   مستفعلن مستفعلن مستفعلن"
     }),
     Bahr({
         "aname": u"رمل",
         "ename": "trotting",
-        "trans": "ramal",
-        "ametre": "cvccvcv cvccvcv cvccv",
-        "emetre": "xu-- xu-- xu-",
+        "trans": u"ramal",
+        "ameter": "cvccvcv cvccvcv cvccv",
+        "emeter": "xu-- xu-- xu-",
         "key": u"رمل الأبحر ترويه الثقات فاعلاتن فاعلاتن فاعلاتن"
     }),
     Bahr({
         "aname": u"سريع",
         "ename": "swift",
-        "trans": "sarīʿ",
-        "ametre": "cvcvccv cvcvccv cvccv",
-        "emetre": "xxu- xxu- -u-",
+        "trans": u"sarīʿ",
+        "ameter": "cvcvccv cvcvccv cvccv",
+        "emeter": "xxu- xxu- -u-",
         "key": u"بحرٌ سريع ماله ساحل مستفعلن مستفعلن فاعلن"
     }),
     Bahr({
         "aname": u"منسرح",
         "ename": "quick-paced",
-        "trans": "mnsariħ",
-        "ametre": "cvcvccv cvcvcv cvcccv", #TODO verify
-        "emetre": "x-u- -x-u -uu-",
+        "trans": u"munsariħ",
+        "ameter": "cvcvccv cvcvcv cvcccv", #TODO verify
+        "emeter": "x-u- -x-u -uu-",
         "key": u"منسرح فيه يضرب المثل    مستفعلن مفعولات مفتعلن"
     }),
     Bahr({
         "aname": u"خفيف",
         "ename": "light",
-        "trans": "khafīf",
-        "ametre": "cvccvcv cvcvccv cvccvcv",
-        "emetre": "xu-x --u- xu-x",
+        "trans": u"khafīf",
+        "ameter": "cvccvcv cvcvccv cvccvcv",
+        "emeter": "xu-x --u- xu-x",
         "key": u"يا خفيفاً خفّت به الحركات   فاعلاتن مستفعلن فاعلاتن"
     }),
     Bahr({
         "aname": u"مضارع",
         "ename": "similar",
-        "trans": "muḍāriʿ",
-        "ametre": "u-xx -u--",
-        "emetre": "ccvcvcv cvccvcv",
+        "trans": u"muḍāriʿ",
+        "ameter": "u-xx -u--",
+        "emeter": "ccvcvcv cvccvcv",
         "key": u"تعدّ المضارعات  مفاعيلُ فاعلاتن"
     }),
     Bahr({
         "aname": u"مقتضب",
         "ename": "untrained",
-        "trans": "muqtaḍab",
-        "ametre": "cvccvc cvcccv",
-        "emetre": "xu-u -uu-",
+        "trans": u"muqtaḍab",
+        "ameter": "cvccvc cvcccv",
+        "emeter": "xu-u -uu-",
         "key": u"اقتضب كما سألوا مفعلات مفتعلن"
     }),
     Bahr({
         "aname": u"مجتث",
         "ename": "cut-off",
-        "trans": "mujtathth",
-        "ametre": "cvcvccv cvccvcv",
-        "emetre": "x-u- xu--",
+        "trans": u"mujtathth",
+        "ameter": "cvcvccv cvccvcv",
+        "emeter": "x-u- xu--",
         "key": u"أن جثت الحركات  مستفعلن فاعلاتن"
     }),
     Bahr({
         "aname": u"متقارب",
         "ename": "nearing",
-        "trans": "mutaqārib",
-        "ametre": "ccvcv ccvcv ccvcv ccv",
-        "emetre": "u-x u-x u-x u-",
+        "trans": u"mutaqārib",
+        "ameter": "ccvcv ccvcv ccvcv ccv",
+        "emeter": "u-x u-x u-x u-",
         "key": u"عن المتقارب قال الخليل      فعولن فعولن فعولن فعول"
     }),
     Bahr({
         "aname": u"متدارك",
         "ename": "overtaking",
-        "trans": "mutadārik",
-        "ametre": "",
-        "emetre": "xu- xu- xu- (xu-)", # - can be substituted for u u)
+        "trans": u"mutadārik",
+        "ameter": "",
+        "emeter": "S- S- S- S-", # - can be substituted for u u)
         "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
     })
 ]
@@ -218,16 +228,16 @@ def get_bahr(name, dic=True):
     return None
 
 def _get_values(label):
-	values = []
-	for b in buhuur:
-        values.append(b[label])
-	return values
+    values = []
+    for b in buhuur:
+        values.append(b.get_value(label))
+    return values
 
 def arabic_names():
-	return _get_values("aname")
+    return _get_values("aname")
 
 def english_names():
-	return _get_values("ename")
+    return _get_values("ename")
 
 def trans_names():
-	return _get_values("trans")
+    return _get_values("trans")
