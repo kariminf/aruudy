@@ -11,7 +11,7 @@
 
   function info() {
       var xmlhttp = new XMLHttpRequest();
-      var url = "http://kariminf.pythonanywhere.com/ls";
+      var url = "https://kariminf.pythonanywhere.com/ls";
 
       xmlhttp.open("GET", url);
       xmlhttp.send();
@@ -38,7 +38,7 @@
 
   function info2(name) {
       var xmlhttp = new XMLHttpRequest();
-      var url = "http://kariminf.pythonanywhere.com/info/" + name;
+      var url = "https://kariminf.pythonanywhere.com/info/" + name;
 
       xmlhttp.open("GET", url);
       xmlhttp.send();
@@ -75,7 +75,7 @@
   function search() {
       var xmlhttp = new XMLHttpRequest();
       var shatr = document.getElementById("in").value
-      var url = "http://kariminf.pythonanywhere.com/shatr/" + shatr;
+      var url = "https://kariminf.pythonanywhere.com/shatr/" + shatr;
 
       xmlhttp.open("GET", url);
       xmlhttp.send();
