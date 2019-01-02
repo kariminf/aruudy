@@ -11,14 +11,27 @@
 [![codebeat badge](https://codebeat.co/badges/9ea7f2f7-58cb-4df9-b4b7-33d33aee07aa)](https://codebeat.co/projects/github-com-kariminf-aruudy-master)
 [![Code Climate](https://img.shields.io/codeclimate/maintainability-percentage/kariminf/aruudy.svg?style=plastic)](https://codeclimate.com/github/kariminf/aruudy/)
 
-It is a set of python libraries which aims for Arabic prosody (Arud) or "Science of Poetry".
+Aruudy is a light library for Arabic prosody (Aruud) or "Science of Poetry".
 
 [Test here](http://ararud.sourceforge.net)
 
 ## Features
-* Detecting Arabic poetry metre
-* Detection of word pattern [not this version]
-* Search words with pattern, beginning and ending [not this version]
+
+- bahr
+    - Recover all meters (arabic name, english name, transliterated name)
+    - Get the meters information by either its arabic or english names
+
+- poetry
+    - Information about Arabic poetery meters
+    - Normalizing part (shatr) of a verse: delete tatweel, add forgotten diacretics
+    - Writing the part into prosody form
+    - Finding the arabic prosodic units "watad" and "sabab" based on haraka (vowel)
+    - Finding the english prosodic units based on syllables
+    - Detecting Arabic poetry meter
+
+- web
+    - API with flask
+    - CGI (Common Gateway Interface) program
 
 
 ## Use
@@ -43,39 +56,36 @@ Arabic poetry meter detection
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from poetry import armetre
+from aruudy.poetry import meter
 
-r = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
-print("original: " + r)
+text = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
 
-#Filters characters like tatwiil
-r = armetre.ar_filter(r)
-print("filtered: " + r)
+shatr = meter.process_shatr(text)
 
-# Al has diacretics according to shamsi-qamari characters
-r = armetre.fix_al(r)
-print("al fixed: " + r)
+#original text
+print("original: " + shatr.orig)
 
-# When there is madd (a, o, i), folks don't put diacritics for the character
-r = armetre.fix_awy(r)
-print("awy fixed: " + r)
+#Normalized text
+print("normalized: " + shatr.norm)
 
-# Farahidi metre for poetry
-r = armetre.get_cv(r)
-print("scansion: " + r)
+#prosody form
+print("prosody form: " + shatr.prosody)
+
+# Farahidi meter for poetry
+print("arabic scansion: " + shatr.ameter)
 
 # Western-like metre
-r = armetre.get_metre(r)
-print("western scansion: " + r)
+print("western scansion: " + shatr.emeter)
 
-# Metre name
-r = armetre.get_metre_name(r)
-print("metre name: " + r)
+#get the bahr: it has aname, ename, trans, 
+b = shatr.bahr
+
+
 ```
 
 ## Recommendations
 
-To detect the metre, the poem's part must be fully vocalized (has diacritics).
+To detect the meter, the poem's part must be fully vocalized (has diacritics).
 To this end, It is recommended to use [Mishkal](https://github.com/linuxscout/mishkal)
 
 @TODO more examples

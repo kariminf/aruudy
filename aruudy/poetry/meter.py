@@ -23,6 +23,7 @@
 #
 
 import re
+from aruudy.poetry import bahr
 
 # sun letters in arabic
 SUN = u"([تثدذرزسشصضطظلن])"
@@ -148,9 +149,10 @@ def get_ameter (text):
     res = re.sub(u"\\s+", u"", res)
 
     #Replace all what is left as it was a consonent
-    res = re.sub(u"[^v]+", "c", res)
+    res = re.sub(u"[^v\\s]+", "c", res)
 
-    #res = re.sub(ur'V$', 'VC', res)
+    # add sukuun in the end
+    res = re.sub(u"v$", "vc", res)
 
     return res
 
@@ -167,10 +169,10 @@ class Shatr(object):
         self.prosody = prosody_form(self.norm)
         self.ameter = get_ameter(self.prosody)
         self.emeter = get_emeter(self.ameter)
-        self.bahr = None
+        self.bahr = bahr.search_bahr(self.emeter, self.ameter)
 
-    def to_dict(self):
-        return {
+    def to_dict(self, bahr=False):
+        res = {
             "text": self.orig,
             "norm": self.norm,
             "prosody": self.prosody,
@@ -178,6 +180,12 @@ class Shatr(object):
             "emeter": self.emeter,
             "bahr": self.bahr
         }
+        if bahr:
+            if self.bahr:
+                res["bahr"] = self.bahr.get_names()
+            else:
+                res["bahr"] = "None"
+        return res
 
 
 class Bayt(object):

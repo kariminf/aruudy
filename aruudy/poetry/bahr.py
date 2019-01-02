@@ -22,8 +22,8 @@
 import re
 
 class BahrError (Exception):
-	def __init__(self, name):
-		Exception.__init__(self, "Bahr does not have an attribute called: " + name)
+    def __init__(self, name):
+        Exception.__init__(self, "Bahr does not have an attribute called: " + name)
 
 class Bahr(object):
     def __init__(self, info):
@@ -34,6 +34,16 @@ class Bahr(object):
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
+
+    def __str__(self):
+        return str(self.get_names())
+
+    def get_names(self):
+        return {
+            "aname": self.aname,
+            "ename": self.ename,
+            "trans": self.trans
+        }
 
     def test_property(self, key, value):
         val = self.get_value(key)
@@ -50,15 +60,22 @@ class Bahr(object):
             dict[key] = getattr(self, key)
         return dict
 
+    def validate(self, emeter):
+        m = emeter.replace(" ", "")
+        reg = self.emeter.replace(" ", "").replace("x", "[\\-u]")
+        reg = reg.replace("o", "(-|uu)").replace("S", "(-uu|-u)")
+        reg = "^" + reg + "$"
+        return (re.search(reg, m) != None)
+
     def compare(self, ameter):#use lavenstein distance
         return 0
 
 # emeter from: https://en.wikipedia.org/wiki/Metre_(poetry)#The_Arabic_metres
 # "–" for 1 long syllable (cv)
 # "u" for 1 short syllable (c)
-# "x" for a position that can contain 1 long or 1 short (cv | c)
-# "o" for a position that can contain 1 long or 2 shorts (cv |cc)
-# "S" for a position that can contain 1 long, 2 shorts, or 1 long + 1 short (cvcc|cvc)
+# "x" for a position that can contain 1 long or 1 short [\\-u]
+# "o" for a position that can contain 1 long or 2 shorts (- |uu)
+# "S" for a position that can contain 1 long, 2 shorts, or 1 long + 1 short (-uu|-u)
 
 
 buhuur = [
@@ -241,3 +258,10 @@ def english_names():
 
 def trans_names():
     return _get_values("trans")
+
+def search_bahr(emeter, ameter=None, names=False):
+    for b in buhuur:
+        if b.validate(emeter):
+            return b
+
+    return None

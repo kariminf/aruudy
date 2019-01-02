@@ -23,27 +23,27 @@ from flask import Flask, jsonify, Response
 
 import sys, os
 reload(sys)
-sys.setdefaultencoding('utf8')
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.setdefaultencoding("utf8")
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from aruudy.poetry import bahr
+from aruudy.poetry import bahr, meter
 from aruudy.poetry.bahr import Bahr, BahrError
 
 app = Flask(__name__)
-app.config['JSON_AS_ASCII'] = False
+app.config["JSON_AS_ASCII"] = False
 #headers = {
 #    "Content-Type": "application/json",0
 #    "charset": "utf-8"
 #}
 
-@app.route('/info/<name>', methods=["GET", "POST"])
+@app.route("/info/<name>", methods=["GET", "POST"])
 def info(name):
     b = bahr.get_bahr(name)
     if b == None:
         return "Bahr not found", 404
     return jsonify(b), 200
 
-@app.route('/bahrs', methods=["GET", "POST"])
+@app.route("/ls", methods=["GET", "POST"])
 def bahrs_list():
     res = {
     "arabic": bahr.arabic_names(),
@@ -52,5 +52,10 @@ def bahrs_list():
     }
     return jsonify(res), 200
 
-if __name__ == '__main__':
+@app.route("/shatr/<text>", methods=["GET", "POST"])
+def process_shatr(text):
+    s = meter.process_shatr(text).to_dict(bahr=True)
+    return jsonify(s), 200
+
+if __name__ == "__main__":
     app.run(debug=True)

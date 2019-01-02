@@ -10,7 +10,7 @@ install:
   - pip install pytest-cov
 
 script:
-  - py.test --cov=aruudy/poetry tests/armetre_t.py
+  - py.test --cov=aruudy/poetry tests/*_u.py
 
 after_success:
   - codecov

@@ -27,8 +27,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from aruudy.poetry import bahr
 from aruudy.poetry.bahr import Bahr, BahrError
 
-print bahr.name_type(u"كامل") == "aname"
-print bahr.name_type(u"complete") == "ename"
+print (bahr.name_type(u"كامل"))
+print (bahr.name_type(u"complete"))
 
 mutadarik = {
         "aname": u"متدارك",
@@ -38,9 +38,9 @@ mutadarik = {
         "emeter": "S- S- S- S-", # - can be substituted for u u)
         "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
 }
-print bahr.get_bahr("overtaking") == mutadarik
-print type(bahr.get_bahr("overtaking"))
-print bahr.get_bahr("overtaking", dic=False) == Bahr(mutadarik)
-print type(bahr.get_bahr("overtaking", dic=False))
+print (bahr.get_bahr("overtaking"))
+print (type(bahr.get_bahr("overtaking")))
+print (bahr.get_bahr("overtaking", dic=False))
+print (type(bahr.get_bahr("overtaking", dic=False)))
 
-print bahr.arabic_names()
+print (bahr.arabic_names())

@@ -27,4 +27,7 @@ from aruudy.poetry import meter
 
 orig = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
 
-print meter.process_shatr(orig).to_dict()["prosody"]
+s = meter.process_shatr(orig).to_dict()
+print (s["ameter"])
+print (s["emeter"])
+print (s["bahr"])
