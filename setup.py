@@ -35,7 +35,7 @@ setup(
     license = "Apache-2.0",
     keywords = "arabic nlp languages poetry",
     url = "https://github.com/kariminf/aruudy",
-    packages=['aruudy', 'aruudy.poetry'],
+    packages=['aruudy', 'aruudy.poetry', 'aruudy.web'],
     scripts=['exec/aruudy'],
     long_description=long_description,
     long_description_content_type="text/markdown",

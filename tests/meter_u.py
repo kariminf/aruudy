@@ -25,6 +25,8 @@ import pytest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from aruudy.poetry import meter
+from aruudy.poetry.meter import Shatr
+from aruudy.poetry.bahr import Bahr
 
 
 def test_normalize():
@@ -38,18 +40,26 @@ def test_prosody_del():
     assert meter._prosody_del(u"فَالعلم") == u"فَلعلم"
     assert meter._prosody_del(u"فاستمعَ") == u"فستمعَ"
     assert meter._prosody_del(u"أَتَى المَظلوم إلَى القَاضِي فَأَنصفه قَاضِي العَدل") == u"أَتَ لمَظلوم إلَ لقَاضِي فَأَنصفه قَاضِ لعَدل"
-    assert meter._prosody_del(u"رجعوا") == u"رجعو"
+    assert meter._prosody_del(u"رجعوا") == u"رجعُوْ"
 
 #private function
-def test_prosody_add():
-    assert meter._prosody_add(u"") == u""
-    assert meter._prosody_add(u"") == u""
-    assert meter._prosody_add(u"") == u""
-    assert meter._prosody_add(u"") == u""
+#def test_prosody_add():
+#    assert meter._prosody_add(u"") == u""
 
-def _get_cv ():
-    orig = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
-    dest = "VVCVCVVCVCVCVVCVVVCVVC"
-    orig = armetre.fix_al(orig)
-    orig = armetre.fix_awy(orig)
-    assert armetre.get_cv(orig) == dest
+def test_process_shatr ():
+    text = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
+    ameter = "vvcvcvvcvcvcvvcvvvcvvc"
+
+    s = meter.process_shatr(text)
+    assert type(s) == Shatr
+
+    d = s.to_dict()
+    assert type(d) == dict
+    assert type(d["bahr"]) == Bahr
+
+    d = s.to_dict(bahr=True)
+    assert type(d["bahr"]) == dict
+    assert d["ameter"] == ameter
+
+    s = meter.process_shatr("aaa")
+    assert not s.bahr

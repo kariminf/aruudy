@@ -83,7 +83,7 @@ def _prosody_del(text):
 
     # delete alif of plural masculin conjugation
     # رجعوا ---> رجعو
-    res = re.sub(u"\u0648[\u064F]?\u0627(\\s+|$)", u"\u0648\u064F\\1\u0652", res)
+    res = re.sub(u"[\u064F]?\u0648\u0627(\\s+|$)", u"\u064F\u0648\u0652\\1", res)
 
     #TODO amruu
     # تحذف واو (عمرو) في الرفع والجر، مثل : حضر عَمرٌو، ذهبت إلى عَمرٍو، تكتب عروضيا هكذا : حضر عَمرُن، ذهبث إلى عَمرِن
