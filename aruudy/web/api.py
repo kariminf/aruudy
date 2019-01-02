@@ -19,15 +19,16 @@
 # limitations under the License.
 #
 
-from flask import Flask, jsonify, Response
+from flask import Flask, jsonify
 
+"""
 import sys, os
 reload(sys)
 sys.setdefaultencoding("utf8")
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+"""
 
 from aruudy.poetry import bahr, meter
-from aruudy.poetry.bahr import Bahr, BahrError
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False

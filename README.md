@@ -1,6 +1,6 @@
 # Aruudy
 
-[![Project](https://img.shields.io/badge/Project-Aruudy-0BDA51.svg?style=plastic)](http://ararud.sourceforge.net)
+[![Project](https://img.shields.io/badge/Project-Aruudy-0BDA51.svg?style=plastic)](https://kariminf.github.io/aruudy/)
 [![License](https://img.shields.io/badge/License-Apache_2-0BDA51.svg?style=plastic)](http://www.apache.org/licenses/LICENSE-2.0)
 [![PyPI](https://img.shields.io/pypi/v/aruudy.svg?style=plastic)](https://pypi.python.org/pypi/aruudy)
 [![Downloads](https://img.shields.io/pypi/dm/aruudy.svg?style=plastic)](https://pypi.org/project/aruudy/)
@@ -13,7 +13,9 @@
 
 Aruudy is a light library for Arabic prosody (Aruud) or "Science of Poetry".
 
-[Test here](http://ararud.sourceforge.net)
+[Test here](https://kariminf.github.io/aruudy/)
+
+[web API: kariminf.pythonanywhere.com/](kariminf.pythonanywhere.com/)
 
 ## Features
 

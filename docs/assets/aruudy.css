@@ -1,0 +1,237 @@
+* {
+  box-sizing:border-box;
+}
+/********* Some shared properties *******************/
+
+/******* background color **********/
+.k-button, .ribbon, .k-act {
+  color: white;
+  background: indigo;
+}
+
+h1, h2, h3 {
+  color: indigo;
+  text-align: center;
+}
+
+.ribbon {
+  padding-top: 1em;
+}
+
+.ribbon h2, .ribbon a {
+  color: yellow;
+  text-align: left;
+}
+
+.k-nact {
+  color: white;
+  background: gray;
+}
+
+/******* selected background color ********/
+
+.k-button:hover, .k-menu > a:hover, .k-sel {
+  background: slateblue;
+  color: yellow;
+  border-color: slateblue;
+}
+
+/*********** blocks *********************/
+
+.k-button, .k-input, .k-card, .k-select, .k-fs, .k-menu > a, .k-fs > h1 > span {
+  display: inline-block;
+  border-radius: .5em;
+  margin: .5em;
+  padding: .5em 1em;
+  text-decoration: none;
+  border: 1px solid indigo;
+  font-size: 1em;
+}
+
+
+.k-input, .k-select, .k-kard {
+  padding: .2em;
+  margin: .5em 0;
+}
+
+.k-input {
+    min-height: 1.6em;
+}
+
+.k-fs > h1 > span{
+  display: inline;
+  padding: 5px;
+  margin: 0;
+  margin-left: 1em;
+  background: white;
+}
+
+.k-input:focus {
+  box-shadow: 0 0 5px indigo;
+}
+
+
+.k-menu > a {
+  text-transform: uppercase;
+  color:inherit;
+  padding: .2em;
+  border: 0;
+  margin: 0;
+}
+
+/*********** menu & footer *******************/
+.k-menu, .k-footer {
+  display:block;
+  position: fixed;
+  z-index: 3;
+  width: auto;
+  height: 2em;
+  padding: .5em .5em 0 .5em;
+  text-align: center;
+  background: black;
+  color: white;
+  border-radius: .5em;
+  font-weight: bold;
+}
+
+.k-menu {
+  top: .2em;
+  left: .2em;
+  text-align: center;
+  padding: .2em;
+}
+
+.k-footer {
+  bottom: 0;
+  right: 0;
+  text-align: right;
+  font-size: .8em;
+  font-style: italic;
+}
+
+.k-footer-clean {
+  height: 3em;
+}
+
+.k-button {
+  font-size: .8em;
+  font-weight: bold;
+}
+
+.k-card h3 {
+  text-align: center;
+}
+
+
+.vflex > .under {
+  position: relative;
+  top:auto;
+  margin-top:auto;
+  bottom:0;
+  margin-bottom:0;
+  text-align: center;
+}
+
+.hflex {
+  display: flex;
+  flex-wrap: wrap;
+  padding: .1em;
+}
+
+.vflex {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.fixed-wraper {
+  background: lavender;
+  position: fixed;
+  z-index: 1;
+  height: 50%;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: auto;
+  overflow: hidden;
+}
+
+.k-tab{
+  border-spacing: .3em;
+  border-collapse: separate;
+  width: 100%;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.k-tab tr:nth-child(odd) td{
+  background-color: lavender;
+}
+
+.k-tab tr td {
+  padding: .1em;
+  border: 1px solid indigo;
+}
+
+.k-tab tr th:not(.noCol) {
+  background-color: indigo;
+  color: yellow;
+  padding: .2em;
+  border-radius: 5px;
+}
+
+/*************************************************************/
+
+.k-fs > h1 {
+  font: 1em normal;
+  margin: -1.25em -0.5em 0;
+  font-weight: bold;
+  text-align: left;
+}
+
+.k-fs > h1:after, .k-fs > h1:before {
+  content: ' ';
+  display: block;
+  height: .5em;
+  overflow: hidden;
+  position: relative;
+}
+
+.k-fs > h1:after{
+  top: .5em;
+}
+
+.k-fs > h1:before {
+  bottom: .5em;
+}
+
+.content-wrapper {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  width: auto;
+  z-index: 2;
+  background: white;
+}
+
+.content {
+  padding: .5em;
+}
+
+.k-1 {
+  width: 100%;
+
+}
+
+@media only screen and (min-width: 768px) {
+  .k-l-3 {
+    width: 30%;
+    width: calc(100%/3 - 1em);
+  }
+
+  .k-l-2 {
+    width: 45%;
+    width: calc(50% - 1em);
+  }
+}

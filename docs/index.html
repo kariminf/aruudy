@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Aruudy test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--link rel="shortcut icon" type="image/png" href="./assets/favicon.png"-->
+  <link rel="stylesheet" href="assets/aruudy.css">
+
+  <script type="text/javascript">
+
+  function info() {
+      var xmlhttp = new XMLHttpRequest();
+      var url = "http://kariminf.pythonanywhere.com/ls";
+
+      xmlhttp.open("GET", url);
+      xmlhttp.send();
+
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          var res = xmlhttp.responseText;
+          var obj = JSON.parse(res);
+          var txt = "<table><tr><th>Arabic</th><th>Trans</th><th>English</th><th>Info</th></tr>";
+          for (let i=0; i<obj.arabic.length; i++) {
+              txt += "<tr><td>" + obj.arabic[i] + "</td>";
+              txt += "<td>" + obj.trans[i] + "</td>";
+              txt += "<td>" + obj.english[i] + "</td>";
+              txt += "<td><button onclick=\"info2('" + obj.english[i]
+              txt+= "')\" class=\"k-button\">Info</button></td>";
+              txt += "</tr>"
+          }
+
+          txt += "</table>"
+          document.getElementById("out").innerHTML = txt;
+        }
+      };
+  }
+
+  function info2(name) {
+      var xmlhttp = new XMLHttpRequest();
+      var url = "http://kariminf.pythonanywhere.com/info/" + name;
+
+      xmlhttp.open("GET", url);
+      xmlhttp.send();
+
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          var res = xmlhttp.responseText;
+          var obj = JSON.parse(res);
+          var txt = "<table>";
+          txt += "<tr><th>Arabic name</th>";
+          txt += "<td dir = \"rtl\">" + obj.aname + "</td></tr>";
+
+          txt += "<tr><th>Transliterated name</th>";
+          txt += "<td>" + obj.trans + "</td></tr>";
+
+          txt += "<tr><th>English name</th>";
+          txt += "<td>" + obj.ename + "</td></tr>";
+
+          txt += "<tr><th>Arabic meter</th>";
+          txt += "<td>" + obj.ameter + "</td></tr>";
+
+          txt += "<tr><th>English meter</th>";
+          txt += "<td>" + obj.emeter + "</td></tr>";
+
+          txt += "<tr><th>Meter key</th>";
+          txt += "<td dir=\"rtl\">" + obj.key + "</td></tr>";
+
+          txt += "</table>"
+          document.getElementById("out").innerHTML = txt;
+        }
+      };
+  }
+
+  function search() {
+      var xmlhttp = new XMLHttpRequest();
+      var shatr = document.getElementById("in").value
+      var url = "http://kariminf.pythonanywhere.com/shatr/" + shatr;
+
+      xmlhttp.open("GET", url);
+      xmlhttp.send();
+
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          var res = xmlhttp.responseText;
+          var obj = JSON.parse(res);
+          var txt = "<table>";
+          txt += "<tr><th>Original text</th>";
+          txt += "<td dir = \"rtl\">" + obj.text + "</td></tr>";
+
+          txt += "<tr><th>Normalized text</th>";
+          txt += "<td dir = \"rtl\">" + obj.norm + "</td></tr>";
+
+          txt += "<tr><th>Prosody text</th>";
+          txt += "<td dir = \"rtl\">" + obj.prosody + "</td></tr>";
+
+          txt += "<tr><th>Arabic meter</th>";
+          txt += "<td>" + obj.ameter + "</td></tr>";
+
+          txt += "<tr><th>English meter</th>";
+          txt += "<td>" + obj.emeter + "</td></tr>";
+
+          txt += "<tr><th>Bahr (Meter)</th>";
+          if (obj.bahr == "None"){
+              txt += "<td >Not found</td></tr>";
+          }else{
+              txt += "<td >" + obj.bahr.aname + ", "
+              txt += obj.bahr.ename + ", "
+              txt += obj.bahr.trans + ", "
+              txt += "<button onclick=\"info2('" + obj.bahr.ename
+              txt += "')\" class=\"k-button\">Info</button></td></tr>";
+          }
+
+
+
+          txt += "</table>"
+          document.getElementById("out").innerHTML = txt;
+        }
+      };
+  }
+
+  </script>
+
+</head>
+<body>
+
+  <div class="content-wrapper">
+    <h1>Aruudy</h1>
+    <div class="content hflex">
+      <div class="k-fs k-1">
+        <h1><span>Description</span></h1>
+        <div>
+          Aruudy is a python library for Arabic prosody.
+          The web API is hosted on
+          <a href="http://kariminf.pythonanywhere.com" target="_blank">
+              http://kariminf.pythonanywhere.com
+          </a>
+        </div>
+      </div>
+
+      <div class="k-fs k-1 k-l-2">
+        <h1><span>Info</span></h1>
+        <button onclick="info()" class="k-button">List meters</button>
+      </div>
+
+      <div class="k-fs k-1 k-l-2">
+          <h1><span>Find meter</span></h1>
+          <input type="text" id="in" class="k-input k-1" dir="rtl" /><br>
+          <button onclick="search()" class="k-button">Search</button>
+      </div>
+
+      <div class="k-fs k-1">
+        <h1><span>Find meter</span></h1>
+        <div id="out"></div>
+      </div>
+
+    <div class="k-footer-clean"></div>
+
+  </div>
+
+</body>
+</html>
