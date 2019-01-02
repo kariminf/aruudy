@@ -27,30 +27,26 @@ import re
 sun = u"[\u062A\u062B\u062F\u0630\u0631\u0632\u0633\u0634\u0635\u0636\u0637\u0638\u0644\u0646]"
 
 
+def normalize(text):
+    res = test #result
 
-def filter(text):
-    """Filters the input text from unwanted characters such as tatweel
-
-    Parameters
-    ----------
-    text : string
-        Description of parameter `text`.
-
-    Returns
-    -------
-    string
-        Filtered string
-
-    """
-    filtered = text
-
+    # Filtering
+    # ===========
     #delete tatweel
-    filtered = re.sub(ur"\u0640", "", filtered)
+    res = re.sub(u"\u0640", "", res)
 
-    #delete a lot of chars
-    #nwtext = re.sub(ur'[^\u0621-\u063A\u0641-\u0652]', '', nwtext)
+    # Tashkiil
+    # ===========
+    # add Fatha to first al-
+    res = re.sub(u"^\\s*\u0627\u0644", "\u0627\u064E\u0644", res)
+    # add Fatha to any non diacretized char preceeding alif
+    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0627([^\u064E\u064F\u0650\u0652])", "\\1\u064E\u0627\\2", res)
+    #add Damma to any non diacretized char preceeding waw
+    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0648([^\u064E\u064F\u0650\u0652])", u"\\1\u064F\u0648\\2", res)
+    #add Kasra to any non diacretized char preceeding yaa
+    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u064A([^\u064E\u064F\u0650\u0652])", u"\\1\u0650\u064A\\2", res)
 
-    return filtered
+    return res
 
 
 def fix_al(text):
@@ -69,8 +65,7 @@ def fix_al(text):
     """
 
     nwtext = text
-    #al- in the first sentence: add fatha
-    nwtext = re.sub(ur'^\s*\u0627\u0644', ur'\u0627\u064E\u0644', nwtext)
+
 
     #Replace al- with sun character (it can be preceded by prepositions bi- li-)
     nwtext = re.sub(ur'([^\s]\s+|(?:\u0644|\u0628)[\u0650]?)\u0627\u0644(' + sun + ')', ur'\1\2', nwtext)
@@ -81,14 +76,6 @@ def fix_al(text):
 
 def fix_awy(text):
     nwtext = text
-    #alif
-    nwtext = re.sub(ur'([^\u064E\u064F\u0650\u0652\s])\u0627([^\u064E\u064F\u0650\u0652])', ur'\g<1>\u064E\u0627\g<2>', nwtext)
-
-    #waw
-    nwtext = re.sub(ur'([^\u064E\u064F\u0650\u0652\s])\u0648([^\u064E\u064F\u0650\u0652])', ur'\1\u064F\u0648\2', nwtext)
-
-    #yaa
-    nwtext = re.sub(ur'([^\u064E\u064F\u0650\u0652\s])\u064A([^\u064E\u064F\u0650\u0652])', ur'\1\u0650\u064A\2', nwtext)
 
     return nwtext
 
@@ -143,8 +130,8 @@ def get_metre_name(metre):
 
 class Shatr(object):
     def __init__(self, text):
-        self.original = text
-        self.processed = text
+        self.orig = text
+        self.norm = text
         self.prosody = text
         self.meter = ""
         self.syllables = ""

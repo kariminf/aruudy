@@ -36,12 +36,21 @@ app.config['JSON_AS_ASCII'] = False
 #    "charset": "utf-8"
 #}
 
-@app.route('/info/<name>', methods=["GET"])
+@app.route('/info/<name>', methods=["GET", "POST"])
 def info(name):
     b = bahr.get_bahr(name)
     if b == None:
-        return "Bahr not found"
+        return "Bahr not found", 404
     return jsonify(b), 200
+
+@app.route('/bahrs', methods=["GET", "POST"])
+def bahrs_list():
+    res = {
+    "arabic": bahr.arabic_names(),
+    "english": bahr.english_names(),
+    "trans": bahr.trans_names()
+    }
+    return jsonify(res), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

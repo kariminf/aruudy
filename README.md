@@ -3,8 +3,13 @@
 [![Project](https://img.shields.io/badge/Project-Aruudy-0BDA51.svg?style=plastic)](http://ararud.sourceforge.net)
 [![License](https://img.shields.io/badge/License-Apache_2-0BDA51.svg?style=plastic)](http://www.apache.org/licenses/LICENSE-2.0)
 [![PyPI](https://img.shields.io/pypi/v/aruudy.svg?style=plastic)](https://pypi.python.org/pypi/aruudy)
-[![Travis](https://img.shields.io/travis/kariminf/aruudy.svg?style=plastic)](https://travis-ci.org/kariminf/pytransliteration)
+[![Downloads](https://img.shields.io/pypi/dm/aruudy.svg?style=plastic)](https://pypi.org/project/aruudy/)
+[![Python version](https://img.shields.io/pypi/pyversions/aruddy.svg?style=plastic)](https://pypi.org/project/aruudy/)
+[![Travis](https://img.shields.io/travis/kariminf/aruudy.svg?style=plastic)](https://travis-ci.org/kariminf/aruudy)
 [![Codecov](https://img.shields.io/codecov/c/github/kariminf/aruudy.svg?style=plastic)](https://codecov.io/gh/kariminf/aruudy)
+[![CodeFactor](https://www.codefactor.io/repository/github/kariminf/aruudy/badge/master)](https://www.codefactor.io/repository/github/kariminf/aruudy/overview/master)
+[![codebeat badge](https://codebeat.co/badges/9ea7f2f7-58cb-4df9-b4b7-33d33aee07aa)](https://codebeat.co/projects/github-com-kariminf-aruudy-master)
+[![Code Climate](https://img.shields.io/codeclimate/maintainability-percentage/kariminf/aruudy.svg?style=plastic)](https://codeclimate.com/github/kariminf/aruudy/)
 
 It is a set of python libraries which aims for Arabic prosody (Arud) or "Science of Poetry".
 
