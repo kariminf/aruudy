@@ -24,120 +24,165 @@
 
 import re
 
-sun = u"[\u062A\u062B\u062F\u0630\u0631\u0632\u0633\u0634\u0635\u0636\u0637\u0638\u0644\u0646]"
+# sun letters in arabic
+SUN = u"([تثدذرزسشصضطظلن])"
+# alif in the middle of sentence
+# DORJ = spaces or (bi-, li-)kasra? or (ka-, fa-)fatha?
+DORJ = u"([^\\s]\\s+|[\u0644\u0628][\u0650]?|[\u0643\u0641][\u064E]?)"
+
+# ahruf al3illa: alif, alif maqsura, waw, yaa
+ILLA = u"[اىوي]"
 
 
 def normalize(text):
-    res = test #result
+    res = text #result
 
     # Filtering
     # ===========
     #delete tatweel
-    res = re.sub(u"\u0640", "", res)
+    res = re.sub(u"\u0640", u"", res)
 
     # Tashkiil
     # ===========
     # add Fatha to first al-
-    res = re.sub(u"^\\s*\u0627\u0644", "\u0627\u064E\u0644", res)
+    res = re.sub(u"^\\s*\u0627\u0644", u"\u0627\u064E\u0644", res)
     # add Fatha to any non diacretized char preceeding alif
-    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0627([^\u064E\u064F\u0650\u0652])", "\\1\u064E\u0627\\2", res)
+    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0627([^\u064E\u064F\u0650\u0652])", u"\\1\u064E\u0627\\2", res)
     #add Damma to any non diacretized char preceeding waw
     res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0648([^\u064E\u064F\u0650\u0652])", u"\\1\u064F\u0648\\2", res)
     #add Kasra to any non diacretized char preceeding yaa
     res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u064A([^\u064E\u064F\u0650\u0652])", u"\\1\u0650\u064A\\2", res)
 
+    #shadda not followed by a diacritic: add a madda above
+    res = res = re.sub(u"\u0651([^\u064B-\u0650])", u"\u0651\u0653\\1", res)
+
+    return res
+
+# https://ar.wikipedia.org/wiki/عروض
+
+def _prosody_del(text):
+    res = text
+
+    # Replace al- with sun character (it can be preceded by prepositions bi- li-)
+    # والصِّدق، والشَّمس ---> وصصِدق، وَششَمس
+    res = re.sub(DORJ + u"\u0627\u0644" + SUN , u"\\1\\2", res)
+
+    # Replace al- with l otherwise
+    # # والكتاب، فالعلم ---> وَلكتاب، فَلعِلم
+    res = re.sub(DORJ + u"\u0627\u0644", u"\\1\u0644", res)
+
+    # delete first alif of a word in the middle of sentence
+    # فاستمعَ، وافهم، واستماعٌ، وابنٌ، واثنان ---> فَستَمَعَ، وَفهَم، وَستِماعُن، وَبنُن، وَثنانِ
+    res = re.sub(DORJ + u"\u0627(.)" , u"\\1\\2", res)
+
+    # delete ending alif, waw and yaa preceeding a sakin
+    # أتى المظلوم إلى القاضي فأنصفه قاضي العدل ---> أتَ لمظلوم إلَ لقاضي فأنصفه قاضِ لعدل.
+    res = re.sub(ILLA + u"\\s+(.\u0652)", u" \\1", res)
+
+    # delete alif of plural masculin conjugation
+    # رجعوا ---> رجعو
+    res = re.sub(u"\u0648[\u064F]?\u0627(\\s+|$)", u"\u0648\u064F\\1\u0652", res)
+
+    #TODO amruu
+    # تحذف واو (عمرو) في الرفع والجر، مثل : حضر عَمرٌو، ذهبت إلى عَمرٍو، تكتب عروضيا هكذا : حضر عَمرُن، ذهبث إلى عَمرِن
+
+    #تحذف الألف، والواو الزائدتين من : مائة، أنا، أولو، أولات، أولئك
+
+    #تحذف الألف الأخيرة من الأدوات والحروف والأسماء الآتية إذا وليها ساكن : إذا، لماذا، هذا، كذا، إلا، ما، إذما، حاشا، خلا، عدا، كلا، لما
+
     return res
 
 
-def fix_al(text):
-    """Short summary.
+def _prosody_add(text):
+    res = text
 
-    Parameters
-    ----------
-    text : string
-        Arabic text .
+    # Replace fathatayn with fatha + nuun + sukuun
+    res = re.sub(u"(\u064B\u0627|\u0627\u064B)", u"\u064E\u0646\u0652", res)
+    # Replace dammatun with damma + nuun + sukuun
+    res = re.sub(u"\u064C", u"\u064F\u0646\u0652", res)
+    # Replace kasratin with kasra + nuun + sukuun
+    res = re.sub(u"\u064D", u"\u0650\u0646\u0652", res)
 
-    Returns
-    -------
-    type
-        Description of returned object.
+    # letter + Shadda ---> letter + sukuun + letter
+    res = re.sub(u"(.)\u0651", u"\\1\u0652\\1", res)
 
-    """
-
-    nwtext = text
+    # hamza mamduuda --> alif-hamza + fatha + alif + sukuun
+    res = re.sub(u"\u0622", u"\u0623\u064E\u0627\u0652", res)
 
 
-    #Replace al- with sun character (it can be preceded by prepositions bi- li-)
-    nwtext = re.sub(ur'([^\s]\s+|(?:\u0644|\u0628)[\u0650]?)\u0627\u0644(' + sun + ')', ur'\1\2', nwtext)
+    return res
 
-    #Replace al- with l otherwise
-    nwtext = re.sub(ur'([^\s]\s+|(?:\u0644|\u0628).?)\u0627\u0644', ur'\1\u0644', nwtext)
-    return nwtext
+#TODO trait these
+"""
+زيادة حرف الواو في بعض الأسماء، مثل : (طاوس، دَاود)، تكتب عروضيا هكذا : دَأوُود، طَأوُوس.
+زيادة الألف في المواضع الآتية :
+في بعض أسماء الإشارة، مثل : (هذا، هذه، هذان، هذين، ذلك، ذلكما، ذلكم)، تكتب عروضيا هكذا :هاذا، هاذه، هاذان، هاذين، ذالك، ذالكما، ذالكم....
+في لفظ الجلالة (الله، الرحمن، إله)، تكتب عروضيا هكذا : اللاه، اَررحمان، إلاه.
+في (لكن) المخففة، والمشددة (لكنَّ)، تكتب عروضيا هكذا : لكن، لاكننَ.
+في لفظ (طه)، تكتب عروضيا هكذا : طاها.
+أولئك، تكتب عروضيا هكذا : ألائك.
+إشباع حركة حرف الروي بحيث ينشأ عن الإشباع حرفُ مدٍّ مجانسٌ لحركة حرف الروي، مثل أن يكون آخر الشطر (الحكمُ، كتابا، القمرِ)، تكتب عروضيا هكذا : الحكمو، كتابا، القَمَرِي).
+تشبع حركة هاء الضمير الغائب للمفرد المذكر، وميم الجمع إن لم يترتب على ذلك كسر البيت الشعري، أو التقاء ساكنين، مثل : لهُ، بهِ، لكمُ، بكمُ، تكتب عروضيا هكذا : لهُو، بهِي، لكمُو، بكُمُو.
+كاف المخاطب أو المخاطبة، ونون الرفع في الفعل المضارع، ونون جمع المذكر السالم، وتاء ضمير التكلم أو المخاطب للمذكر أو المؤنث تشبع حركتها إذا وقعت إحداها نهاية أحد الشطرين، مثل : كلامكَ، كلامُكِ، يسمعانِ، يسمعونَ، تسمعينَ، مسلمونَ، مسلمينَ، قُمتَ، قمتُ، قمتِ، تكتب عروضيا هكذا : كلامكَا، كلامكِي، يسمعانِي، يسمعونَا، تسمعينَا، مسلمونَا، مسلمينَا،، قُمتَا، قمتُو، قمتِي.
+الهمزة الممدودة تكتب همزة مفتوحة بعدها ألف، مثل، آمن، قرآن، تكتب عروضيا هكذا: أَامَنَ، قرأَان.
+الأحرف التي تحذف
+"""
 
-def fix_awy(text):
-    nwtext = text
 
-    return nwtext
+def prosody_form(text):
+    res = _prosody_del(text)
+    res = _prosody_add(res)
+    return res
 
-def get_cv (text):
-    nwtext = text
+
+def get_ameter (text):
+    res = text
 
     #Delete sukuun
-    nwtext = re.sub(ur'\u0652', '', nwtext)
+    res = re.sub(u"\u0652", "", res)
 
-    #Shadda replace (no need, it will be considered as a consonent)
-    #nwtext = re.sub(ur'(.)\u0651', ur'\1\1', nwtext)
+    #Replace fatha, damma, kasra & madda with (V) for vowel
+    res = re.sub(u"[^v\\s][\u064E\u064F\u0650\u0653]", "v", res)
 
-    #space + lam + consonent + shadda
-    #nwtext = re.sub(ur'\s\u0644[^\u064B\u064C\u064D]\u0651', u'\u0651', nwtext)
-
-    #Replace fatha, damma & kasra with (V) for vowel
-    nwtext = re.sub(ur'[^CV][\u064E\u064F\u0650]', 'V', nwtext)
-
-    #delete fathatayn over alif
-    nwtext = re.sub(ur'\u0627\u064B', u'\u0627', nwtext)
-
-    #Replace fathatayn, dammatayn, kasratayn with Vowel follewed by Consonent
-    nwtext = re.sub(ur'[^CV][\u064B\u064C\u064D]', 'VC', nwtext)
-
-    #return nwtext
-    #alif-alifmaqsora + space + consonent => delete madd
-    nwtext = re.sub(ur'[\u0627\u0649]\s+[^V]', 'C', nwtext)
-
-    #Delete space
-    nwtext = re.sub(ur'\s', '', nwtext)
+    #Delete spaces
+    res = re.sub(u"\\s+", u"", res)
 
     #Replace all what is left as it was a consonent
-    nwtext = re.sub(ur'[^CV]', 'C', nwtext)
+    res = re.sub(u"[^v]+", "c", res)
 
-    nwtext = re.sub(ur'V$', 'VC', nwtext)
+    #res = re.sub(ur'V$', 'VC', res)
 
-    return nwtext
+    return res
 
-def get_metre (cv):
-    metre = cv
-    metre = metre.replace("VC", "-")
-    metre = metre.replace("V", "u")
-    return metre
-
-def get_metre_name(metre):
-    for reg in metres:
-        match = re.search(r'^'+reg+'$', metre)
-        if match:
-            return metres.get(reg)
-    return "not found"
-
+def get_emeter (ameter):
+    res = ameter
+    res = res.replace("vc", "-")
+    res = res.replace("v", "u")
+    return res
 
 class Shatr(object):
     def __init__(self, text):
         self.orig = text
-        self.norm = text
-        self.prosody = text
-        self.meter = ""
-        self.syllables = ""
+        self.norm = normalize(text)
+        self.prosody = prosody_form(self.norm)
+        self.ameter = get_ameter(self.prosody)
+        self.emeter = get_emeter(self.ameter)
         self.bahr = None
+
+    def to_dict(self):
+        return {
+            "text": self.orig,
+            "norm": self.norm,
+            "prosody": self.prosody,
+            "ameter": self.ameter,
+            "emeter": self.emeter,
+            "bahr": self.bahr
+        }
 
 
 class Bayt(object):
     def __init__(self, text, sep="\t"):
         self.original = text
+
+def process_shatr(text):
+    return Shatr(text)
