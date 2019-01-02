@@ -21,6 +21,7 @@ Aruudy is a light library for Arabic prosody (Aruud) or "Science of Poetry".
     - Recover all meters (arabic name, english name, transliterated name)
     - Get the meters information by either its arabic or english names
 
+
 - poetry
     - Information about Arabic poetery meters
     - Normalizing part (shatr) of a verse: delete tatweel, add forgotten diacretics
@@ -28,6 +29,7 @@ Aruudy is a light library for Arabic prosody (Aruud) or "Science of Poetry".
     - Finding the arabic prosodic units "watad" and "sabab" based on haraka (vowel)
     - Finding the english prosodic units based on syllables
     - Detecting Arabic poetry meter
+
 
 - web
     - API with flask
@@ -77,11 +79,71 @@ print("arabic scansion: " + shatr.ameter)
 # Western-like metre
 print("western scansion: " + shatr.emeter)
 
-#get the bahr: it has aname, ename, trans, 
+#get the bahr: it has aname, ename, trans,
 b = shatr.bahr
 
+# Bahr arabic name
+print("western scansion: " + b.aname)
 
 ```
+
+You can process a text with sub-functions (without using **meter.process_shatr** which uses them all):
+- **meter.normalize(text)**: returns a normalized text; deletes tatweel and fix some diacretics problems
+- **meter.prosody_form(text)**: returns the prosody writing (الكتابة العروضية) of the text
+- **meter.get_ameter(text)**: returns a string of arabic meter  with "v" as haraka "c" as sukuun
+- **meter.get_emeter(ameter)**: returns european meter from a given arabic meter
+
+
+### Web Api
+
+The api uses **flask** which must be installed. To launch the server on your machine (locally), type:
+
+```sh
+python aruudy/web/api.py
+```
+
+This will create a server on **http://127.0.0.1:5000**.
+
+The api has three request types:
+
+#### $host/ls
+
+Returns a json object with names of available Arabic poetry meters (16 meters).
+The object has three lists:
+- arabic: Arabic names of the 16 meters
+- english: English equivalent names
+- trans: transliterated names
+
+![api ls](img/api.ls.png)
+
+#### $host/info/< name >
+
+Retrieve information about a meter by its name (arabic or english).
+It returns a json object describing the meter (bahr).
+- aname: Arabic name of the meter
+- ename: English name of the meter
+- trans: transliterated name
+- ameter: the meter used by Arabs as defined by Al-Khalil
+- emeter: the meter by syllables (European method)
+- key: a verse which describs the bahr
+
+![api info ar](img/api.info.ar.png)
+![api info en](img/api.info.en.png)
+
+#### $host/shatr/<text>
+
+Used to find the meter of the given text (a shatr: part of the verse). It returns a json object with these information:
+- text: the original text
+- norm: the text normalized: no tatweel, fix some diacretics
+- prosody: prosody writing (الكتابة العروضية) of the text
+- ameter: the arabic meter of the text
+- emeter: the english/european meter of the text
+- bahr: the name of the bahr
+    - if not found, it is a string "None"
+    - if found, it is a json object with "aname", "ename" and "trans"
+
+![api shatr found](img/api.shatr.found.png)
+![api shatr none](img/api.shatr.none.png)
 
 ## Recommendations
 
@@ -91,7 +153,7 @@ To this end, It is recommended to use [Mishkal](https://github.com/linuxscout/mi
 @TODO more examples
 
 ## License
-Copyright (C) 2014-2017 Abdelkrime Aries
+Copyright (C) 2014-2019 Abdelkrime Aries
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -28,8 +28,8 @@ from aruudy.poetry import bahr
 # sun letters in arabic
 SUN = u"([تثدذرزسشصضطظلن])"
 # alif in the middle of sentence
-# DORJ = spaces or (bi-, li-)kasra? or (ka-, fa-)fatha?
-DORJ = u"([^\\s]\\s+|[\u0644\u0628][\u0650]?|[\u0643\u0641][\u064E]?)"
+# DORJ = spaces or (bi-, li-)kasra? or (ka-, fa-, wa-)fatha?
+DORJ = u"([^\\s]\\s+|[\u0644\u0628][\u0650]?|[\u0643\u0641\u0648][\u064E]?)"
 
 # ahruf al3illa: alif, alif maqsura, waw, yaa
 ILLA = u"[اىوي]"
@@ -72,13 +72,14 @@ def _prosody_del(text):
     # # والكتاب، فالعلم ---> وَلكتاب، فَلعِلم
     res = re.sub(DORJ + u"\u0627\u0644", u"\\1\u0644", res)
 
+
     # delete first alif of a word in the middle of sentence
     # فاستمعَ، وافهم، واستماعٌ، وابنٌ، واثنان ---> فَستَمَعَ، وَفهَم، وَستِماعُن، وَبنُن، وَثنانِ
-    res = re.sub(DORJ + u"\u0627(.)" , u"\\1\\2", res)
+    res = re.sub(DORJ + u"\u0627(.[^\u064B-\u0651])" , u"\\1\\2", res)
 
     # delete ending alif, waw and yaa preceeding a sakin
     # أتى المظلوم إلى القاضي فأنصفه قاضي العدل ---> أتَ لمظلوم إلَ لقاضي فأنصفه قاضِ لعدل.
-    res = re.sub(ILLA + u"\\s+(.\u0652)", u" \\1", res)
+    res = re.sub(ILLA + u"\\s+(.[^\u064B-\u0651])", u" \\1", res)
 
     # delete alif of plural masculin conjugation
     # رجعوا ---> رجعو

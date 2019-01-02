@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#  Copyright 2017 Abdelkrime Aries <kariminfo0@gmail.com>
+
+#  Copyright 2019 Abdelkrime Aries <kariminfo0@gmail.com>
 #
 #  ---- AUTHORS ----
-#  2017	Abdelkrime Aries <kariminfo0@gmail.com>
+#  2019	Abdelkrime Aries <kariminfo0@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,44 +19,37 @@
 # limitations under the License.
 #
 
-import os
-import sys
+import os, sys
 import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from aruudy.poetry import armetre
+from aruudy.poetry import meter
 
 
-def test_arfilter():
-    orig = u"تطويـــــــــــــــــــــل"
-    dest = u"تطويل"
-    assert armetre.arfilter(orig) == dest
+def test_normalize():
+    assert meter.normalize(u"تَطْوِيـــــــــــــــــــــل") == u"تَطْوِيل"
+    assert meter.normalize(u"الأَول الشمس القمر") == u"اَلأَول الشمس القمر"
+    assert meter.normalize(u"ساح يسيح يسوح") == u"سَاح يسِيح يسُوح"
 
-def test_fix_al():
-    orig = u"الأول الشمس القمر"
-    dest = u"اَلأول شمس لقمر"
-    assert armetre.fix_al(orig) == dest
+#private function
+def test_prosody_del():
+    assert meter._prosody_del(u"وَالشمس") == u"وَشمس"
+    assert meter._prosody_del(u"فَالعلم") == u"فَلعلم"
+    assert meter._prosody_del(u"فاستمعَ") == u"فستمعَ"
+    assert meter._prosody_del(u"أَتَى المَظلوم إلَى القَاضِي فَأَنصفه قَاضِي العَدل") == u"أَتَ لمَظلوم إلَ لقَاضِي فَأَنصفه قَاضِ لعَدل"
+    assert meter._prosody_del(u"رجعوا") == u"رجعو"
 
-def test_fix_awy():
-    orig = u"ساح يسيح يسوح"
-    dest = u"سَاح يسِيح يسُوح"
-    assert armetre.fix_awy(orig) == dest
+#private function
+def test_prosody_add():
+    assert meter._prosody_add(u"") == u""
+    assert meter._prosody_add(u"") == u""
+    assert meter._prosody_add(u"") == u""
+    assert meter._prosody_add(u"") == u""
 
-
-def test_get_cv ():
+def _get_cv ():
     orig = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
     dest = "VVCVCVVCVCVCVVCVVVCVVC"
     orig = armetre.fix_al(orig)
     orig = armetre.fix_awy(orig)
     assert armetre.get_cv(orig) == dest
-
-def test_get_metre ():
-    orig = "VVCVCVVCVCVCVVCVVVCVVC"
-    dest = "u--u---u-uu-u-"
-    assert armetre.get_metre(orig) == dest
-
-def test_get_metre_name():
-    orig = "u--u---u-uu-u-"
-    dest = "tawiil"
-    assert armetre.get_metre_name(orig) == dest
