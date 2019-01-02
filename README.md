@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2-0BDA51.svg?style=plastic)](http://www.apache.org/licenses/LICENSE-2.0)
 [![PyPI](https://img.shields.io/pypi/v/aruudy.svg?style=plastic)](https://pypi.python.org/pypi/aruudy)
 [![Downloads](https://img.shields.io/pypi/dm/aruudy.svg?style=plastic)](https://pypi.org/project/aruudy/)
-[![Python version](https://img.shields.io/pypi/pyversions/aruddy.svg?style=plastic)](https://pypi.org/project/aruudy/)
+[![Python version](https://img.shields.io/pypi/pyversions/aruudy.svg?style=plastic)](https://pypi.org/project/aruudy/)
 [![Travis](https://img.shields.io/travis/kariminf/aruudy.svg?style=plastic)](https://travis-ci.org/kariminf/aruudy)
 [![Codecov](https://img.shields.io/codecov/c/github/kariminf/aruudy.svg?style=plastic)](https://codecov.io/gh/kariminf/aruudy)
 [![CodeFactor](https://www.codefactor.io/repository/github/kariminf/aruudy/badge/master)](https://www.codefactor.io/repository/github/kariminf/aruudy/overview/master)
