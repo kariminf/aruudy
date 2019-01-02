@@ -22,13 +22,15 @@
 from setuptools import setup
 
 from os import path
+import io
+
 this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+with io.open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name = "aruudy",
-    version = "0.2.0",
+    version = "0.2.1",
     author = "Abdelkrime Aries",
     author_email = "kariminfo0@gmail.com",
     description = ("Arabic poetry package"),
