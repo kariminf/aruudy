@@ -15,7 +15,7 @@ Aruudy is a light library for Arabic prosody (Aruud) or "Science of Poetry".
 
 [Test here](https://kariminf.github.io/aruudy/)
 
-[web API: kariminf.pythonanywhere.com/](kariminf.pythonanywhere.com/)
+[web API: kariminf.pythonanywhere.com/](https://kariminf.pythonanywhere.com/)
 
 ## Features
 
@@ -132,7 +132,7 @@ It returns a json object describing the meter (bahr).
 ![api info ar](img/api.info.ar.png)
 ![api info en](img/api.info.en.png)
 
-#### $host/shatr/<text>
+#### $host/shatr/< text >
 
 Used to find the meter of the given text (a shatr: part of the verse). It returns a json object with these information:
 - text: the original text

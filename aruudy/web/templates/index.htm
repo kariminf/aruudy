@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>Testing Aruudy</title>
+    <meta charset="UTF-8">
+    <style></style>
+  </head>
+  <body>
+
+      <p>
+          Arabic prosody
+      </p>
+
+      <h1>Info about available meters</h1>
+      <p>
+          Using <b>"$host/ls"</b>.
+          <br>Try this:
+          <a href="./ls" target="_blank">
+              {{ host }}ls
+          </a>
+      </p>
+
+      <h1>Info about a specific meter</h1>
+      <p>
+          Using <b>"$host/info/[name]"</b>.
+          The name can be in Arabic or English.
+          <br>Try this:
+          <a href="./info/long" target="_blank">
+              {{ host }}info/long
+          </a>
+          <br>Or, this:
+          <a href="./info/كامل" target="_blank">
+              {{ host }}info/كامل
+          </a>
+      </p>
+
+      <h1>Processing a verse's part (shatr)</h1>
+      <p>
+          Using <b>"$host/shatr/[text]"</b>.
+          <br>Try this:
+          <a href="./shatr/أَسِرْبَ%20القَطا%20هَلْ%20مَنْ%20يُعِيْرُ%20جَناحَهُ" target="_blank">
+              {{ host }}shatr/أَسِرْبَ%20القَطا%20هَلْ%20مَنْ%20يُعِيْرُ%20جَناحَهُ
+          </a>
+      </p>
+
+  </body>
+</html>

@@ -19,18 +19,16 @@
 # limitations under the License.
 #
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, request
+from flask_cors import CORS
 
-"""
 import sys, os
-reload(sys)
-sys.setdefaultencoding("utf8")
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-"""
 
 from aruudy.poetry import bahr, meter
 
 app = Flask(__name__)
+CORS(app)
 app.config["JSON_AS_ASCII"] = False
 #headers = {
 #    "Content-Type": "application/json",0
@@ -57,6 +55,12 @@ def bahrs_list():
 def process_shatr(text):
     s = meter.process_shatr(text).to_dict(bahr=True)
     return jsonify(s), 200
+
+
+@app.route("/", methods=["GET", "POST"])
+def route():
+    #res = '<a href="./ls">list meters</a>'
+    return render_template("index.htm", host = request.host_url)
 
 if __name__ == "__main__":
     app.run(debug=True)
