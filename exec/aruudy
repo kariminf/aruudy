@@ -5,39 +5,93 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from aruudy.poetry import armetre
+from aruudy.poetry import bahr, meter
+
+try:
+    unicode = str
+except:
+    pass
 
 def help():
-    hlp = """aruudy -b <string>
-aruudy --bahr <string>
+    hlp = """aruudy [-s | --shatr] <string>:
+    Find meter to a verse's part (shatr)
+        <text> is the verse's part (shatr)
+
+aruudy [-l, --list] [a|e|t]:
+    List all Available arabic meters names
+        a: in Arabic, e: in English, t: in transliteration
+
+aruudy [-i, --info] <name>:
+    List information about the bahr
+        <name> is the name (english or arabic) of the meter (bahr)
     """
     print(hlp)
 
+def shatr(text):
+    text = unicode(text)
+    s = meter.process_shatr(text)
+    #original text
+    print("original: " + s.orig)
+    #Normalized text
+    print("normalized: " + s.norm)
+    #prosody form
+    print("prosody form: " + s.prosody)
+    # Farahidi meter for poetry
+    print("arabic scansion: " + s.ameter)
+    # Western-like metre
+    print("western scansion: " + s.emeter)
+    if s.bahr:
+        print("Meter Arabic name: " + s.bahr.aname)
+        print("Meter English name: " + s.bahr.ename)
+        print("Meter Transliterated name: " + s.bahr.tname)
+    else:
+        print("Meter Not Found")
+
+def lst(lang):
+    if len(lang)> 1 or "aet".find(lang) == -1:
+        print("aruudy [-l, --list] [a|e|t]")
+        exit(1)
+    if lang == "t":
+        lang = "trans"
+    else:
+        lang += "name"
+    ls = bahr._get_values(lang)
+    print("List of meters:")
+    for l in ls:
+        print(l)
+
+def info(name):
+    if ord(name[0]) > 128:
+        name = unicode(name)
+    b = bahr.get_bahr(name)
+    if b == None:
+        print("Meter not found")
+    else:
+        print("Arabic name: " + b["aname"])
+        print("English name: " + b["ename"])
+        print("Transliterated name: " + b["trans"])
+        print("Arabic meter: " + b["ameter"])
+        print("English meter: " + b["emeter"])
+        print("Key: " + b["key"])
+
 def main(argv):
-    input = ""
     try:
-        opts, args = getopt.getopt(argv,"hb:",["bahr="])
+        opts, args = getopt.getopt(argv,"hs:l:i:",["help", "shatr=", "list=", "info="])
     except getopt.GetoptError:
         help()
         sys.exit(2)
 
     for opt, arg in opts:
-        if opt == '-h':
+        if opt in ("-h", "--help"):
             help()
             sys.exit()
-        elif opt in ("-b", "--bahr"):
-            input = arg
-    input = unicode(input, 'utf-8')
-    r = armetre.arfilter(input)
-    r = armetre.fix_al(r)
-    r = armetre.fix_awy(r)
-    print("After filtering: " + r)
-    r = armetre.get_cv(r)
-    print("The scansion is: " + r)
-    r = armetre.get_metre(r)
-    print("Western scansion is: " + r)
-    r = armetre.get_metre_name(r)
-    print("The metre name: " + r)
+        elif opt in ("-s", "--shatr"):
+            shatr(arg)
+        elif opt in ("-l", "--list"):
+            lst(arg)
+        elif opt in ("-i", "--info"):
+            info(arg)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
