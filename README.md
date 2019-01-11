@@ -196,7 +196,6 @@ You can process a text with sub-functions (without using **meter.process_shatr**
 To detect the meter, the poem's part must be fully vocalized (has diacritics).
 To this end, It is recommended to use [Mishkal](https://github.com/linuxscout/mishkal)
 
-@TODO more examples
 
 ## License
 Copyright (C) 2014-2019 Abdelkrime Aries
