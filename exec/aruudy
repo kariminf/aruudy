@@ -8,9 +8,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from aruudy.poetry import bahr, meter
 
 try:
-    unicode = str
-except:
-    pass
+    UNICODE_EXISTS = bool(type(unicode))
+except NameError:
+    unicode = lambda s, u="": str(s)
 
 def help():
     hlp = """aruudy [-s | --shatr] <string>:
@@ -28,7 +28,7 @@ aruudy [-i, --info] <name>:
     print(hlp)
 
 def shatr(text):
-    text = unicode(text)
+    text = unicode(text, "UTF-8")
     s = meter.process_shatr(text)
     #original text
     print("original: " + s.orig)
@@ -43,7 +43,7 @@ def shatr(text):
     if s.bahr:
         print("Meter Arabic name: " + s.bahr.aname)
         print("Meter English name: " + s.bahr.ename)
-        print("Meter Transliterated name: " + s.bahr.tname)
+        print("Meter Transliterated name: " + s.bahr.trans)
     else:
         print("Meter Not Found")
 
@@ -61,8 +61,7 @@ def lst(lang):
         print(l)
 
 def info(name):
-    if ord(name[0]) > 128:
-        name = unicode(name)
+    name = unicode(name, "UTF-8")
     b = bahr.get_bahr(name)
     if b == None:
         print("Meter not found")

@@ -48,53 +48,53 @@ pip install aruudy
 
 ### Command line
 
+#### List all available meters
+
+```sh
+aruudy [-l | --list] [a|e|t]
 ```
-aruudy -b 'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
-```
+Will print the 16 meters names in
+- Arabic if the option is "a"
+- English if the option is "e"
+- Transliteration if the option is "t"
 
-### Programming
+For example:
 
-Arabic poetry meter detection
-
-```python
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from aruudy.poetry import meter
-
-text = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
-
-shatr = meter.process_shatr(text)
-
-#original text
-print("original: " + shatr.orig)
-
-#Normalized text
-print("normalized: " + shatr.norm)
-
-#prosody form
-print("prosody form: " + shatr.prosody)
-
-# Farahidi meter for poetry
-print("arabic scansion: " + shatr.ameter)
-
-# Western-like metre
-print("western scansion: " + shatr.emeter)
-
-#get the bahr: it has aname, ename, trans,
-b = shatr.bahr
-
-# Bahr arabic name
-print("western scansion: " + b.aname)
-
+```sh
+aruudy -l a
 ```
 
-You can process a text with sub-functions (without using **meter.process_shatr** which uses them all):
-- **meter.normalize(text)**: returns a normalized text; deletes tatweel and fix some diacretics problems
-- **meter.prosody_form(text)**: returns the prosody writing (الكتابة العروضية) of the text
-- **meter.get_ameter(text)**: returns a string of arabic meter  with "v" as haraka "c" as sukuun
-- **meter.get_emeter(ameter)**: returns european meter from a given arabic meter
+![shell ls](img/shell.ls.ar.png)
 
+#### Get information about a meter
+
+```sh
+aruudy [-i, --info] <name>
+```
+
+The name can be in Arabic or in English.
+
+Example:
+
+```sh
+aruudy -i long
+```
+
+![shell ls](img/shell.info.en.png)
+
+#### Get the meter of a Shatr (part of verse)
+
+```sh
+aruudy [-s, --shatr] <text>
+```
+
+Example:
+
+```sh
+aruudy -s "أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
+```
+
+![shell shatr](img/shell.shatr.found.png)
 
 ### Web Api
 
@@ -146,6 +146,50 @@ Used to find the meter of the given text (a shatr: part of the verse). It return
 
 ![api shatr found](img/api.shatr.found.png)
 ![api shatr none](img/api.shatr.none.png)
+
+
+### Programming
+
+Arabic poetry meter detection
+
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from aruudy.poetry import meter
+
+text = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
+
+shatr = meter.process_shatr(text)
+
+#original text
+print("original: " + shatr.orig)
+
+#Normalized text
+print("normalized: " + shatr.norm)
+
+#prosody form
+print("prosody form: " + shatr.prosody)
+
+# Farahidi meter for poetry
+print("arabic scansion: " + shatr.ameter)
+
+# Western-like metre
+print("western scansion: " + shatr.emeter)
+
+#get the bahr: it has aname, ename, trans,
+b = shatr.bahr
+
+# Bahr arabic name
+print("western scansion: " + b.aname)
+
+```
+
+You can process a text with sub-functions (without using **meter.process_shatr** which uses them all):
+- **meter.normalize(text)**: returns a normalized text; deletes tatweel and fix some diacretics problems
+- **meter.prosody_form(text)**: returns the prosody writing (الكتابة العروضية) of the text
+- **meter.get_ameter(text)**: returns a string of arabic meter  with "v" as haraka "c" as sukuun
+- **meter.get_emeter(ameter)**: returns european meter from a given arabic meter
 
 ## Recommendations
 

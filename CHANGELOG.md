@@ -4,6 +4,7 @@
 
 * Fix some buhuur
 * Tashkiil of half vocalized texts
+* More options to the executable
 
 ## 0.2.0 (2019/01/02)
 
