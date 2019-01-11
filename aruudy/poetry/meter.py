@@ -43,19 +43,68 @@ def normalize(text):
     #delete tatweel
     res = re.sub(u"\u0640", u"", res)
 
+    #delete any non wanted char
+    res = re.sub(u"[^\u0621-\u0652\\s]", u"", res)
+
     # Tashkiil
     # ===========
+
+    # allati التِي
+    res = res = re.sub(u"(^|\\s)\u0627\u0644\u0651?\u064E?\u062A\u0650\u064A(\\s|$)", u"\\1\u0627\u0644\u0651\u064E\u062A\u0650\u064A\\2", res)
+
+    # if fatha damma or kasra is before shadda: switch
+    res = res = re.sub(u"([\u064B-\u0650])\u0651", u"\u0651\\1", res)
+
     # add Fatha to first al-
     res = re.sub(u"^\\s*\u0627\u0644", u"\u0627\u064E\u0644", res)
+
+    # Falty fathatan on alif fix
+    res = re.sub(u"([^\\s])\u064E?([\u0627\u0649])\u064B", u"\\1\u064B\\2", res)
+
     # add Fatha to any non diacretized char preceeding alif
-    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0627([^\u064E\u064F\u0650\u0652])", u"\\1\u064E\u0627\\2", res)
+    res = re.sub(u"([^\u064B-\u0651\\s])(\u0627|\u0649)([^\u064E\u064F\u0650\u0652])", u"\\1\u064E\\2\\3", res)
+
+    # if alif is preceeding waw: add sukuun to alif
+    res = re.sub(u"\u0627\u0648", u"\u0627\u0652\u0648", res)
+
     #add Damma to any non diacretized char preceeding waw
     res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0648([^\u064E\u064F\u0650\u0652])", u"\\1\u064F\u0648\\2", res)
+
     #add Kasra to any non diacretized char preceeding yaa
-    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u064A([^\u064E\u064F\u0650\u0652])", u"\\1\u0650\u064A\\2", res)
+    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u064A([^\u064E\u064F\u0650\u0652]|$)", u"\\1\u0650\u064A\\2", res)
+
+    # add Shadda to shamsi characters after al-
+    res = re.sub(u"(^|\\s)\u0627\u0644" + SUN + u"([^\u0651])", u"\\1\u0627\u0644\\2\u0651\\3", res)
+
+    # add madda to other characters after al-
+    res = re.sub(u"((?:^|\\s)\u0627\u0644[^\u0651])([^\u064E-\u0651])", u"\\1\u0653\\2", res)
+
+    # add kasra to li
+    res = re.sub(u"(^|\\s)\u0644([^\u064E-\u0652])", u"\\1\u0644\u0650\\2", res)
+
+    # add kasra to bi
+    res = re.sub(u"(^|\\s)\u0628([^\u064E-\u0652])", u"\\1\u0628\u0650\\2", res)
+
+    # add fatha to fa
+    res = re.sub(u"(^|\\s)\u0641([^\u064E-\u0652])", u"\\1\u0641\u064E\\2", res)
+
+    # add fatha to wa
+    res = re.sub(u"(^|\\s)\u0648([^\u064E-\u0652])", u"\\1\u0648\u064E\\2", res)
+
+    # madda over alif with no fatha or damma
+    res = re.sub(u"\u0623([^\u064E\u064F])", u"\u0623\u0653\\1", res)
+
+    # hamza under alif with no kasra
+    res = re.sub(u"\u0625([^\u0650])", u"\u0625\u0650\\1", res)
 
     #shadda not followed by a diacritic: add a madda above
     res = res = re.sub(u"\u0651([^\u064B-\u0650])", u"\u0651\u0653\\1", res)
+
+    #add madda to any leading letter except alif
+    res = res = re.sub(u"(^|\\s)([^\u0627])([^\u064E-\u0652])", u"\\1\\2\u0653\\3", res)
+
+    #after sukuun must be a haraka
+    res = res = re.sub(u"\u0652([^\\s])([^\u064B-\u0650\\s])", u"\u0652\\1\u0653\\2", res)
 
     return res
 
@@ -75,11 +124,11 @@ def _prosody_del(text):
 
     # delete first alif of a word in the middle of sentence
     # فاستمعَ، وافهم، واستماعٌ، وابنٌ، واثنان ---> فَستَمَعَ، وَفهَم، وَستِماعُن، وَبنُن، وَثنانِ
-    res = re.sub(DORJ + u"\u0627(.[^\u064B-\u0651])" , u"\\1\\2", res)
+    res = re.sub(DORJ + u"\u0627([^\\s][^\u064B-\u0651\u0653])" , u"\\1\\2", res)
 
     # delete ending alif, waw and yaa preceeding a sakin
     # أتى المظلوم إلى القاضي فأنصفه قاضي العدل ---> أتَ لمظلوم إلَ لقاضي فأنصفه قاضِ لعدل.
-    res = re.sub(ILLA + u"\\s+(.[^\u064B-\u0651])", u" \\1", res)
+    res = re.sub(ILLA + u"\\s+(.[^\u064B-\u0651\u0653])", u" \\1", res)
 
     # delete alif of plural masculin conjugation
     # رجعوا ---> رجعو
@@ -98,10 +147,18 @@ def _prosody_del(text):
 def _prosody_add(text):
     res = text
 
-    # Replace fathatayn with fatha + nuun + sukuun
-    res = re.sub(u"(\u064B\u0627|\u0627\u064B)", u"\u064E\u0646\u0652", res)
+    #replace tanwiin taa marbuta by taa maftuuha
+    res = re.sub(u"\u0629([\u064B-\u064D])", u"\u062A\\1", res)
+
+    # delete alif from: fathatan + alif
+    res = re.sub(u"\u064B(\u0627|\u0649)", u"\u064B", res)
+
+    # Replace fathatan with fatha + nuun + sukuun
+    res = re.sub(u"\u064B", u"\u064E\u0646\u0652", res)
+
     # Replace dammatun with damma + nuun + sukuun
     res = re.sub(u"\u064C", u"\u064F\u0646\u0652", res)
+
     # Replace kasratin with kasra + nuun + sukuun
     res = re.sub(u"\u064D", u"\u0650\u0646\u0652", res)
 
@@ -132,6 +189,7 @@ def _prosody_add(text):
 
 
 def prosody_form(text):
+    res = text
     res = _prosody_del(text)
     res = _prosody_add(res)
     return res

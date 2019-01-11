@@ -21,6 +21,7 @@
 
 import os, sys
 import pytest
+import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -31,8 +32,8 @@ from aruudy.poetry.bahr import Bahr
 
 def test_normalize():
     assert meter.normalize(u"تَطْوِيـــــــــــــــــــــل") == u"تَطْوِيل"
-    assert meter.normalize(u"الأَول الشمس القمر") == u"اَلأَول الشمس القمر"
-    assert meter.normalize(u"ساح يسيح يسوح") == u"سَاح يسِيح يسُوح"
+    assert meter.normalize(u"الأَول الشمس القمر") == u"اَلأَول الشّٓمس القٓمر"
+    assert meter.normalize(u"ساح يسيح يسوح") == u"سَاح يٓسِيح يٓسُوح"
 
 #private function
 def test_prosody_del():
@@ -63,3 +64,23 @@ def test_process_shatr ():
 
     s = meter.process_shatr("aaa")
     assert not s.bahr
+
+try:
+    UNICODE_EXISTS = bool(type(unicode))
+except NameError:
+    unicode = lambda s: str(s)
+
+def test_bahr_detection ():
+    with open("exp.json") as f:
+        exps = json.load(f)["exp"]
+
+    for exp in exps:
+        try:
+            txt = exp["shatr"].encode()
+            out = exp["bahr"].encode()
+        except:
+            txt = exp["shatr"]
+            out = exp["bahr"]
+        #print (txt)
+        s = meter.process_shatr(txt)
+        assert s.bahr.aname == out

@@ -20,6 +20,7 @@
 #
 
 import os, sys
+import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -31,3 +32,10 @@ s = meter.process_shatr(orig).to_dict()
 print (s["ameter"])
 print (s["emeter"])
 print (s["bahr"])
+
+with open("exp.json") as f:
+    exps = json.load(f)["exp"]
+
+for exp in exps:
+    s = meter.process_shatr(unicode(exp["shatr"]))
+    print(unicode(exp["bahr"]) + " " + str(s.bahr))

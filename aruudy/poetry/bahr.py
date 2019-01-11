@@ -63,7 +63,7 @@ class Bahr(object):
     def validate(self, emeter):
         m = emeter.replace(" ", "")
         reg = self.emeter.replace(" ", "").replace("x", "[\\-u]")
-        reg = reg.replace("o", "(-|uu)").replace("S", "(-uu|-u)")
+        reg = reg.replace("w", "(-|uu)").replace("S", "(-uu|-u)")
         reg = "^" + reg + "$"
         return (re.search(reg, m) != None)
 
@@ -73,8 +73,8 @@ class Bahr(object):
 # emeter from: https://en.wikipedia.org/wiki/Metre_(poetry)#The_Arabic_metres
 # "–" for 1 long syllable (cv)
 # "u" for 1 short syllable (c)
-# "x" for a position that can contain 1 long or 1 short [\\-u]
-# "o" for a position that can contain 1 long or 2 shorts (- |uu)
+# "x" for a position that can contain 1 long or 1 short [-u]
+# "w" for a position that can contain 1 long or 2 shorts (-|uu)
 # "S" for a position that can contain 1 long, 2 shorts, or 1 long + 1 short (-uu|-u)
 
 
@@ -108,7 +108,7 @@ buhuur = [
         "ename": "abundant",
         "trans": u"wāfir",
         "ametet": "ccvcccv ccvcccv ccvcv",
-        "emeter": "u-o- u-o- u--",
+        "emeter": "u-w- u-w- u--",
         "key": u"بحور الشعر وافرها جميل  مفاعلتن مفاعلتن فعولن"
     }),
     Bahr({
@@ -116,7 +116,7 @@ buhuur = [
         "ename": "complete",
         "trans": u"kāmil",
         "ameter": "cccvccv cccvccv cccvccv",
-        "emeter": "o-u- o-u- o-u-",
+        "emeter": "w-u- w-u- w-u-",
         "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
     }),
     Bahr({
@@ -132,7 +132,7 @@ buhuur = [
         "ename": "trembling",
         "trans": u"rajaz",
         "ameter": "cvcvccv cvcvccv cvcvccv",
-        "emeter": "x-u- x-u- x-u- x-u-",
+        "emeter": "x-u- x-u- x-u-",
         "key": u"في أبحر الأرجاز بحرٌ يسهل   مستفعلن مستفعلن مستفعلن"
     }),
     Bahr({
