@@ -71,7 +71,9 @@ except NameError:
     unicode = lambda s: str(s)
 
 def test_bahr_detection ():
-    with open("exp.json") as f:
+    script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
+    fpath = os.path.join(script_dir, "exp.json")
+    with open(fpath, "r") as f:
         exps = json.load(f)["exp"]
 
     for exp in exps:
