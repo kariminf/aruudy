@@ -19,23 +19,28 @@
 # limitations under the License.
 #
 
-import os, sys
-import json
+import os
+import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from aruudy.poetry import meter
+from aruudy.poetry.meter import Bahr, BahrError
 
-orig = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
+print (meter.name_type(u"كامل"))
+print (meter.name_type(u"complete"))
 
-s = meter.process_shatr(orig).to_dict()
-print (s["ameter"])
-print (s["emeter"])
-print (s["bahr"])
+mutadarik = {
+        "aname": u"متدارك",
+        "ename": "overtaking",
+        "trans": "mutadārik",
+        "ameter": "",
+        "emeter": "S- S- S- S-", # - can be substituted for u u)
+        "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
+}
+print (meter.get_bahr("overtaking"))
+print (type(meter.get_bahr("overtaking")))
+print (meter.get_bahr("overtaking", dic=False))
+print (type(meter.get_bahr("overtaking", dic=False)))
 
-with open("exp.json") as f:
-    exps = json.load(f)["exp"]
-
-for exp in exps:
-    s = meter.process_shatr(unicode(exp["shatr"]))
-    print(unicode(exp["bahr"]) + " " + str(s.bahr))
+print (meter.arabic_names())

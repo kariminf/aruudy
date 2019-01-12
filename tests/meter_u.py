@@ -19,70 +19,50 @@
 # limitations under the License.
 #
 
-import os, sys
+import os
+import sys
 import pytest
-import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from aruudy.poetry import meter
-from aruudy.poetry.meter import Shatr
-from aruudy.poetry.bahr import Bahr
+from aruudy.poetry.meter import Bahr, BahrError
 
+mutadarik = {
+        "aname": u"متدارك",
+        "ename": "overtaking",
+        "trans": u"mutadārik",
+        "ameter": "",
+        "emeter": "S- S- S- S-", # - can be substituted for u u)
+        "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
+}
 
-def test_normalize():
-    assert meter.normalize(u"تَطْوِيـــــــــــــــــــــل") == u"تَطْوِيل"
-    assert meter.normalize(u"الأَول الشمس القمر") == u"اَلأَول الشّٓمس القٓمر"
-    assert meter.normalize(u"ساح يسيح يسوح") == u"سَاح يٓسِيح يٓسُوح"
+def test_name_type():
+    assert meter.name_type(u"كامل") == "aname"
+    assert meter.name_type(u"complete") == "ename"
 
-#private function
-def test_prosody_del():
-    assert meter._prosody_del(u"وَالشمس") == u"وَشمس"
-    assert meter._prosody_del(u"فَالعلم") == u"فَلعلم"
-    assert meter._prosody_del(u"فاستمعَ") == u"فستمعَ"
-    assert meter._prosody_del(u"أَتَى المَظلوم إلَى القَاضِي فَأَنصفه قَاضِي العَدل") == u"أَتَ لمَظلوم إلَ لقَاضِي فَأَنصفه قَاضِ لعَدل"
-    assert meter._prosody_del(u"رجعوا") == u"رجعُوْ"
+def test_get_bahr():
+    assert meter.get_bahr("overtaking") == mutadarik
+    assert type(meter.get_bahr("overtaking")) is dict
+    assert meter.get_bahr("overtaking", dic=False) == Bahr(mutadarik)
+    assert type(meter.get_bahr("overtaking", dic=False)) is Bahr
+    assert meter.get_bahr("aaa") == None
 
-#private function
-#def test_prosody_add():
-#    assert meter._prosody_add(u"") == u""
+def test_get_names():
+    assert meter.arabic_names()[0] == u"طويل"
+    assert meter.english_names()[0] == "long"
+    assert meter.trans_names()[0] == u"ṭawīl"
 
-def test_process_shatr ():
-    text = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
-    ameter = "vvcvcvvcvcvcvvcvvvcvvc"
+def test_bahr():
+    b = meter.get_bahr("overtaking", dic=False)
 
-    s = meter.process_shatr(text)
-    assert type(s) == Shatr
+    assert b.test_property("trans", u"mutadārik")
+    assert not b.test_property("trans", u"kamil")
+    with pytest.raises(BahrError):
+        b.test_property("transliterate", u"kamil")
 
-    d = s.to_dict()
-    assert type(d) == dict
-    assert type(d["bahr"]) == Bahr
+    assert b.get_value("trans") == u"mutadārik"
+    with pytest.raises(BahrError):
+        b.get_value("transliterate")
 
-    d = s.to_dict(bahr=True)
-    assert type(d["bahr"]) == dict
-    assert d["ameter"] == ameter
-
-    s = meter.process_shatr("aaa")
-    assert not s.bahr
-
-try:
-    UNICODE_EXISTS = bool(type(unicode))
-except NameError:
-    unicode = lambda s: str(s)
-
-def test_bahr_detection ():
-    script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
-    fpath = os.path.join(script_dir, "exp.json")
-    with open(fpath, "r") as f:
-        exps = json.load(f)["exp"]
-
-    for exp in exps:
-        try:
-            txt = exp["shatr"].encode()
-            out = exp["bahr"].encode()
-        except:
-            txt = exp["shatr"]
-            out = exp["bahr"]
-        #print (txt)
-        s = meter.process_shatr(txt)
-        assert s.bahr.aname == out
+    assert b.to_dict() == mutadarik

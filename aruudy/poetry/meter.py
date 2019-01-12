@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#  ar_metre.py
-#  processing and detecting the metre of arabic poetery
-#
+
 #  Copyright 2019 Abdelkrime Aries <kariminfo0@gmail.com>
 #
 #  ---- AUTHORS ----
-#  2019  Abdelkrime Aries <kariminfo0@gmail.com>
+# 2019	Abdelkrime Aries <kariminfo0@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,179 +20,6 @@
 #
 
 import re
-from aruudy.poetry import bahr
-
-# sun letters in arabic
-SUN = u"([تثدذرزسشصضطظلن])"
-# alif in the middle of sentence
-# DORJ = spaces or (bi-, li-)kasra? or (ka-, fa-, wa-)fatha?
-DORJ = u"([^\\s]\\s+|[\u0644\u0628][\u0650]?|[\u0643\u0641\u0648][\u064E]?)"
-
-# ahruf al3illa: alif, alif maqsura, waw, yaa
-ILLA = u"[اىوي]"
-
-
-def normalize(text):
-    res = text #result
-
-    # Filtering
-    # ===========
-    #delete tatweel
-    res = re.sub(u"\u0640", u"", res)
-
-    #delete any non wanted char
-    res = re.sub(u"[^\u0621-\u0652\\s]", u"", res)
-
-    # Tashkiil
-    # ===========
-
-    # allati التِي
-    res = res = re.sub(u"(^|\\s)\u0627\u0644\u0651?\u064E?\u062A\u0650\u064A(\\s|$)", u"\\1\u0627\u0644\u0651\u064E\u062A\u0650\u064A\\2", res)
-
-    # if fatha damma or kasra is before shadda: switch
-    res = res = re.sub(u"([\u064B-\u0650])\u0651", u"\u0651\\1", res)
-
-    # add Fatha to first al-
-    res = re.sub(u"^\\s*\u0627\u0644", u"\u0627\u064E\u0644", res)
-
-    # Falty fathatan on alif fix
-    res = re.sub(u"([^\\s])\u064E?([\u0627\u0649])\u064B", u"\\1\u064B\\2", res)
-
-    # if alif is preceeding waw: add sukuun to alif
-    res = re.sub(u"\u0627\u0648", u"\u0627\u0652\u0648", res)
-
-    # repeat 2 times when there are two consecutive alif, etc.
-    for i in range(2):
-        # add Fatha to any non diacretized char preceeding alif X 2
-        res = re.sub(u"([^\u064B-\u0650\\s])([\u0627\u0649])([^\u064B-\u0652]|$)", u"\\1\u064E\\2\\3", res)
-
-        #add Damma to any non diacretized char preceeding waw
-        res = re.sub(u"([^\u064B-\u0652\\s])\u0648([^\u064B-\u0652]|$)", u"\\1\u064F\u0648\\2", res)
-
-        #add Kasra to any non diacretized char preceeding yaa
-        res = re.sub(u"([^\u064B-\u0652\\s])\u064A([^\u064B-\u0652]|$)", u"\\1\u0650\u064A\\2", res)
-
-    # add Shadda to shamsi characters after al-
-    res = re.sub(u"(^|\\s)\u0627\u0644" + SUN + u"([^\u0651])", u"\\1\u0627\u0644\\2\u0651\\3", res)
-
-    # add madda to other characters after al-
-    res = re.sub(u"((?:^|\\s)\u0627\u0644[^\u0651])([^\u064E-\u0651])", u"\\1\u0653\\2", res)
-
-    # add kasra to li
-    res = re.sub(u"(^|\\s)\u0644([^\u064E-\u0652])", u"\\1\u0644\u0650\\2", res)
-
-    # add kasra to bi
-    res = re.sub(u"(^|\\s)\u0628([^\u064E-\u0652])", u"\\1\u0628\u0650\\2", res)
-
-    # add fatha to fa
-    res = re.sub(u"(^|\\s)\u0641([^\u064E-\u0652])", u"\\1\u0641\u064E\\2", res)
-
-    # add fatha to wa
-    res = re.sub(u"(^|\\s)\u0648([^\u064E-\u0652])", u"\\1\u0648\u064E\\2", res)
-
-    # madda over alif with no vocalization
-    res = re.sub(u"\u0623([^\u064B-\u0652\\s])", u"\u0623\u0653\\1", res)
-
-    # hamza under alif with no kasra
-    res = re.sub(u"\u0625([^\u0650])", u"\u0625\u0650\\1", res)
-
-    #shadda not followed by a diacritic: add a madda above
-    res = res = re.sub(u"\u0651([^\u064B-\u0650])", u"\u0651\u0653\\1", res)
-
-    #add madda to any leading letter except alif
-    res = res = re.sub(u"(^|\\s)([^\u0627])([^\u064E-\u0652])", u"\\1\\2\u0653\\3", res)
-
-    #after sukuun must be a haraka
-    res = res = re.sub(u"\u0652([^\\s])([^\u064B-\u0650\\s])", u"\u0652\\1\u0653\\2", res)
-
-    return res
-
-# https://ar.wikipedia.org/wiki/عروض
-
-def _prosody_del(text):
-    res = text
-
-    # Replace al- with sun character (it can be preceded by prepositions bi- li-)
-    # والصِّدق، والشَّمس ---> وصصِدق، وَششَمس
-    res = re.sub(DORJ + u"\u0627(\u0644[^\u064E-\u0650])" + SUN , u"\\1\\2\\3", res)
-
-    # Replace al- with l otherwise
-    # # والكتاب، فالعلم ---> وَلكتاب، فَلعِلم
-    res = re.sub(DORJ + u"\u0627(\u0644[^\u064E-\u0650])", u"\\1\\2", res)
-
-
-    # delete first alif of a word in the middle of sentence
-    # فاستمعَ، وافهم، واستماعٌ، وابنٌ، واثنان ---> فَستَمَعَ، وَفهَم، وَستِماعُن، وَبنُن، وَثنانِ
-    res = re.sub(DORJ + u"\u0627([^\\s][^\u064B-\u0651\u0653])" , u"\\1\\2", res)
-
-    # delete ending alif, waw and yaa preceeding a sakin
-    # أتى المظلوم إلى القاضي فأنصفه قاضي العدل ---> أتَ لمظلوم إلَ لقاضي فأنصفه قاضِ لعدل.
-    res = re.sub(ILLA + u"\\s+(.[^\u064B-\u0651\u0653])", u" \\1", res)
-
-    # delete alif of plural masculin conjugation
-    # رجعوا ---> رجعو
-    res = re.sub(u"[\u064F]?\u0648\u0627(\\s+|$)", u"\u064F\u0648\u0652\\1", res)
-
-    #TODO amruu
-    # تحذف واو (عمرو) في الرفع والجر، مثل : حضر عَمرٌو، ذهبت إلى عَمرٍو، تكتب عروضيا هكذا : حضر عَمرُن، ذهبث إلى عَمرِن
-
-    #تحذف الألف، والواو الزائدتين من : مائة، أنا، أولو، أولات، أولئك
-
-    #تحذف الألف الأخيرة من الأدوات والحروف والأسماء الآتية إذا وليها ساكن : إذا، لماذا، هذا، كذا، إلا، ما، إذما، حاشا، خلا، عدا، كلا، لما
-
-    return res
-
-
-def _prosody_add(text):
-    res = text
-
-    #replace tanwiin taa marbuta by taa maftuuha
-    res = re.sub(u"\u0629([\u064B-\u064D])", u"\u062A\\1", res)
-
-    # delete alif from: fathatan + alif
-    res = re.sub(u"\u064B(\u0627|\u0649)", u"\u064B", res)
-
-    # Replace fathatan with fatha + nuun + sukuun
-    res = re.sub(u"\u064B", u"\u064E\u0646\u0652", res)
-
-    # Replace dammatun with damma + nuun + sukuun
-    res = re.sub(u"\u064C", u"\u064F\u0646\u0652", res)
-
-    # Replace kasratin with kasra + nuun + sukuun
-    res = re.sub(u"\u064D", u"\u0650\u0646\u0652", res)
-
-    # letter + Shadda ---> letter + sukuun + letter
-    res = re.sub(u"(.)\u0651", u"\\1\u0652\\1", res)
-
-    # hamza mamduuda --> alif-hamza + fatha + alif + sukuun
-    res = re.sub(u"\u0622", u"\u0623\u064E\u0627\u0652", res)
-
-
-    return res
-
-#TODO trait these
-"""
-زيادة حرف الواو في بعض الأسماء، مثل : (طاوس، دَاود)، تكتب عروضيا هكذا : دَأوُود، طَأوُوس.
-زيادة الألف في المواضع الآتية :
-في بعض أسماء الإشارة، مثل : (هذا، هذه، هذان، هذين، ذلك، ذلكما، ذلكم)، تكتب عروضيا هكذا :هاذا، هاذه، هاذان، هاذين، ذالك، ذالكما، ذالكم....
-في لفظ الجلالة (الله، الرحمن، إله)، تكتب عروضيا هكذا : اللاه، اَررحمان، إلاه.
-في (لكن) المخففة، والمشددة (لكنَّ)، تكتب عروضيا هكذا : لكن، لاكننَ.
-في لفظ (طه)، تكتب عروضيا هكذا : طاها.
-أولئك، تكتب عروضيا هكذا : ألائك.
-إشباع حركة حرف الروي بحيث ينشأ عن الإشباع حرفُ مدٍّ مجانسٌ لحركة حرف الروي، مثل أن يكون آخر الشطر (الحكمُ، كتابا، القمرِ)، تكتب عروضيا هكذا : الحكمو، كتابا، القَمَرِي).
-تشبع حركة هاء الضمير الغائب للمفرد المذكر، وميم الجمع إن لم يترتب على ذلك كسر البيت الشعري، أو التقاء ساكنين، مثل : لهُ، بهِ، لكمُ، بكمُ، تكتب عروضيا هكذا : لهُو، بهِي، لكمُو، بكُمُو.
-كاف المخاطب أو المخاطبة، ونون الرفع في الفعل المضارع، ونون جمع المذكر السالم، وتاء ضمير التكلم أو المخاطب للمذكر أو المؤنث تشبع حركتها إذا وقعت إحداها نهاية أحد الشطرين، مثل : كلامكَ، كلامُكِ، يسمعانِ، يسمعونَ، تسمعينَ، مسلمونَ، مسلمينَ، قُمتَ، قمتُ، قمتِ، تكتب عروضيا هكذا : كلامكَا، كلامكِي، يسمعانِي، يسمعونَا، تسمعينَا، مسلمونَا، مسلمينَا،، قُمتَا، قمتُو، قمتِي.
-الهمزة الممدودة تكتب همزة مفتوحة بعدها ألف، مثل، آمن، قرآن، تكتب عروضيا هكذا: أَامَنَ، قرأَان.
-الأحرف التي تحذف
-"""
-
-
-def prosody_form(text):
-    res = text
-    res = _prosody_del(text)
-    res = _prosody_add(res)
-    return res
-
 
 def get_ameter (text):
     res = text
@@ -223,35 +47,269 @@ def get_emeter (ameter):
     res = res.replace("v", "u")
     return res
 
-class Shatr(object):
-    def __init__(self, text):
-        self.orig = text
-        self.norm = normalize(text)
-        self.prosody = prosody_form(self.norm)
-        self.ameter = get_ameter(self.prosody)
-        self.emeter = get_emeter(self.ameter)
-        self.bahr = bahr.search_bahr(self.emeter, self.ameter)
+class BahrError (Exception):
+    def __init__(self, name):
+        Exception.__init__(self, "Bahr does not have an attribute called: " + name)
 
-    def to_dict(self, bahr=False):
-        res = {
-            "text": self.orig,
-            "norm": self.norm,
-            "prosody": self.prosody,
-            "ameter": self.ameter,
-            "emeter": self.emeter,
-            "bahr": self.bahr
+class Bahr(object):
+    def __init__(self, info):
+        self.keys = []
+        for key in info:
+            setattr(self, key, info[key])
+            self.keys.append(key)
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __str__(self):
+        return str(self.get_names())
+
+    def get_names(self):
+        return {
+            "aname": self.aname,
+            "ename": self.ename,
+            "trans": self.trans
         }
-        if bahr:
-            if self.bahr:
-                res["bahr"] = self.bahr.get_names()
+
+    def test_property(self, key, value):
+        val = self.get_value(key)
+        return val == value
+
+    def get_value(self, key):
+        if not key in self.keys:
+            raise BahrError(key)
+        return getattr(self, key)
+
+    def to_dict(self):
+        dict = {}
+        for key in self.keys:
+            dict[key] = getattr(self, key)
+        return dict
+
+    def validate(self, emeter):
+        m = emeter.replace(" ", "")
+        reg = self.emeter.replace(" ", "").replace("x", "[\\-u]")
+        reg = reg.replace("w", "(-|uu)").replace("S", "(-uu|-u)")
+        reg = "^" + reg + "$"
+        res = re.search(reg, m)
+        if not res and hasattr(self, "meter") :
+            for reg in self.meter:
+                reg = reg["e"].replace(" ", "").replace("x", "[\\-u]")
+                reg = reg.replace("w", "(-|uu)").replace("S", "(-uu|-u)")
+                reg = "^" + reg + "$"
+                res = re.search(reg, m)
+                if res:
+                    break
+
+        return (res != None)
+
+    def compare(self, ameter):#use lavenstein distance
+        return 0
+
+# emeter from: https://en.wikipedia.org/wiki/Metre_(poetry)#The_Arabic_metres
+# "–" for 1 long syllable (cv)
+# "u" for 1 short syllable (c)
+# "x" for a position that can contain 1 long or 1 short [-u]
+# "w" for a position that can contain 1 long or 2 shorts (-|uu)
+# "S" for a position that can contain 1 long, 2 shorts, or 1 long + 1 short (-uu|-u)
+
+
+buhuur = [
+    Bahr({
+        "aname": u"طويل",
+        "ename": "long",
+        "trans": u"ṭawīl",
+        "meter": [
+            {
+                "a": "cvcv ccvcvcv ccvcv ccvccv",
+                "e": "-x u-x- u-x u-x-"
+            }
+        ],
+        "ameter": "ccvcv ccvcvcv ccvcv ccvccv",
+        "emeter": "u-x u-x- u-x u-x-",
+        "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
+    }),
+    Bahr({
+        "aname": u"مديد",
+        "ename": "protracted",
+        "trans": u"madīd",
+        "ameter": "cvccvcv cvccv cvccvcv",
+        "emeter": "xu-- xu- xu--",
+        "key": u"لمديد الشعر عندي صفاتُ  فاعلاتن فاعلن فاعلاتن"
+    }),
+    Bahr({
+        "aname": u"بسيط",
+        "ename": "spread-out",
+        "trans": u"basīṭ",
+        "ameter": "cvcvccv cccv cvcvccv cccv",
+        "emeter": "x-u- xu- --u- w-",
+        "key": u"إن البسيط لديه يبسط الأملُ  مستفعلن فعلن مستفعلن فعلن"
+    }),
+    Bahr({
+        "aname": u"وافر",
+        "ename": "abundant",
+        "trans": u"wāfir",
+        "ametet": "ccvcccv ccvcccv ccvcv",
+        "emeter": "u-w- u-w- u--",
+        "key": u"بحور الشعر وافرها جميل  مفاعلتن مفاعلتن فعولن"
+    }),
+    Bahr({
+        "aname": u"كامل",
+        "ename": "complete",
+        "meter": [
+            {
+                "a": "cccvccv cccvccv",
+                "e": "w-u- w-u-"
+            }
+        ],
+        "trans": u"kāmil",
+        "ameter": "cccvccv cccvccv cccvccv",
+        "emeter": "w-u- w-u- w-u-",
+        "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
+    }),
+    Bahr({
+        "aname": u"هزج",
+        "ename": "trilling",
+        "trans": u"hazaj",
+        "ameter": "ccvcvcv ccvcvcv",
+        "emeter": "u--x u--x",
+        "key": u"على الأهزاج تسهيل      مفاعيلن مفاعيلن"
+    }),
+    Bahr({
+        "aname": u"رجز",
+        "ename": "trembling",
+        "trans": u"rajaz",
+        "ameter": "cvcvccv cvcvccv cvcvccv",
+        "emeter": "x-u- x-u- x-u-",
+        "key": u"في أبحر الأرجاز بحرٌ يسهل   مستفعلن مستفعلن مستفعلن"
+    }),
+    Bahr({
+        "aname": u"رمل",
+        "ename": "trotting",
+        "trans": u"ramal",
+        "ameter": "cvccvcv cvccvcv cvccv",
+        "emeter": "xu-- xu-- xu-",
+        "key": u"رمل الأبحر ترويه الثقات فاعلاتن فاعلاتن فاعلاتن"
+    }),
+    Bahr({
+        "aname": u"سريع",
+        "ename": "swift",
+        "trans": u"sarīʿ",
+        "ameter": "cvcvccv cvcvccv cvccv",
+        "emeter": "xxu- xxu- -u-",
+        "key": u"بحرٌ سريع ماله ساحل مستفعلن مستفعلن فاعلن"
+    }),
+    Bahr({
+        "aname": u"منسرح",
+        "ename": "quick-paced",
+        "trans": u"munsariħ",
+        "ameter": "cvcvccv cvcvcv cvcccv", #TODO verify
+        "emeter": "x-u- -x-u -uu-",
+        "key": u"منسرح فيه يضرب المثل    مستفعلن مفعولات مفتعلن"
+    }),
+    Bahr({
+        "aname": u"خفيف",
+        "ename": "light",
+        "trans": u"khafīf",
+        "ameter": "cvccvcv cvcvccv cvccvcv",
+        "emeter": "xu-x --u- xu-x",
+        "key": u"يا خفيفاً خفّت به الحركات   فاعلاتن مستفعلن فاعلاتن"
+    }),
+    Bahr({
+        "aname": u"مضارع",
+        "ename": "similar",
+        "trans": u"muḍāriʿ",
+        "ameter": "u-xx -u--",
+        "emeter": "ccvcvcv cvccvcv",
+        "key": u"تعدّ المضارعات  مفاعيلُ فاعلاتن"
+    }),
+    Bahr({
+        "aname": u"مقتضب",
+        "ename": "untrained",
+        "trans": u"muqtaḍab",
+        "ameter": "cvccvc cvcccv",
+        "emeter": "xu-u -uu-",
+        "key": u"اقتضب كما سألوا مفعلات مفتعلن"
+    }),
+    Bahr({
+        "aname": u"مجتث",
+        "ename": "cut-off",
+        "trans": u"mujtathth",
+        "ameter": "cvcvccv cvccvcv",
+        "emeter": "x-u- xu--",
+        "key": u"أن جثت الحركات  مستفعلن فاعلاتن"
+    }),
+    Bahr({
+        "aname": u"متقارب",
+        "ename": "nearing",
+        "trans": u"mutaqārib",
+        "ameter": "ccvcv ccvcv ccvcv ccvcv",
+        "emeter": "u-x u-x u-x u-x",
+        "key": u"عن المتقارب قال الخليل      فعولن فعولن فعولن فعول"
+    }),
+    Bahr({
+        "aname": u"متدارك",
+        "ename": "overtaking",
+        "trans": u"mutadārik",
+        "ameter": "",
+        "emeter": "S- S- S- S-", # - can be substituted for u u)
+        "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
+    })
+]
+
+
+def name_type(name):
+    if re.match("^[a-zA-Z]", name):
+        return "ename"
+    else:
+        return "aname"
+
+def get_bahr(name, dic=True):
+    """Search for poetry Bahr by name.
+
+    Parameters
+    ----------
+    name : string
+        name of the poetry Bahr (meter).
+    dic : bool
+        True(default): it returns a dict object with all information.
+        If False, it returns an object of type Bahr
+
+    Returns
+    -------
+    type
+        dict: containing the information.
+        or a Bahr object.
+        or None
+
+    """
+    label = name_type(name)
+    for b in buhuur:
+        if b.test_property(label, name):
+            if dic:
+                return b.to_dict()
             else:
-                res["bahr"] = "None"
-        return res
+                return b
+    return None
 
+def _get_values(label):
+    values = []
+    for b in buhuur:
+        values.append(b.get_value(label))
+    return values
 
-class Bayt(object):
-    def __init__(self, text, sep="\t"):
-        self.original = text
+def arabic_names():
+    return _get_values("aname")
 
-def process_shatr(text):
-    return Shatr(text)
+def english_names():
+    return _get_values("ename")
+
+def trans_names():
+    return _get_values("trans")
+
+def search_bahr(emeter, ameter=None, names=False):
+    for b in buhuur:
+        if b.validate(emeter):
+            return b
+
+    return None

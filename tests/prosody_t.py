@@ -19,28 +19,23 @@
 # limitations under the License.
 #
 
-import os
-import sys
+import os, sys
+import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from aruudy.poetry import bahr
-from aruudy.poetry.bahr import Bahr, BahrError
+from aruudy.poetry import prosody
 
-print (bahr.name_type(u"كامل"))
-print (bahr.name_type(u"complete"))
+orig = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
 
-mutadarik = {
-        "aname": u"متدارك",
-        "ename": "overtaking",
-        "trans": "mutadārik",
-        "ameter": "",
-        "emeter": "S- S- S- S-", # - can be substituted for u u)
-        "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
-}
-print (bahr.get_bahr("overtaking"))
-print (type(bahr.get_bahr("overtaking")))
-print (bahr.get_bahr("overtaking", dic=False))
-print (type(bahr.get_bahr("overtaking", dic=False)))
+s = prosody.process_shatr(orig).to_dict()
+print (s["ameter"])
+print (s["emeter"])
+print (s["bahr"])
 
-print (bahr.arabic_names())
+with open("exp.json") as f:
+    exps = json.load(f)["exp"]
+
+for exp in exps:
+    s = prosody.process_shatr(unicode(exp["shatr"]))
+    print(unicode(exp["bahr"]) + " " + str(s.bahr))

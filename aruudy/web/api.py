@@ -25,7 +25,7 @@ from flask_cors import CORS
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-from aruudy.poetry import bahr, meter
+from aruudy.poetry import prosody, meter
 
 app = Flask(__name__)
 CORS(app)
@@ -37,7 +37,7 @@ app.config["JSON_AS_ASCII"] = False
 
 @app.route("/info/<name>", methods=["GET", "POST"])
 def info(name):
-    b = bahr.get_bahr(name)
+    b = meter.get_bahr(name)
     if b == None:
         return "Bahr not found", 404
     return jsonify(b), 200
@@ -45,15 +45,15 @@ def info(name):
 @app.route("/ls", methods=["GET", "POST"])
 def bahrs_list():
     res = {
-    "arabic": bahr.arabic_names(),
-    "english": bahr.english_names(),
-    "trans": bahr.trans_names()
+    "arabic": meter.arabic_names(),
+    "english": meter.english_names(),
+    "trans": meter.trans_names()
     }
     return jsonify(res), 200
 
 @app.route("/shatr/<text>", methods=["GET", "POST"])
 def process_shatr(text):
-    s = meter.process_shatr(text).to_dict(bahr=True)
+    s = prosody.process_shatr(text).to_dict(bahr=True)
     return jsonify(s), 200
 
 

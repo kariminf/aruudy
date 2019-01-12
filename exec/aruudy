@@ -5,7 +5,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from aruudy.poetry import bahr, meter
+from aruudy.poetry import prosody, meter
 
 try:
     UNICODE_EXISTS = bool(type(unicode))
@@ -29,7 +29,7 @@ aruudy [-i, --info] <name>:
 
 def shatr(text):
     text = unicode(text, "UTF-8")
-    s = meter.process_shatr(text)
+    s = prosody.process_shatr(text)
     #original text
     print("original: " + s.orig)
     #Normalized text
@@ -55,14 +55,14 @@ def lst(lang):
         lang = "trans"
     else:
         lang += "name"
-    ls = bahr._get_values(lang)
+    ls = meter._get_values(lang)
     print("List of meters:")
     for l in ls:
         print(l)
 
 def info(name):
     name = unicode(name, "UTF-8")
-    b = bahr.get_bahr(name)
+    b = meter.get_bahr(name)
     if b == None:
         print("Meter not found")
     else:
