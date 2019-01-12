@@ -17,6 +17,15 @@ Aruudy is a light library for Arabic prosody (Aruud) or "Science of Poetry".
 
 [web API: kariminf.pythonanywhere.com/](https://kariminf.pythonanywhere.com/)
 
+## Notations
+
+- **Verse [Bayt]**: (بيت) a line of poetry which is composed of two parts.
+- **Hemistich [Shatr]**: (شطر) a part of a verse
+- **Meter [Bahr]**: (بحر) The rhythme
+- **Scansion [Wazn]**: (وزن) the weight of syllables, or the rhythmic structure
+- **Foot [Tafiila]**: (تفعيلة) the rhythmic parts which compose the scansion 
+
+
 ## Features
 
 - bahr

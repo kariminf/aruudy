@@ -61,17 +61,19 @@ def normalize(text):
     # Falty fathatan on alif fix
     res = re.sub(u"([^\\s])\u064E?([\u0627\u0649])\u064B", u"\\1\u064B\\2", res)
 
-    # add Fatha to any non diacretized char preceeding alif
-    res = re.sub(u"([^\u064B-\u0651\\s])(\u0627|\u0649)([^\u064E\u064F\u0650\u0652])", u"\\1\u064E\\2\\3", res)
-
     # if alif is preceeding waw: add sukuun to alif
     res = re.sub(u"\u0627\u0648", u"\u0627\u0652\u0648", res)
 
-    #add Damma to any non diacretized char preceeding waw
-    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u0648([^\u064E\u064F\u0650\u0652])", u"\\1\u064F\u0648\\2", res)
+    # repeat 2 times when there are two consecutive alif, etc.
+    for i in range(2):
+        # add Fatha to any non diacretized char preceeding alif X 2
+        res = re.sub(u"([^\u064B-\u0650\\s])([\u0627\u0649])([^\u064B-\u0652]|$)", u"\\1\u064E\\2\\3", res)
 
-    #add Kasra to any non diacretized char preceeding yaa
-    res = re.sub(u"([^\u064E\u064F\u0650\u0652\\s])\u064A([^\u064E\u064F\u0650\u0652]|$)", u"\\1\u0650\u064A\\2", res)
+        #add Damma to any non diacretized char preceeding waw
+        res = re.sub(u"([^\u064B-\u0652\\s])\u0648([^\u064B-\u0652]|$)", u"\\1\u064F\u0648\\2", res)
+
+        #add Kasra to any non diacretized char preceeding yaa
+        res = re.sub(u"([^\u064B-\u0652\\s])\u064A([^\u064B-\u0652]|$)", u"\\1\u0650\u064A\\2", res)
 
     # add Shadda to shamsi characters after al-
     res = re.sub(u"(^|\\s)\u0627\u0644" + SUN + u"([^\u0651])", u"\\1\u0627\u0644\\2\u0651\\3", res)
@@ -91,8 +93,8 @@ def normalize(text):
     # add fatha to wa
     res = re.sub(u"(^|\\s)\u0648([^\u064E-\u0652])", u"\\1\u0648\u064E\\2", res)
 
-    # madda over alif with no fatha or damma
-    res = re.sub(u"\u0623([^\u064E\u064F])", u"\u0623\u0653\\1", res)
+    # madda over alif with no vocalization
+    res = re.sub(u"\u0623([^\u064B-\u0652\\s])", u"\u0623\u0653\\1", res)
 
     # hamza under alif with no kasra
     res = re.sub(u"\u0625([^\u0650])", u"\u0625\u0650\\1", res)
@@ -115,11 +117,11 @@ def _prosody_del(text):
 
     # Replace al- with sun character (it can be preceded by prepositions bi- li-)
     # والصِّدق، والشَّمس ---> وصصِدق، وَششَمس
-    res = re.sub(DORJ + u"\u0627\u0644" + SUN , u"\\1\\2", res)
+    res = re.sub(DORJ + u"\u0627(\u0644[^\u064E-\u0650])" + SUN , u"\\1\\2\\3", res)
 
     # Replace al- with l otherwise
     # # والكتاب، فالعلم ---> وَلكتاب، فَلعِلم
-    res = re.sub(DORJ + u"\u0627\u0644", u"\\1\u0644", res)
+    res = re.sub(DORJ + u"\u0627(\u0644[^\u064E-\u0650])", u"\\1\\2", res)
 
 
     # delete first alif of a word in the middle of sentence

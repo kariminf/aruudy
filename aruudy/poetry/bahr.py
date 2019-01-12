@@ -65,7 +65,17 @@ class Bahr(object):
         reg = self.emeter.replace(" ", "").replace("x", "[\\-u]")
         reg = reg.replace("w", "(-|uu)").replace("S", "(-uu|-u)")
         reg = "^" + reg + "$"
-        return (re.search(reg, m) != None)
+        res = re.search(reg, m)
+        if not res and hasattr(self, "meter") :
+            for reg in self.meter:
+                reg = reg["e"].replace(" ", "").replace("x", "[\\-u]")
+                reg = reg.replace("w", "(-|uu)").replace("S", "(-uu|-u)")
+                reg = "^" + reg + "$"
+                res = re.search(reg, m)
+                if res:
+                    break
+
+        return (res != None)
 
     def compare(self, ameter):#use lavenstein distance
         return 0
@@ -83,8 +93,14 @@ buhuur = [
         "aname": u"طويل",
         "ename": "long",
         "trans": u"ṭawīl",
+        "meter": [
+            {
+                "a": "cvcv ccvcvcv ccvcv ccvccv",
+                "e": "-x u-x- u-x u-x-"
+            }
+        ],
         "ameter": "ccvcv ccvcvcv ccvcv ccvccv",
-        "emeter": "u-x u-x- u-x u-u-",
+        "emeter": "u-x u-x- u-x u-x-",
         "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
     }),
     Bahr({
@@ -114,6 +130,12 @@ buhuur = [
     Bahr({
         "aname": u"كامل",
         "ename": "complete",
+        "meter": [
+            {
+                "a": "cccvccv cccvccv",
+                "e": "w-u- w-u-"
+            }
+        ],
         "trans": u"kāmil",
         "ameter": "cccvccv cccvccv cccvccv",
         "emeter": "w-u- w-u- w-u-",
@@ -195,8 +217,8 @@ buhuur = [
         "aname": u"متقارب",
         "ename": "nearing",
         "trans": u"mutaqārib",
-        "ameter": "ccvcv ccvcv ccvcv ccv",
-        "emeter": "u-x u-x u-x u-",
+        "ameter": "ccvcv ccvcv ccvcv ccvcv",
+        "emeter": "u-x u-x u-x u-x",
         "key": u"عن المتقارب قال الخليل      فعولن فعولن فعولن فعول"
     }),
     Bahr({
