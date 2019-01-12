@@ -72,18 +72,19 @@ class Tafiila(object):
                 return text_foot
         return None
 
+# فَاعِلُنْ
 class CVCCV(Tafiila):
     #varation
     def __init__(self, var=[NORMAL]):
         self.feet = [
         {
             "var": NORMAL,
-            "mnemonic": u"فَعِلُنْ",
+            "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
         },
         {
             "var": KHABN,
-            "mnemonic": u"فَاعِلُنْ",
+            "mnemonic": u"فَعِلُنْ",
             "emeter": "uu-"
         },
         {
@@ -104,6 +105,7 @@ class CVCCV(Tafiila):
         ]
         self.init(var)
 
+# فَعُولُنْ
 class CCVCV(Tafiila):
     #varation
     def __init__(self, var=[NORMAL]):
@@ -136,6 +138,33 @@ class CCVCV(Tafiila):
         ]
         self.init(var)
 
+# مَفَاعِيلُنْ
+class CCVCVCV(Tafiila):
+    #varation
+    def __init__(self, var=[NORMAL]):
+        self.feet = [
+        {
+            "var": NORMAL,
+            "mnemonic": u"مَفَاعِيلُنْ",
+            "emeter": "u---"
+        },
+        {
+            "var": QABDH,
+            "mnemonic": u"مَفَاعِلُنْ",
+            "emeter": "u-u-"
+        },
+        {
+            "var": KAFF,
+            "mnemonic": u"مَفَاعِيلُ",
+            "emeter": "u--u"
+        },
+        {
+            "var": HADF,
+            "mnemonic": u"فَعُولُنْ",
+            "emeter": "u--"
+        }
+        ]
+        self.init(var)
 
 
 if __name__ == '__main__':
