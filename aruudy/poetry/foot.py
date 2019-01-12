@@ -68,9 +68,8 @@ class Tafiila(object):
         for foot in self.afeet:
             if text_emeter.startswith(foot["emeter"]):
                 text_foot = copy.deepcopy(foot)
-                text_foot["rest"] = text_emeter[len(foot["emeter"]):]
-                return text_foot
-        return None
+                return text_foot, text_emeter[len(foot["emeter"]):]
+        return None, None
 
 # فَاعِلُنْ
 class CVCCV(Tafiila):

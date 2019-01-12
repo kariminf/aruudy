@@ -201,7 +201,7 @@ class Shatr(object):
         self.prosody = prosody_form(self.norm)
         self.ameter = meter.get_ameter(self.prosody)
         self.emeter = meter.get_emeter(self.ameter)
-        self.bahr = meter.search_bahr(self.emeter, self.ameter)
+        self.bahr, self.t = meter.search_bahr(self.emeter, self.ameter)
 
     def to_dict(self, bahr=False):
         res = {
@@ -210,7 +210,8 @@ class Shatr(object):
             "prosody": self.prosody,
             "ameter": self.ameter,
             "emeter": self.emeter,
-            "bahr": self.bahr
+            "bahr": self.bahr,
+            "taqsiim": self.t
         }
         if bahr:
             if self.bahr:

@@ -20,6 +20,7 @@
 #
 
 import re
+from aruudy.poetry import foot
 
 def get_ameter (text):
     res = text
@@ -47,6 +48,8 @@ def get_emeter (ameter):
     res = res.replace("v", "u")
     return res
 
+buhuur = []
+
 class BahrError (Exception):
     def __init__(self, name):
         Exception.__init__(self, "Bahr does not have an attribute called: " + name)
@@ -57,6 +60,7 @@ class Bahr(object):
         for key in info:
             setattr(self, key, info[key])
             self.keys.append(key)
+        buhuur.append(self)
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -87,21 +91,19 @@ class Bahr(object):
         return dict
 
     def validate(self, emeter):
-        m = emeter.replace(" ", "")
-        reg = self.emeter.replace(" ", "").replace("x", "[\\-u]")
-        reg = reg.replace("w", "(-|uu)").replace("S", "(-uu|-u)")
-        reg = "^" + reg + "$"
-        res = re.search(reg, m)
-        if not res and hasattr(self, "meter") :
-            for reg in self.meter:
-                reg = reg["e"].replace(" ", "").replace("x", "[\\-u]")
-                reg = reg.replace("w", "(-|uu)").replace("S", "(-uu|-u)")
-                reg = "^" + reg + "$"
-                res = re.search(reg, m)
-                if res:
-                    break
 
-        return (res != None)
+        for var in self.meter: # different variants
+            res = []
+            text_emeter = emeter
+            for foot in var: # diffent feet of the variant
+                text_foot, text_emeter= foot.process(text_emeter)
+                if not text_foot:
+                    res = None
+                    break
+                res.append(text_foot)
+            if res:
+                return res
+        return None
 
     def compare(self, ameter):#use lavenstein distance
         return 0
@@ -113,17 +115,36 @@ class Bahr(object):
 # "w" for a position that can contain 1 long or 2 shorts (-|uu)
 # "S" for a position that can contain 1 long, 2 shorts, or 1 long + 1 short (-uu|-u)
 
+tawiil = Bahr({
+    "aname": u"طويل",
+    "ename": "long",
+    "trans": u"ṭawīl",
+    "meter": [
+        [
+        foot.CCVCV([foot.NORMAL, foot.QABDH]),
+        foot.CCVCVCV([foot.NORMAL, foot.QABDH, foot.KAFF]),
+        foot.CCVCV([foot.NORMAL, foot.QABDH]),
+        foot.CCVCVCV([foot.QABDH]),
+        ]
+    ],
+    "ameter": "ccvcv ccvcvcv ccvcv ccvccv",
+    "emeter": "u-x u-x- u-x u-x-",
+    "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
+})
 
-buhuur = [
+"""
+buhuur2 = [
     Bahr({
         "aname": u"طويل",
         "ename": "long",
         "trans": u"ṭawīl",
         "meter": [
-            {
-                "a": "cvcv ccvcvcv ccvcv ccvccv",
-                "e": "-x u-x- u-x u-x-"
-            }
+            [
+            foot.CCVCV([foot.NORMAL, foot.QABDH]),
+            foot.CCVCVCV([foot.NORMAL, foot.QABDH]),
+            foot.CCVCV([foot.NORMAL, foot.QABDH]),
+            foot.CCVCVCV([foot.QABDH]),
+            ]
         ],
         "ameter": "ccvcv ccvcvcv ccvcv ccvccv",
         "emeter": "u-x u-x- u-x u-x-",
@@ -256,7 +277,7 @@ buhuur = [
         "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
     })
 ]
-
+"""
 
 def name_type(name):
     if re.match("^[a-zA-Z]", name):
@@ -309,7 +330,8 @@ def trans_names():
 
 def search_bahr(emeter, ameter=None, names=False):
     for b in buhuur:
-        if b.validate(emeter):
-            return b
+        res = b.validate(emeter)
+        if res:
+            return b, res
 
-    return None
+    return None, None
