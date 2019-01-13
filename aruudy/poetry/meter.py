@@ -20,7 +20,7 @@
 #
 
 import re
-from aruudy.poetry import foot
+from aruudy.poetry import foot as f
 
 def get_ameter (text):
     res = text
@@ -85,10 +85,10 @@ class Bahr(object):
         return getattr(self, key)
 
     def to_dict(self):
-        dict = {}
+        dic = {}
         for key in self.keys:
-            dict[key] = getattr(self, key)
-        return dict
+            dic[key] = getattr(self, key)
+        return dic
 
     def validate(self, emeter):
 
@@ -96,7 +96,7 @@ class Bahr(object):
             res = []
             text_emeter = emeter
             for foot in var: # diffent feet of the variant
-                text_foot, text_emeter= foot.process(text_emeter)
+                text_foot, text_emeter = foot.process(text_emeter)
                 if not text_foot:
                     res = None
                     break
@@ -121,73 +121,89 @@ tawiil = Bahr({
     "trans": u"ṭawīl",
     "meter": [
         [
-        foot.CCVCV([foot.NORMAL, foot.QABDH]),
-        foot.CCVCVCV([foot.NORMAL, foot.QABDH, foot.KAFF]),
-        foot.CCVCV([foot.NORMAL, foot.QABDH]),
-        foot.CCVCVCV([foot.QABDH]),
+        f.CCVCV([f.SALIM, f.QABDH]),
+        f.CCVCVCV([f.SALIM, f.QABDH, f.KAFF]),
+        f.CCVCV([f.SALIM, f.QABDH]),
+        f.CCVCVCV([f.QABDH]),
         ]
     ],
-    "ameter": "ccvcv ccvcvcv ccvcv ccvccv",
-    "emeter": "u-x u-x- u-x u-x-",
     "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
 })
 
+madiid = Bahr({
+    "aname": u"مديد",
+    "ename": "protracted",
+    "trans": u"madīd",
+    "meter": [
+        [
+        f.CVCCVCV([f.SALIM, f.KHABN]),
+        f.CVCCV([f.SALIM, f.KHABN]),
+        f.CVCCVCV([f.SALIM, f.KHABN])
+        ]
+    ],
+    "key": u"لمديد الشعر عندي صفاتُ  فاعلاتن فاعلن فاعلاتن"
+})
+
+basiit = Bahr({
+    "aname": u"بسيط",
+    "ename": "spread-out",
+    "trans": u"basīṭ",
+    "meter": [
+        [
+        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI]),
+        f.CVCCV([f.SALIM, f.KHABN]),
+        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI]),
+        f.CVCCV([f.KHABN, f.QATE]),
+        ],
+        [
+        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI]),
+        f.CVCCV([f.SALIM, f.KHABN]),
+        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI, f.QATE, f.TADIIL]),
+        ],
+    ],
+    "key": u"إن البسيط لديه يبسط الأملُ  مستفعلن فعلن مستفعلن فعلن"
+})
+
+wafir = Bahr({
+    "aname": u"وافر",
+    "ename": "abundant",
+    "trans": u"wāfir",
+    "meter": [
+        [
+        f.CCVCCCV([f.SALIM, f.ASAB]),
+        f.CCVCCCV([f.SALIM, f.ASAB]),
+        f.CCVCV([f.SALIM]),
+        ]
+    ],
+    "key": u"بحور الشعر وافرها جميل  مفاعلتن مفاعلتن فعولن"
+})
+
+kaamil = Bahr({
+    "aname": u"كامل",
+    "ename": "complete",
+    "trans": u"kāmil",
+    "meter": [
+        [
+        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        ],
+        [
+        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        ],
+    ],
+    "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
+})
+
+
+
+
 """
 buhuur2 = [
-    Bahr({
-        "aname": u"طويل",
-        "ename": "long",
-        "trans": u"ṭawīl",
-        "meter": [
-            [
-            foot.CCVCV([foot.NORMAL, foot.QABDH]),
-            foot.CCVCVCV([foot.NORMAL, foot.QABDH]),
-            foot.CCVCV([foot.NORMAL, foot.QABDH]),
-            foot.CCVCVCV([foot.QABDH]),
-            ]
-        ],
-        "ameter": "ccvcv ccvcvcv ccvcv ccvccv",
-        "emeter": "u-x u-x- u-x u-x-",
-        "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
-    }),
-    Bahr({
-        "aname": u"مديد",
-        "ename": "protracted",
-        "trans": u"madīd",
-        "ameter": "cvccvcv cvccv cvccvcv",
-        "emeter": "xu-- xu- xu--",
-        "key": u"لمديد الشعر عندي صفاتُ  فاعلاتن فاعلن فاعلاتن"
-    }),
-    Bahr({
-        "aname": u"بسيط",
-        "ename": "spread-out",
-        "trans": u"basīṭ",
-        "ameter": "cvcvccv cccv cvcvccv cccv",
-        "emeter": "x-u- xu- --u- w-",
-        "key": u"إن البسيط لديه يبسط الأملُ  مستفعلن فعلن مستفعلن فعلن"
-    }),
-    Bahr({
-        "aname": u"وافر",
-        "ename": "abundant",
-        "trans": u"wāfir",
-        "ametet": "ccvcccv ccvcccv ccvcv",
-        "emeter": "u-w- u-w- u--",
-        "key": u"بحور الشعر وافرها جميل  مفاعلتن مفاعلتن فعولن"
-    }),
-    Bahr({
-        "aname": u"كامل",
-        "ename": "complete",
-        "meter": [
-            {
-                "a": "cccvccv cccvccv",
-                "e": "w-u- w-u-"
-            }
-        ],
-        "trans": u"kāmil",
-        "ameter": "cccvccv cccvccv cccvccv",
-        "emeter": "w-u- w-u- w-u-",
-        "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
-    }),
+
     Bahr({
         "aname": u"هزج",
         "ename": "trilling",
@@ -282,8 +298,7 @@ buhuur2 = [
 def name_type(name):
     if re.match("^[a-zA-Z]", name):
         return "ename"
-    else:
-        return "aname"
+    return "aname"
 
 def get_bahr(name, dic=True):
     """Search for poetry Bahr by name.
@@ -309,8 +324,7 @@ def get_bahr(name, dic=True):
         if b.test_property(label, name):
             if dic:
                 return b.to_dict()
-            else:
-                return b
+            return b
     return None
 
 def _get_values(label):

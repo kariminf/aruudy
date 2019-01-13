@@ -21,7 +21,7 @@
 
 import re, copy
 
-NORMAL = 0
+SALIM = 0
 # zuhaf 2nd
 IDHMAR = 1
 WAQS = 2
@@ -44,7 +44,7 @@ SHAKL = 11
 NAQS = 12
 #illa
 TARFIIL = 13
-IDALA = 14
+IDALA = TADIIL = 14
 ISBAGH = 15
 HADF = 16
 QATE = 17
@@ -54,6 +54,33 @@ QATF = 20
 HADAD = 21
 SALAM = 22
 KASHF = 23
+
+zuhaf_illa_names = {
+SALIM: u"",
+IDHMAR: u"",
+WAQS: u"",
+KHABN: u"",
+TAI: u"",
+ASAB: u"",
+AQL: u"",
+QABDH: u"",
+KAFF: u"",
+KHABL: u"",
+KHAZL: u"",
+SHAKL: u"",
+NAQS: u"",
+TARFIIL: u"",
+IDALA: u"",
+ISBAGH: u"",
+HADF: u"",
+QATE: u"",
+BATR: u"",
+QASR: u"",
+QATF: u"",
+HADAD: u"",
+SALAM: u"",
+KASHF: u""
+}
 
 
 class Tafiila(object):
@@ -71,13 +98,15 @@ class Tafiila(object):
                 return text_foot, text_emeter[len(foot["emeter"]):]
         return None, None
 
+# https://sites.google.com/site/mihfadha/aroudh/14
+
 # فَاعِلُنْ
 class CVCCV(Tafiila):
     #varation
-    def __init__(self, var=[NORMAL]):
+    def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": NORMAL,
+            "var": SALIM,
             "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
         },
@@ -107,10 +136,10 @@ class CVCCV(Tafiila):
 # فَعُولُنْ
 class CCVCV(Tafiila):
     #varation
-    def __init__(self, var=[NORMAL]):
+    def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": NORMAL,
+            "var": SALIM,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
         },
@@ -140,10 +169,10 @@ class CCVCV(Tafiila):
 # مَفَاعِيلُنْ
 class CCVCVCV(Tafiila):
     #varation
-    def __init__(self, var=[NORMAL]):
+    def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": NORMAL,
+            "var": SALIM,
             "mnemonic": u"مَفَاعِيلُنْ",
             "emeter": "u---"
         },
@@ -165,7 +194,176 @@ class CCVCVCV(Tafiila):
         ]
         self.init(var)
 
+# مُسْتَفْعِلُنْ
+class CVCVCCV(Tafiila):
+    #varation
+    def __init__(self, var=[SALIM]):
+        self.feet = [
+        {
+            "var": SALIM,
+            "mnemonic": u"مُسْتَفْعِلُنْ",
+            "emeter": "--u-"
+        },
+        {
+            "var": KHABN,
+            "mnemonic": u"مُتَفْعِلُنْ",
+            "emeter": "u-u-"
+        },
+        {
+            "var": TAI,
+            "mnemonic": u"مُسْتَعِلُنْ",
+            "emeter": "-uu-"
+        },
+        {
+            "var": KHABL,
+            "mnemonic": u"مُتَعِلُنْ",
+            "emeter": "uuu-"
+        },
+        {
+            "var": IDALA,
+            "mnemonic": u"مُسْتَفْعِلَانْ",
+            "emeter": "--u-:"
+        },
+        {
+            "var": QATE,
+            "mnemonic": u"مَفْعُولُنْ",
+            "emeter": "---"
+        }
+        ]
+        self.init(var)
+
+# مُتَفَاعِلُنْ
+class CCCVCCV(Tafiila):
+    #varation
+    def __init__(self, var=[SALIM]):
+        self.feet = [
+        {
+            "var": SALIM,
+            "mnemonic": u"مُتَفَاعِلُنْ",
+            "emeter": "uu-u-"
+        },
+        {
+            "var": IDHMAR,
+            "mnemonic": u"مُتْفَاعِلُنْ",
+            "emeter": "--u-"
+        },
+        {
+            "var": WAQS,
+            "mnemonic": u"مُفَاعِلُنْ",
+            "emeter": "u-u-"
+        },
+        {
+            "var": KHAZL,
+            "mnemonic": u"مُتْفَعِلُنْ",
+            "emeter": "u--"
+        },
+        {
+            "var": TARFIIL,
+            "mnemonic": u"مُتَفَاعِلَاتُنْ",
+            "emeter": "uu-u--"
+        },
+        {
+            "var": TADIIL,
+            "mnemonic": u"مُتَفَاعِلَانْ",
+            "emeter": "uu-u-:"
+        },
+        {
+            "var": QATE,
+            "mnemonic": u"مُتَفَاعِلْ",
+            "emeter": "uu--:"
+        },
+        {
+            "var": HADAD,
+            "mnemonic": u"فِعْلُنْ",
+            "emeter": "--"
+        }
+        ]
+        self.init(var)
+
+# مُفَاعَلَتُنْ
+class CCVCCCV(Tafiila):
+    #varation
+    def __init__(self, var=[SALIM]):
+        self.feet = [
+        {
+            "var": SALIM,
+            "mnemonic": u"مُفَاعَلَتُنْ",
+            "emeter": "u-uu-"
+        },
+        {
+            "var": ASAB,
+            "mnemonic": u"مُفَاعَلْتُنْ",
+            "emeter": "u---"
+        },
+        {
+            "var": AQL,
+            "mnemonic": u"مُفَاعَتُنْ",
+            "emeter": "u-u-"
+        },
+        {
+            "var": NAQS,
+            "mnemonic": u"مُفَاعَلْتُ",
+            "emeter": "u--u"
+        },
+        {
+            "var": QATF,
+            "mnemonic": u"فَعُولُنْ",
+            "emeter": "u--"
+        }
+        ]
+        self.init(var)
+
+# فَاعِلَاتُنْ
+class CVCCVCV(Tafiila):
+    #varation
+    def __init__(self, var=[SALIM]):
+        self.feet = [
+        {
+            "var": SALIM,
+            "mnemonic": u"فَاعِلَاتُنْ",
+            "emeter": "-u--"
+        },
+        {
+            "var": KHABN,
+            "mnemonic": u"فَعِلَاتُنْ",
+            "emeter": "uu--"
+        },
+        {
+            "var": KAFF,
+            "mnemonic": u"فَاعِلَاتُ",
+            "emeter": "-u-u"
+        },
+        {
+            "var": ISBAGH,
+            "mnemonic": u"فَاعِلَاتَانْ",
+            "emeter": "-u--:"
+        },
+        {
+            "var": HADF,
+            "mnemonic": u"فَاعِلُنْ",
+            "emeter": "-u-"
+        },
+        {
+            "var": SHAKL,
+            "mnemonic": u"فَعِلَاتُ",
+            "emeter": "uu-u"
+        },
+        {
+            "var": BATR,
+            "mnemonic": u"فِعْلُنْ",
+            "emeter": "--"
+        },
+        {
+            "var": QASR,
+            "mnemonic": u"فَاعِلَانْ",
+            "emeter": "-u-:"
+        }
+        ]
+        self.init(var)
+
+# مَفْعُولَاتْ
+# normaly, it is used in sarii, but it is used as fa3ilun
 
 if __name__ == '__main__':
-    c = CVCCV([NORMAL, KHABN, QATE])
+    c = CVCCV([SALIM, KHABN, QATE])
     print c.process("--u--u--u")
