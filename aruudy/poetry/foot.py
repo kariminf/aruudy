@@ -98,6 +98,12 @@ class Tafiila(object):
                 return text_foot, text_emeter[len(foot["emeter"]):]
         return None, None
 
+    def to_dict(used=False):
+        if used:
+            return self.afeet[0]
+        return self.feet[0]
+
+
 # https://sites.google.com/site/mihfadha/aroudh/14
 
 # فَاعِلُنْ

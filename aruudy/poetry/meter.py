@@ -95,6 +95,14 @@ class Bahr(object):
         dic = {}
         for key in self.keys:
             dic[key] = getattr(self, key)
+        del dic["meter"]
+        """
+        m = []
+        for aruud in self.meter:
+            a = {}
+            for foot in aruud:
+        """
+
         return dic
 
     def validate(self, emeter):
@@ -366,7 +374,7 @@ mutadaarik = Bahr({
         "arabic": u"متدارك",
         "english": "overtaking",
         "trans": u"mutadārik"
-    }
+    },
     "meter": [
         [
         f.WSWWS([f.SALIM, f.KHABN, f.QATE]),

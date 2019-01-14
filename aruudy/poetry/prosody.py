@@ -226,7 +226,7 @@ class Shatr(object):
         }
         if bahr:
             if self.bahr:
-                res["bahr"] = self.bahr.aname
+                res["bahr"] = self.bahr.to_dict()
         return res
 
 
