@@ -55,31 +55,31 @@ HADAD = 21
 SALAM = 22
 KASHF = 23
 
-zuhaf_illa_names = {
-SALIM: u"",
-IDHMAR: u"",
-WAQS: u"",
-KHABN: u"",
-TAI: u"",
-ASAB: u"",
-AQL: u"",
-QABDH: u"",
-KAFF: u"",
-KHABL: u"",
-KHAZL: u"",
-SHAKL: u"",
-NAQS: u"",
-TARFIIL: u"",
-IDALA: u"",
-ISBAGH: u"",
-HADF: u"",
-QATE: u"",
-BATR: u"",
-QASR: u"",
-QATF: u"",
-HADAD: u"",
-SALAM: u"",
-KASHF: u""
+ZUHAF_ILLA = {
+SALIM: u"سالم",
+IDHMAR: u"إضمار",
+WAQS: u"وقص",
+KHABN: u"خبن",
+TAI: u"طيّ",
+ASAB: u"عصب",
+AQL: u"عقل",
+QABDH: u"قبض",
+KAFF: u"كفّ",
+KHABL: u"خبْل",
+KHAZL: u"خزل",
+SHAKL: u"شكل",
+NAQS: u"نقص",
+TARFIIL: u"ترفيل",
+IDALA: u"تذييل",
+ISBAGH: u"إسباغ",
+HADF: u"حذف",
+QATE: u"قطع",
+BATR: u"بتر",
+QASR: u"قصر",
+QATF: u"قطف",
+HADAD: u"حذذ",
+SALAM: u"صلم",
+KASHF: u"كشف"
 }
 
 
@@ -88,7 +88,7 @@ class Tafiila(object):
     def init(self, var):
         self.afeet = [] # allowed feet
         for foot in self.feet:
-            if foot["var"] in var:
+            if foot["type"] in var:
                 self.afeet.append(foot)
 
     def process(self, text_emeter):
@@ -101,32 +101,32 @@ class Tafiila(object):
 # https://sites.google.com/site/mihfadha/aroudh/14
 
 # فَاعِلُنْ
-class CVCCV(Tafiila):
+class WSWWS(Tafiila):
     #varation
     def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": SALIM,
+            "type": SALIM,
             "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
         },
         {
-            "var": KHABN,
+            "type": KHABN,
             "mnemonic": u"فَعِلُنْ",
             "emeter": "uu-"
         },
         {
-            "var": TARFIIL,
+            "type": TARFIIL,
             "mnemonic": u"فَاعِلَاتُنْ",
             "emeter": "-u--"
         },
         {
-            "var": IDALA,
+            "type": IDALA,
             "mnemonic": u"فَاعِلَانْ",
             "emeter": "-u-:"
         },
         {
-            "var": QATE,
+            "type": QATE,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
         }
@@ -134,32 +134,32 @@ class CVCCV(Tafiila):
         self.init(var)
 
 # فَعُولُنْ
-class CCVCV(Tafiila):
+class WWSWS(Tafiila):
     #varation
     def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": SALIM,
+            "type": SALIM,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
         },
         {
-            "var": QABDH,
+            "type": QABDH,
             "mnemonic": u"فَعُولُ",
             "emeter": "u-u"
         },
         {
-            "var": HADF,
+            "type": HADF,
             "mnemonic": u"فِعَلْ",
             "emeter": "u-"
         },
         {
-            "var": BATR,
+            "type": BATR,
             "mnemonic": u"فِعْ",
             "emeter": "-"
         },
         {
-            "var": QASR,
+            "type": QASR,
             "mnemonic": u"فَعُولْ",
             "emeter": "u-:"
         }
@@ -167,27 +167,27 @@ class CCVCV(Tafiila):
         self.init(var)
 
 # مَفَاعِيلُنْ
-class CCVCVCV(Tafiila):
+class WWSWSWS(Tafiila):
     #varation
     def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": SALIM,
+            "type": SALIM,
             "mnemonic": u"مَفَاعِيلُنْ",
             "emeter": "u---"
         },
         {
-            "var": QABDH,
+            "type": QABDH,
             "mnemonic": u"مَفَاعِلُنْ",
             "emeter": "u-u-"
         },
         {
-            "var": KAFF,
+            "type": KAFF,
             "mnemonic": u"مَفَاعِيلُ",
             "emeter": "u--u"
         },
         {
-            "var": HADF,
+            "type": HADF,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
         }
@@ -195,37 +195,37 @@ class CCVCVCV(Tafiila):
         self.init(var)
 
 # مُسْتَفْعِلُنْ
-class CVCVCCV(Tafiila):
+class WSWSWWS(Tafiila):
     #varation
     def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": SALIM,
+            "type": SALIM,
             "mnemonic": u"مُسْتَفْعِلُنْ",
             "emeter": "--u-"
         },
         {
-            "var": KHABN,
+            "type": KHABN,
             "mnemonic": u"مُتَفْعِلُنْ",
             "emeter": "u-u-"
         },
         {
-            "var": TAI,
+            "type": TAI,
             "mnemonic": u"مُسْتَعِلُنْ",
             "emeter": "-uu-"
         },
         {
-            "var": KHABL,
+            "type": KHABL,
             "mnemonic": u"مُتَعِلُنْ",
             "emeter": "uuu-"
         },
         {
-            "var": IDALA,
+            "type": IDALA,
             "mnemonic": u"مُسْتَفْعِلَانْ",
             "emeter": "--u-:"
         },
         {
-            "var": QATE,
+            "type": QATE,
             "mnemonic": u"مَفْعُولُنْ",
             "emeter": "---"
         }
@@ -233,47 +233,47 @@ class CVCVCCV(Tafiila):
         self.init(var)
 
 # مُتَفَاعِلُنْ
-class CCCVCCV(Tafiila):
+class WWWSWWS(Tafiila):
     #varation
     def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": SALIM,
+            "type": SALIM,
             "mnemonic": u"مُتَفَاعِلُنْ",
             "emeter": "uu-u-"
         },
         {
-            "var": IDHMAR,
+            "type": IDHMAR,
             "mnemonic": u"مُتْفَاعِلُنْ",
             "emeter": "--u-"
         },
         {
-            "var": WAQS,
+            "type": WAQS,
             "mnemonic": u"مُفَاعِلُنْ",
             "emeter": "u-u-"
         },
         {
-            "var": KHAZL,
+            "type": KHAZL,
             "mnemonic": u"مُتْفَعِلُنْ",
             "emeter": "u--"
         },
         {
-            "var": TARFIIL,
+            "type": TARFIIL,
             "mnemonic": u"مُتَفَاعِلَاتُنْ",
             "emeter": "uu-u--"
         },
         {
-            "var": TADIIL,
+            "type": TADIIL,
             "mnemonic": u"مُتَفَاعِلَانْ",
             "emeter": "uu-u-:"
         },
         {
-            "var": QATE,
+            "type": QATE,
             "mnemonic": u"مُتَفَاعِلْ",
             "emeter": "uu--:"
         },
         {
-            "var": HADAD,
+            "type": HADAD,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
         }
@@ -281,32 +281,32 @@ class CCCVCCV(Tafiila):
         self.init(var)
 
 # مُفَاعَلَتُنْ
-class CCVCCCV(Tafiila):
+class WWSWWWS(Tafiila):
     #varation
     def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": SALIM,
+            "type": SALIM,
             "mnemonic": u"مُفَاعَلَتُنْ",
             "emeter": "u-uu-"
         },
         {
-            "var": ASAB,
+            "type": ASAB,
             "mnemonic": u"مُفَاعَلْتُنْ",
             "emeter": "u---"
         },
         {
-            "var": AQL,
+            "type": AQL,
             "mnemonic": u"مُفَاعَتُنْ",
             "emeter": "u-u-"
         },
         {
-            "var": NAQS,
+            "type": NAQS,
             "mnemonic": u"مُفَاعَلْتُ",
             "emeter": "u--u"
         },
         {
-            "var": QATF,
+            "type": QATF,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
         }
@@ -314,47 +314,47 @@ class CCVCCCV(Tafiila):
         self.init(var)
 
 # فَاعِلَاتُنْ
-class CVCCVCV(Tafiila):
+class WSWWSWS(Tafiila):
     #varation
     def __init__(self, var=[SALIM]):
         self.feet = [
         {
-            "var": SALIM,
+            "type": SALIM,
             "mnemonic": u"فَاعِلَاتُنْ",
             "emeter": "-u--"
         },
         {
-            "var": KHABN,
+            "type": KHABN,
             "mnemonic": u"فَعِلَاتُنْ",
             "emeter": "uu--"
         },
         {
-            "var": KAFF,
+            "type": KAFF,
             "mnemonic": u"فَاعِلَاتُ",
             "emeter": "-u-u"
         },
         {
-            "var": ISBAGH,
+            "type": ISBAGH,
             "mnemonic": u"فَاعِلَاتَانْ",
             "emeter": "-u--:"
         },
         {
-            "var": HADF,
+            "type": HADF,
             "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
         },
         {
-            "var": SHAKL,
+            "type": SHAKL,
             "mnemonic": u"فَعِلَاتُ",
             "emeter": "uu-u"
         },
         {
-            "var": BATR,
+            "type": BATR,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
         },
         {
-            "var": QASR,
+            "type": QASR,
             "mnemonic": u"فَاعِلَانْ",
             "emeter": "-u-:"
         }

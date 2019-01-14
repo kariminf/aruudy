@@ -55,7 +55,7 @@ def bahrs_list():
 def process_shatr(text):
     s = prosody.process_shatr(text).to_dict(bahr=True)
     res = 200
-    if not s["bahr"] == "None":
+    if not s["bahr"]:
         res = 404
     return jsonify(s), res
 

@@ -22,30 +22,38 @@
 import re
 from aruudy.poetry import foot as f
 
+is_haraka = re.compile(u"[\u064E\u064F\u0650\u0653]").search
+
 def get_ameter (text):
-    res = text
+    ameter = ""
+    parts = []
+    buf = ""
+    for c in text:
+        buf += c
+        if is_haraka(c):
+            if len(buf[: -2].strip()) > 0:
+                ameter += "s" #sabab
+                parts.append(buf[: -2])
+                buf = buf[-2:]
+            ameter += "w" #watad
+            parts.append(buf)
+            buf = ""
+    if len(re.sub(u"\\s+", u"", buf)) > 0:
+        ameter += "s"
+        parts.append(buf)
 
-    #Delete sukuun
-    res = re.sub(u"\u0652", "", res)
+    return ameter, parts
 
-    #Replace fatha, damma, kasra & madda with (V) for vowel
-    res = re.sub(u"[^v\\s][\u064E\u064F\u0650\u0653]", "v", res)
-
-    #Delete spaces
-    res = re.sub(u"\\s+", u"", res)
-
-    #Replace all what is left as it was a consonent
-    res = re.sub(u"[^v\\s]+", "c", res)
-
-    # add sukuun in the end
-    res = re.sub(u"v$", "vc", res)
-
+def a2e_meter (ameter):
+    res = ameter
+    res = res.replace("ws", "-")
+    res = res.replace("w", "u")
     return res
 
-def get_emeter (ameter):
-    res = ameter
-    res = res.replace("vc", "-")
-    res = res.replace("v", "u")
+def e2a_meter (emeter):
+    res = emeter
+    res = res.replace("-", "ws")
+    res = res.replace("u", "w")
     return res
 
 buhuur = []
@@ -105,15 +113,6 @@ class Bahr(object):
                 return res
         return None
 
-    def compare(self, ameter):#use lavenstein distance
-        return 0
-
-# emeter from: https://en.wikipedia.org/wiki/Metre_(poetry)#The_Arabic_metres
-# "–" for 1 long syllable (cv)
-# "u" for 1 short syllable (c)
-# "x" for a position that can contain 1 long or 1 short [-u]
-# "w" for a position that can contain 1 long or 2 shorts (-|uu)
-# "S" for a position that can contain 1 long, 2 shorts, or 1 long + 1 short (-uu|-u)
 
 tawiil = Bahr({
     "aname": u"طويل",
@@ -121,10 +120,10 @@ tawiil = Bahr({
     "trans": u"ṭawīl",
     "meter": [
         [
-        f.CCVCV([f.SALIM, f.QABDH]),
-        f.CCVCVCV([f.SALIM, f.QABDH, f.KAFF]),
-        f.CCVCV([f.SALIM, f.QABDH]),
-        f.CCVCVCV([f.QABDH]),
+        f.WWSWS([f.SALIM, f.QABDH]),
+        f.WWSWSWS([f.SALIM, f.QABDH, f.KAFF]),
+        f.WWSWS([f.SALIM, f.QABDH]),
+        f.WWSWSWS([f.QABDH]),
         ]
     ],
     "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
@@ -136,9 +135,9 @@ madiid = Bahr({
     "trans": u"madīd",
     "meter": [
         [
-        f.CVCCVCV([f.SALIM, f.KHABN]),
-        f.CVCCV([f.SALIM, f.KHABN]),
-        f.CVCCVCV([f.SALIM, f.KHABN])
+        f.WSWWSWS([f.SALIM, f.KHABN]),
+        f.WSWWS([f.SALIM, f.KHABN]),
+        f.WSWWSWS([f.SALIM, f.KHABN])
         ]
     ],
     "key": u"لمديد الشعر عندي صفاتُ  فاعلاتن فاعلن فاعلاتن"
@@ -150,15 +149,15 @@ basiit = Bahr({
     "trans": u"basīṭ",
     "meter": [
         [
-        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI]),
-        f.CVCCV([f.SALIM, f.KHABN]),
-        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI]),
-        f.CVCCV([f.KHABN, f.QATE]),
+        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI]),
+        f.WSWWS([f.SALIM, f.KHABN]),
+        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI]),
+        f.WSWWS([f.KHABN, f.QATE]),
         ],
         [
-        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI]),
-        f.CVCCV([f.SALIM, f.KHABN]),
-        f.CVCVCCV([f.SALIM, f.KHABN, f.TAI, f.QATE, f.TADIIL]),
+        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI]),
+        f.WSWWS([f.SALIM, f.KHABN]),
+        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI, f.QATE, f.TADIIL]),
         ],
     ],
     "key": u"إن البسيط لديه يبسط الأملُ  مستفعلن فعلن مستفعلن فعلن"
@@ -170,9 +169,9 @@ wafir = Bahr({
     "trans": u"wāfir",
     "meter": [
         [
-        f.CCVCCCV([f.SALIM, f.ASAB]),
-        f.CCVCCCV([f.SALIM, f.ASAB]),
-        f.CCVCV([f.SALIM]),
+        f.WWSWWWS([f.SALIM, f.ASAB]),
+        f.WWSWWWS([f.SALIM, f.ASAB]),
+        f.WWSWS([f.SALIM]),
         ]
     ],
     "key": u"بحور الشعر وافرها جميل  مفاعلتن مفاعلتن فعولن"
@@ -184,15 +183,15 @@ kaamil = Bahr({
     "trans": u"kāmil",
     "meter": [
         [
-        f.CCCVCCV([f.SALIM, f.IDHMAR]),
-        f.CCCVCCV([f.SALIM, f.IDHMAR]),
-        f.CCCVCCV([f.SALIM, f.IDHMAR]),
-        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR]),
         ],
         [
-        f.CCCVCCV([f.SALIM, f.IDHMAR]),
-        f.CCCVCCV([f.SALIM, f.IDHMAR]),
-        f.CCCVCCV([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR]),
         ],
     ],
     "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
