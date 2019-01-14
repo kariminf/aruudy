@@ -54,7 +54,10 @@ def bahrs_list():
 @app.route("/shatr/<text>", methods=["GET", "POST"])
 def process_shatr(text):
     s = prosody.process_shatr(text).to_dict(bahr=True)
-    return jsonify(s), 200
+    res = 200
+    if not s["bahr"]:
+        res = 404
+    return jsonify(s), res
 
 
 @app.route("/", methods=["GET", "POST"])

@@ -20,7 +20,7 @@
 #
 
 import re
-from aruudy.poetry import meter
+from aruudy.poetry import meter, foot
 
 # sun letters in arabic
 SUN = u"([تثدذرزسشصضطظلن])"
@@ -91,7 +91,7 @@ def normalize(text):
     res = re.sub(u"(^|\\s)\u0648([^\u064E-\u0652])", u"\\1\u0648\u064E\\2", res)
 
     # madda over alif with no vocalization
-    res = re.sub(u"\u0623([^\u064B-\u0652\\s])", u"\u0623\u0653\\1", res)
+    res = re.sub(u"\u0623([^\u064B-\u0653\\s])", u"\u0623\u0653\\1", res)
 
     # hamza under alif with no kasra
     res = re.sub(u"\u0625([^\u0650])", u"\u0625\u0650\\1", res)
@@ -100,7 +100,7 @@ def normalize(text):
     res = res = re.sub(u"\u0651([^\u064B-\u0650])", u"\u0651\u0653\\1", res)
 
     #add madda to any leading letter except alif
-    res = res = re.sub(u"(^|\\s)([^\u0627])([^\u064E-\u0652])", u"\\1\\2\u0653\\3", res)
+    res = res = re.sub(u"(^|\\s)([^\u0627])([^\u064E-\u0653])", u"\\1\\2\u0653\\3", res)
 
     #after sukuun must be a haraka
     res = res = re.sub(u"\u0652([^\\s])([^\u064B-\u0650\\s])", u"\u0652\\1\u0653\\2", res)
@@ -114,7 +114,7 @@ def _prosody_del(text):
 
     # Replace al- with sun character (it can be preceded by prepositions bi- li-)
     # والصِّدق، والشَّمس ---> وصصِدق، وَششَمس
-    res = re.sub(DORJ + u"\u0627(\u0644[^\u064E-\u0650])" + SUN , u"\\1\\2\\3", res)
+    res = re.sub(DORJ + u"\u0627\u0644" + SUN , u"\\1\\2", res)
 
     # Replace al- with l otherwise
     # # والكتاب، فالعلم ---> وَلكتاب، فَلعِلم
@@ -142,6 +142,11 @@ def _prosody_del(text):
 
     return res
 
+tatweel = {
+    u"\u064E": u"\u064E\u0627",
+    u"\u064F": u"\u064F\u0648",
+    u"\u0650": u"\u0650\u064A",
+}
 
 def _prosody_add(text):
     res = text
@@ -167,6 +172,7 @@ def _prosody_add(text):
     # hamza mamduuda --> alif-hamza + fatha + alif + sukuun
     res = re.sub(u"\u0622", u"\u0623\u064E\u0627\u0652", res)
 
+    res = re.sub(u"([\u064E-\u0650])$", lambda m: tatweel[m.group(1)], res)
 
     return res
 
@@ -199,24 +205,28 @@ class Shatr(object):
         self.orig = text
         self.norm = normalize(text)
         self.prosody = prosody_form(self.norm)
-        self.ameter = meter.get_ameter(self.prosody)
-        self.emeter = meter.get_emeter(self.ameter)
-        self.bahr = meter.search_bahr(self.emeter, self.ameter)
+        self.ameter, units = meter.get_ameter(self.prosody)
+        self.emeter = meter.a2e_meter(self.ameter)
+        self.bahr, self.parts = meter.search_bahr(self.emeter)
+        if self.parts:
+            for part in self.parts:
+                l = len(meter.e2a_meter(part["emeter"]))
+                part["part"] = "".join(units[:l])
+                units = units[l:]
+                part["type"] = foot.ZUHAF_ILLA[part["type"]]
 
     def to_dict(self, bahr=False):
         res = {
-            "text": self.orig,
             "norm": self.norm,
             "prosody": self.prosody,
-            "ameter": self.ameter,
+            #"ameter": self.ameter,
             "emeter": self.emeter,
-            "bahr": self.bahr
+            "bahr": self.bahr,
+            "parts": self.parts
         }
         if bahr:
             if self.bahr:
-                res["bahr"] = self.bahr.get_names()
-            else:
-                res["bahr"] = "None"
+                res["bahr"] = self.bahr.to_dict()
         return res
 
 
