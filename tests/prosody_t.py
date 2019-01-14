@@ -29,9 +29,9 @@ from aruudy.poetry import prosody
 orig = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
 
 s = prosody.process_shatr(orig).to_dict()
-print (s["ameter"])
-print (s["emeter"])
-print (s["bahr"])
+print (s["bahr"].name["arabic"])
+print (s["bahr"].name["english"])
+print (s["bahr"].name["trans"])
 
 with open("exp.json") as f:
     exps = json.load(f)["exp"]

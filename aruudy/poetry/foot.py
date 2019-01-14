@@ -361,8 +361,44 @@ class WSWWSWS(Tafiila):
         ]
         self.init(var)
 
-# مَفْعُولَاتْ
-# normaly, it is used in sarii, but it is used as fa3ilun
+# مَفْعُولَاتُ
+class WSWSWSW(Tafiila):
+    #varation
+    def __init__(self, var=[SALIM]):
+        self.feet = [
+        {
+            "type": SALIM,
+            "mnemonic": u"مَفْعُولَاتُ",
+            "emeter": "---u"
+        },
+        {
+            "type": KHABN,
+            "mnemonic": u"مَعُولَاتُ",
+            "emeter": "u--u"
+        },
+        {
+            "type": TAI,
+            "mnemonic": u"مَفْعُلَاتُ",
+            "emeter": "-u-u"
+        },
+        {
+            "type": KHABL,
+            "mnemonic": u"مَعُلَاتُ",
+            "emeter": "-u-u"
+        },
+        {
+            "type": SALAM,
+            "mnemonic": u"فِعْلُنْ",
+            "emeter": "--"
+        },
+        {
+            "type": KASHF,
+            "mnemonic": u"مَفْعُولُنْ",
+            "emeter": "---"
+        }
+
+        ]
+        self.init(var)
 
 if __name__ == '__main__':
     c = CVCCV([SALIM, KHABN, QATE])

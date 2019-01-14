@@ -31,14 +31,14 @@ def get_ameter (text):
     for c in text:
         buf += c
         if is_haraka(c):
-            if len(buf[: -2].strip()) > 0:
+            if buf[: -2].strip():
                 ameter += "s" #sabab
                 parts.append(buf[: -2])
                 buf = buf[-2:]
             ameter += "w" #watad
             parts.append(buf)
             buf = ""
-    if len(re.sub(u"\\s+", u"", buf)) > 0:
+    if buf.strip():
         ameter += "s"
         parts.append(buf)
 
@@ -77,20 +77,19 @@ class Bahr(object):
         return str(self.get_names())
 
     def get_names(self):
-        return {
-            "aname": self.aname,
-            "ename": self.ename,
-            "trans": self.trans
-        }
+        return self.get_value("name")
 
     def test_property(self, key, value):
         val = self.get_value(key)
         return val == value
 
-    def get_value(self, key):
+    def get_value(self, key, key2=None):
         if not key in self.keys:
             raise BahrError(key)
-        return getattr(self, key)
+        res = getattr(self, key)
+        if key2:
+            return res[key2]
+        return res
 
     def to_dict(self):
         dic = {}
@@ -115,9 +114,11 @@ class Bahr(object):
 
 
 tawiil = Bahr({
-    "aname": u"طويل",
-    "ename": "long",
-    "trans": u"ṭawīl",
+    "name": {
+        "arabic": u"طويل",
+        "english": "long",
+        "trans": u"ṭawīl"
+    },
     "meter": [
         [
         f.WWSWS([f.SALIM, f.QABDH]),
@@ -130,9 +131,11 @@ tawiil = Bahr({
 })
 
 madiid = Bahr({
-    "aname": u"مديد",
-    "ename": "protracted",
-    "trans": u"madīd",
+    "name": {
+        "arabic": u"مديد",
+        "english": "protracted",
+        "trans": u"madīd"
+    },
     "meter": [
         [
         f.WSWWSWS([f.SALIM, f.KHABN]),
@@ -144,9 +147,11 @@ madiid = Bahr({
 })
 
 basiit = Bahr({
-    "aname": u"بسيط",
-    "ename": "spread-out",
-    "trans": u"basīṭ",
+    "name": {
+        "arabic": u"بسيط",
+        "english": "spread-out",
+        "trans": u"basīṭ"
+    },
     "meter": [
         [
         f.WSWSWWS([f.SALIM, f.KHABN, f.TAI]),
@@ -164,9 +169,11 @@ basiit = Bahr({
 })
 
 wafir = Bahr({
-    "aname": u"وافر",
-    "ename": "abundant",
-    "trans": u"wāfir",
+    "name": {
+        "arabic": u"وافر",
+        "english": "abundant",
+        "trans": u"wāfir"
+    },
     "meter": [
         [
         f.WWSWWWS([f.SALIM, f.ASAB]),
@@ -178,126 +185,203 @@ wafir = Bahr({
 })
 
 kaamil = Bahr({
-    "aname": u"كامل",
-    "ename": "complete",
-    "trans": u"kāmil",
+    "name": {
+        "arabic": u"كامل",
+        "english": "complete",
+        "trans": u"kāmil"
+    },
     "meter": [
         [
         f.WWWSWWS([f.SALIM, f.IDHMAR]),
         f.WWWSWWS([f.SALIM, f.IDHMAR]),
-        f.WWWSWWS([f.SALIM, f.IDHMAR]),
-        f.WWWSWWS([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR])
         ],
         [
         f.WWWSWWS([f.SALIM, f.IDHMAR]),
-        f.WWWSWWS([f.SALIM, f.IDHMAR]),
-        f.WWWSWWS([f.SALIM, f.IDHMAR]),
+        f.WWWSWWS([f.SALIM, f.IDHMAR])
         ],
     ],
     "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
 })
 
-
-
-
-"""
-buhuur2 = [
-
-    Bahr({
-        "aname": u"هزج",
-        "ename": "trilling",
+hazj = Bahr({
+    "name": {
+        "arabic": u"هزج",
+        "english": "trilling",
         "trans": u"hazaj",
-        "ameter": "ccvcvcv ccvcvcv",
-        "emeter": "u--x u--x",
-        "key": u"على الأهزاج تسهيل      مفاعيلن مفاعيلن"
-    }),
-    Bahr({
-        "aname": u"رجز",
-        "ename": "trembling",
-        "trans": u"rajaz",
-        "ameter": "cvcvccv cvcvccv cvcvccv",
-        "emeter": "x-u- x-u- x-u-",
-        "key": u"في أبحر الأرجاز بحرٌ يسهل   مستفعلن مستفعلن مستفعلن"
-    }),
-    Bahr({
-        "aname": u"رمل",
-        "ename": "trotting",
+    },
+    "meter": [
+        [
+        f.WWSWSWS([f.SALIM, f.KAFF]),
+        f.WWSWSWS([f.SALIM, f.KAFF])
+        ]
+    ],
+    "key": u"على الأهزاج تسهيل      مفاعيلن مفاعيلن"
+})
+
+rajz = Bahr({
+    "name": {
+        "arabic": u"رجز",
+        "english": "trembling",
+        "trans": u"rajaz"
+    },
+    "meter": [
+        [
+        f.WSWSWWS([f.SALIM, f.KHABN]),
+        f.WSWSWWS([f.SALIM, f.KHABN]),
+        f.WSWSWWS([f.SALIM, f.KHABN])
+        ]
+    ],
+    "key": u"في أبحر الأرجاز بحرٌ يسهل   مستفعلن مستفعلن مستفعلن"
+})
+
+raml = Bahr({
+    "name": {
+        "arabic": u"رمل",
+        "english": "trotting",
         "trans": u"ramal",
-        "ameter": "cvccvcv cvccvcv cvccv",
-        "emeter": "xu-- xu-- xu-",
-        "key": u"رمل الأبحر ترويه الثقات فاعلاتن فاعلاتن فاعلاتن"
-    }),
-    Bahr({
-        "aname": u"سريع",
-        "ename": "swift",
+    },
+    "meter": [
+        [
+        f.WSWWSWS([f.SALIM, f.KHABN]),
+        f.WSWWSWS([f.SALIM, f.KHABN]),
+        f.WSWWSWS([f.SALIM, f.KHABN])
+        ]
+    ],
+    "key": u"رمل الأبحر ترويه الثقات فاعلاتن فاعلاتن فاعلاتن"
+})
+
+sariie = Bahr({
+    "name": {
+        "arabic": u"سريع",
+        "english": "swift",
         "trans": u"sarīʿ",
-        "ameter": "cvcvccv cvcvccv cvccv",
-        "emeter": "xxu- xxu- -u-",
-        "key": u"بحرٌ سريع ماله ساحل مستفعلن مستفعلن فاعلن"
-    }),
-    Bahr({
-        "aname": u"منسرح",
-        "ename": "quick-paced",
-        "trans": u"munsariħ",
-        "ameter": "cvcvccv cvcvcv cvcccv", #TODO verify
-        "emeter": "x-u- -x-u -uu-",
-        "key": u"منسرح فيه يضرب المثل    مستفعلن مفعولات مفتعلن"
-    }),
-    Bahr({
-        "aname": u"خفيف",
-        "ename": "light",
-        "trans": u"khafīf",
-        "ameter": "cvccvcv cvcvccv cvccvcv",
-        "emeter": "xu-x --u- xu-x",
-        "key": u"يا خفيفاً خفّت به الحركات   فاعلاتن مستفعلن فاعلاتن"
-    }),
-    Bahr({
-        "aname": u"مضارع",
-        "ename": "similar",
-        "trans": u"muḍāriʿ",
-        "ameter": "u-xx -u--",
-        "emeter": "ccvcvcv cvccvcv",
-        "key": u"تعدّ المضارعات  مفاعيلُ فاعلاتن"
-    }),
-    Bahr({
-        "aname": u"مقتضب",
-        "ename": "untrained",
-        "trans": u"muqtaḍab",
-        "ameter": "cvccvc cvcccv",
-        "emeter": "xu-u -uu-",
-        "key": u"اقتضب كما سألوا مفعلات مفتعلن"
-    }),
-    Bahr({
-        "aname": u"مجتث",
-        "ename": "cut-off",
-        "trans": u"mujtathth",
-        "ameter": "cvcvccv cvccvcv",
-        "emeter": "x-u- xu--",
-        "key": u"أن جثت الحركات  مستفعلن فاعلاتن"
-    }),
-    Bahr({
-        "aname": u"متقارب",
-        "ename": "nearing",
-        "trans": u"mutaqārib",
-        "ameter": "ccvcv ccvcv ccvcv ccvcv",
-        "emeter": "u-x u-x u-x u-x",
-        "key": u"عن المتقارب قال الخليل      فعولن فعولن فعولن فعول"
-    }),
-    Bahr({
-        "aname": u"متدارك",
-        "ename": "overtaking",
-        "trans": u"mutadārik",
-        "ameter": "",
-        "emeter": "S- S- S- S-", # - can be substituted for u u)
-        "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
-    })
-]
-"""
+    },
+    "meter": [
+        [
+        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI, f.KHABL]),
+        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI, f.KHABL]),
+        f.WSWWS([f.SALIM])
+        ]
+    ],
+    "key": u"بحرٌ سريع ماله ساحل مستفعلن مستفعلن فاعلن"
+})
+
+munsarih = Bahr({
+    "name": {
+        "arabic": u"منسرح",
+        "english": "quick-paced",
+        "trans": u"munsariħ"
+    },
+    "meter": [
+        [
+        f.WSWSWWS([f.SALIM, f.KHABN]),
+        f.WSWSWSW([f.SALIM, f.TAI]),
+        f.WSWSWWS([f.TAI])
+        ]
+    ],
+    "key": u"منسرح فيه يضرب المثل    مستفعلن مفعولات مفتعلن"
+})
+
+khafiif = Bahr({
+    "name": {
+        "arabic": u"خفيف",
+        "english": "light",
+        "trans": u"khafīf"
+    },
+    "meter": [
+        [
+        f.WSWWSWS([f.SALIM, f.KHABN, f.KAFF]),
+        f.WSWSWWS([f.SALIM]),
+        f.WSWWSWS([f.SALIM, f.KHABN, f.SHAKL])
+        ]
+    ],
+    "key": u"يا خفيفاً خفّت به الحركات   فاعلاتن مستفعلن فاعلاتن"
+})
+
+mudharie = Bahr({
+    "name": {
+        "arabic": u"مضارع",
+        "english": "similar",
+        "trans": u"muḍāriʿ"
+    },
+    "meter": [
+        [
+        f.WWSWSWS([f.SALIM, f.QABDH,f.KAFF]),
+        f.WSWWSWS([f.SALIM])
+        ]
+    ],
+    "key": u"تعدّ المضارعات  مفاعيلُ فاعلاتن"
+})
+
+muqtadhib = Bahr({
+    "name": {
+        "arabic": u"مقتضب",
+        "english": "untrained",
+        "trans": u"muqtaḍab"
+    },
+    "meter": [
+        [
+        f.WSWSWSW([f.SALIM, f.KHABN]),
+        f.WSWSWWS([f.TAI])
+        ]
+    ],
+    "key": u"اقتضب كما سألوا مفعلات مفتعلن"
+})
+
+mujdath = Bahr({
+    "name": {
+        "arabic": u"مجتث",
+        "english": "cut-off",
+        "trans": u"mujtathth"
+    },
+    "meter": [
+        [
+        f.WSWSWWS([f.SALIM, f.KHABN]),
+        f.WSWWSWS([f.SALIM, f.KHABN])
+        ]
+    ],
+    "key": u"أن جثت الحركات  مستفعلن فاعلاتن"
+})
+
+mutaqaarib = Bahr({
+    "name": {
+        "arabic": u"متقارب",
+        "english": "nearing",
+        "trans": u"mutaqārib"
+    },
+    "meter": [
+        [
+        f.WWSWS([f.SALIM, f.QABDH]),
+        f.WWSWS([f.SALIM, f.QABDH]),
+        f.WWSWS([f.SALIM, f.QABDH]),
+        f.WWSWS([f.SALIM, f.QABDH])
+        ]
+    ],
+    "key": u"عن المتقارب قال الخليل      فعولن فعولن فعولن فعول"
+})
+
+mutadaarik = Bahr({
+    "name": {
+        "arabic": u"متدارك",
+        "english": "overtaking",
+        "trans": u"mutadārik"
+    }
+    "meter": [
+        [
+        f.WSWWS([f.SALIM, f.KHABN, f.QATE]),
+        f.WSWWS([f.SALIM, f.KHABN, f.QATE]),
+        f.WSWWS([f.SALIM, f.KHABN, f.QATE]),
+        f.WSWWS([f.SALIM, f.KHABN, f.QATE])
+        ]
+    ],
+    "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
+})
 
 def name_type(name):
     if re.match("^[a-zA-Z]", name):
-        return "ename"
-    return "aname"
+        return "english"
+    return "arabic"
 
 def get_bahr(name, dic=True):
     """Search for poetry Bahr by name.
@@ -326,14 +410,14 @@ def get_bahr(name, dic=True):
             return b
     return None
 
-def _get_values(label):
+def _get_values(attr1, attr2 = None):
     values = []
     for b in buhuur:
-        values.append(b.get_value(label))
+        values.append(b.get_value(attr1, attr2))
     return values
 
 def arabic_names():
-    return _get_values("aname")
+    return _get_values("name")
 
 def english_names():
     return _get_values("ename")
