@@ -47,31 +47,36 @@ def shatr(text):
     else:
         print("Meter Not Found")
 
+langs = {
+    "t": "trans",
+    "a": "arabic",
+    "e": "english"
+}
+
 def lst(lang):
     if len(lang)> 1 or "aet".find(lang) == -1:
         print("aruudy [-l, --list] [a|e|t]")
         exit(1)
-    if lang == "t":
-        lang = "trans"
-    else:
-        lang += "name"
-    ls = meter._get_values(lang)
+    lang = langs[lang]
+    ls = meter._get_values("name", lang)
     print("List of meters:")
     for l in ls:
         print(l)
 
 def info(name):
     name = unicode(name, "UTF-8")
-    b = meter.get_bahr(name)
-    if b == None:
+    b = meter.get_bahr(name, False)
+    if not b:
         print("Meter not found")
     else:
-        print("Arabic name: " + b["aname"])
-        print("English name: " + b["ename"])
-        print("Transliterated name: " + b["trans"])
-        print("Arabic meter: " + b["ameter"])
-        print("English meter: " + b["emeter"])
-        print("Key: " + b["key"])
+        print("Arabic name: " + b.name["arabic"])
+        print("English name: " + b.name["english"])
+        print("Transliterated name: " + b.name["trans"])
+        s = b.scansion
+        print("Arabic meter: " + s["ameter"])
+        print("English meter: " + s["emeter"])
+        print("Mnemonic: " + s["mnemonic"])
+        print("Key: " + b.key)
 
 def main(argv):
     try:

@@ -82,7 +82,6 @@ SALAM: u"صلم",
 KASHF: u"كشف"
 }
 
-
 class Tafiila(object):
 
     def init(self, var):
@@ -97,6 +96,11 @@ class Tafiila(object):
                 text_foot = copy.deepcopy(foot)
                 return text_foot, text_emeter[len(foot["emeter"]):]
         return None, None
+
+    def get_meter(self, used=True):
+        if used:
+            return self.afeet[0].copy()
+        return self.feet[0].copy()
 
     def to_dict(used=False):
         if used:

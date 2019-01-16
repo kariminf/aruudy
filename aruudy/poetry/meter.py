@@ -56,6 +56,24 @@ def e2a_meter (emeter):
     res = res.replace("u", "w")
     return res
 
+def extract_meter(feet, used=True):
+    res = {
+        "type": "",
+        "mnemonic": "",
+        "emeter": ""
+    }
+
+    sep = ""
+    for foot in feet:
+        meter = foot.get_meter(used)
+        res["type"] += sep + f.ZUHAF_ILLA[meter["type"]]
+        res["mnemonic"] += sep + meter["mnemonic"]
+        res["emeter"] += sep + meter["emeter"]
+        if not sep:
+            sep = " "
+    return res
+
+
 buhuur = []
 
 class BahrError (Exception):
@@ -70,6 +88,9 @@ class Bahr(object):
             self.keys.append(key)
         buhuur.append(self)
 
+        self.scansion = extract_meter(self.meter[0])
+        self.scansion["ameter"] = e2a_meter(self.scansion["emeter"])
+
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
@@ -79,8 +100,8 @@ class Bahr(object):
     def get_names(self):
         return self.get_value("name")
 
-    def test_property(self, key, value):
-        val = self.get_value(key)
+    def test_property(self, key, value, key2=None ):
+        val = self.get_value(key, key2)
         return val == value
 
     def get_value(self, key, key2=None):
@@ -412,7 +433,7 @@ def get_bahr(name, dic=True):
     """
     label = name_type(name)
     for b in buhuur:
-        if b.test_property(label, name):
+        if b.test_property("name", name, label):
             if dic:
                 return b.to_dict()
             return b
