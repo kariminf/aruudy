@@ -21,11 +21,11 @@
           var res = xmlhttp.responseText;
           var obj = JSON.parse(res);
           var txt = "<table><tr><th>Arabic</th><th>Trans</th><th>English</th><th>Info</th></tr>";
-          for (let i=0; i<obj.arabic.length; i++) {
-              txt += "<tr><td>" + obj.arabic[i] + "</td>";
-              txt += "<td>" + obj.trans[i] + "</td>";
-              txt += "<td>" + obj.english[i] + "</td>";
-              txt += "<td><button onclick=\"info2('" + obj.english[i]
+          for (let i=0; i<obj.length; i++) {
+              txt += "<tr><td>" + obj[i].arabic + "</td>";
+              txt += "<td>" + obj[i].trans + "</td>";
+              txt += "<td>" + obj[i].english + "</td>";
+              txt += "<td><button onclick=\"info2('" + obj[i].english
               txt+= "')\" class=\"k-button\">Info</button></td>";
               txt += "</tr>"
           }
@@ -49,19 +49,25 @@
           var obj = JSON.parse(res);
           var txt = "<table>";
           txt += "<tr><th>Arabic name</th>";
-          txt += "<td dir = \"rtl\">" + obj.aname + "</td></tr>";
+          txt += "<td dir = \"rtl\">" + obj.name.arabic + "</td></tr>";
 
           txt += "<tr><th>Transliterated name</th>";
-          txt += "<td>" + obj.trans + "</td></tr>";
+          txt += "<td>" + obj.name.trans + "</td></tr>";
 
           txt += "<tr><th>English name</th>";
-          txt += "<td>" + obj.ename + "</td></tr>";
+          txt += "<td>" + obj.name.english + "</td></tr>";
 
           txt += "<tr><th>Arabic meter</th>";
-          txt += "<td>" + obj.ameter + "</td></tr>";
+          txt += "<td>" + obj.used_scansion.ameter + "</td></tr>";
 
           txt += "<tr><th>English meter</th>";
-          txt += "<td>" + obj.emeter + "</td></tr>";
+          txt += "<td>" + obj.used_scansion.emeter + "</td></tr>";
+
+          txt += "<tr><th>Mnemonic</th>";
+          txt += "<td>" + obj.used_scansion.mnemonic + "</td></tr>";
+
+          txt += "<tr><th>feet types</th>";
+          txt += "<td>" + obj.used_scansion.type + "</td></tr>";
 
           txt += "<tr><th>Meter key</th>";
           txt += "<td dir=\"rtl\">" + obj.key + "</td></tr>";
@@ -75,7 +81,7 @@
   function search() {
       var xmlhttp = new XMLHttpRequest();
       var shatr = document.getElementById("in").value
-      var url = "https://kariminf.pythonanywhere.com/shatr/" + shatr;
+      var url = "https://kariminf.pythonanywhere.com/shatr/" + shatr + "/-bahr";
 
       xmlhttp.open("GET", url);
       xmlhttp.send();
@@ -84,10 +90,7 @@
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
           var res = xmlhttp.responseText;
           var obj = JSON.parse(res);
-          var txt = "<table>";
-          txt += "<tr><th>Original text</th>";
-          txt += "<td dir = \"rtl\">" + obj.text + "</td></tr>";
-
+          var txt = "<table border=\"0\">";
           txt += "<tr><th>Normalized text</th>";
           txt += "<td dir = \"rtl\">" + obj.norm + "</td></tr>";
 
@@ -100,14 +103,29 @@
           txt += "<tr><th>English meter</th>";
           txt += "<td>" + obj.emeter + "</td></tr>";
 
+          txt += "<tr><th>Parts</th>";
+          if (obj.bahr == "None"){
+              txt += "<td >Not found</td></tr>";
+          }else{
+            txt += "<td ><table border=\"1\" dir=\"rtl\">";
+            for( let e of ["part", "mnemonic", "type"]) {
+                txt += "<tr>";
+                for (let i=0; i<obj.parts.length; i++) {
+                    txt += "<td>" + obj.parts[i][e] + "</td>";
+                }
+                txt += "</tr>";
+            }
+            txt += "</table></td></tr>";
+          }
+
           txt += "<tr><th>Bahr (Meter)</th>";
           if (obj.bahr == "None"){
               txt += "<td >Not found</td></tr>";
           }else{
-              txt += "<td >" + obj.bahr.aname + ", "
-              txt += obj.bahr.ename + ", "
+              txt += "<td >" + obj.bahr.arabic + ", "
+              txt += obj.bahr.english + ", "
               txt += obj.bahr.trans + ", "
-              txt += "<button onclick=\"info2('" + obj.bahr.ename
+              txt += "<button onclick=\"info2('" + obj.bahr.english
               txt += "')\" class=\"k-button\">Info</button></td></tr>";
           }
 
@@ -150,8 +168,18 @@
       </div>
 
       <div class="k-fs k-1">
-        <h1><span>Find meter</span></h1>
+        <h1><span>Found meter</span></h1>
         <div id="out"></div>
+      </div>
+      <div class="k-fs k-1">
+        <h1><span>Examples</span></h1>
+        <p>عَفَتِ الدِّيَارُ مَحَلُّهَا فَمُقَامُهَا</p>
+        <p>فَـلا تَظُـنّـنّ أنّ اللّيْـثَ يَبْتَسِـمُ</p>
+        <p>قفا نبْكِ منْ ذِكْرى حبيبٍ ومَنْزِلِ</p>
+        <p>كتَمتُ اسمَ الحَبيبِ منَ العِبادِ</p>
+        <p>سَلامٌ رائِحٌ، غادِ</p>
+        <p>كلامُنا لفْظٌ مفيدٌ كاستَقِم</p>
+        <p>فألفاهُمُ القَومُ رَوْبَى، نِياما</p>
       </div>
 
     <div class="k-footer-clean"></div>
