@@ -445,14 +445,17 @@ def _get_values(attr1, attr2 = None):
         values.append(b.get_value(attr1, attr2))
     return values
 
-def arabic_names():
+def get_names():
     return _get_values("name")
+    
+def arabic_names():
+    return _get_values("name", "arabic")
 
 def english_names():
-    return _get_values("ename")
+    return _get_values("name", "english")
 
 def trans_names():
-    return _get_values("trans")
+    return _get_values("name", "trans")
 
 def search_bahr(emeter, ameter=None, names=False):
     for b in buhuur:

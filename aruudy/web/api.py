@@ -44,15 +44,17 @@ def info(name):
 
 @app.route("/ls", methods=["GET", "POST"])
 def bahrs_list():
-    res = {
-    "arabic": meter.arabic_names(),
-    "english": meter.english_names(),
-    "trans": meter.trans_names()
-    }
+    # res = {
+    # "arabic": meter.arabic_names(),
+    # "english": meter.english_names(),
+    # "trans": meter.trans_names()
+    # }
+    res = meter.get_names()
     return jsonify(res), 200
 
 @app.route("/shatr/<text>", methods=["GET", "POST"])
-def process_shatr(text):
+@app.route("/shatr/<text>/<opt>", methods=["GET", "POST"])
+def process_shatr(text, opt=None):
     s = prosody.process_shatr(text).to_dict(bahr=True)
     res = 200
     if not s["bahr"]:
