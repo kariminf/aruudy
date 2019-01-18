@@ -219,7 +219,7 @@ class Shatr(object):
         res = {
             "norm": self.norm,
             "prosody": self.prosody,
-            #"ameter": self.ameter,
+            "ameter": self.ameter,
             "emeter": self.emeter,
             "bahr": self.bahr,
             "parts": self.parts

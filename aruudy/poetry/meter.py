@@ -88,8 +88,13 @@ class Bahr(object):
             self.keys.append(key)
         buhuur.append(self)
 
-        self.scansion = extract_meter(self.meter[0])
-        self.scansion["ameter"] = e2a_meter(self.scansion["emeter"])
+        self.used_scansion = extract_meter(self.meter[0])
+        self.used_scansion["ameter"] = e2a_meter(self.used_scansion["emeter"])
+        self.keys.append("used_scansion")
+
+        self.std_scansion = extract_meter(self.meter[0], used=False)
+        self.std_scansion["ameter"] = e2a_meter(self.std_scansion["emeter"])
+        self.keys.append("std_scansion")
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
@@ -117,12 +122,6 @@ class Bahr(object):
         for key in self.keys:
             dic[key] = getattr(self, key)
         del dic["meter"]
-        """
-        m = []
-        for aruud in self.meter:
-            a = {}
-            for foot in aruud:
-        """
 
         return dic
 
@@ -447,7 +446,7 @@ def _get_values(attr1, attr2 = None):
 
 def get_names():
     return _get_values("name")
-    
+
 def arabic_names():
     return _get_values("name", "arabic")
 
