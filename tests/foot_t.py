@@ -19,28 +19,12 @@
 # limitations under the License.
 #
 
-import os, sys
-import json
+import os
+import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from aruudy.poetry import prosody
+from aruudy.poetry import foot
 
-try:
-    UNICODE_EXISTS = bool(type(unicode))
-except NameError:
-    unicode = lambda s: str(s)
-
-orig = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
-
-s = prosody.process_shatr(orig).to_dict()
-print (s["bahr"].name["arabic"])
-print (s["bahr"].name["english"])
-print (s["bahr"].name["trans"])
-
-with open("exp.json") as f:
-    exps = json.load(f)["exp"]
-
-for exp in exps:
-    s = prosody.process_shatr(unicode(exp["shatr"]))
-    print(unicode(exp["bahr"]) + " " + str(s.bahr))
+c = foot.CVCCV([SALIM, KHABN, QATE])
+print (c.process("--u--u--u"))

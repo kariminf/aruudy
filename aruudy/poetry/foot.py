@@ -409,7 +409,3 @@ class WSWSWSW(Tafiila):
 
         ]
         self.init(var)
-
-if __name__ == '__main__':
-    c = CVCCV([SALIM, KHABN, QATE])
-    print c.process("--u--u--u")

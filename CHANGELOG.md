@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 (2019/01/18)
+
+* Improved vocalizing letters
+* Split text to parts
+* Detecting verse feet with their types
+* Affording mnemonics
+
 ## 0.3.0 (2019/01/11)
 
 * Fix some buhuur

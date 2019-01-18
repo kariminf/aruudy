@@ -37,7 +37,7 @@ def test_normalize():
 
 #private function
 def test_prosody_del():
-    assert prosody._prosody_del(u"وَالشمس") == u"وَلشمس"
+    assert prosody._prosody_del(u"وَالشمس") == u"وَشمس"
     assert prosody._prosody_del(u"فَالعلم") == u"فَلعلم"
     assert prosody._prosody_del(u"فاستمعَ") == u"فستمعَ"
     assert prosody._prosody_del(u"أَتَى المَظلوم إلَى القَاضِي فَأَنصفه قَاضِي العَدل") == u"أَتَ لمَظلوم إلَ لقَاضِي فَأَنصفه قَاضِ لعَدل"
@@ -49,7 +49,7 @@ def test_prosody_del():
 
 def test_process_shatr ():
     text = u"أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ"
-    ameter = "vvcvcvvcvcvcvvcvvvcvvc"
+    ameter = "wwswswwswswswwswwwswws"
 
     s = prosody.process_shatr(text)
     assert type(s) == Shatr
@@ -77,12 +77,16 @@ def test_bahr_detection ():
         exps = json.load(f)["exp"]
 
     for exp in exps:
+        """
         try:
             txt = exp["shatr"].encode()
             out = exp["bahr"].encode()
         except:
             txt = exp["shatr"]
             out = exp["bahr"]
+        """
+        txt = unicode(exp["shatr"])
+        out = unicode(exp["bahr"])
         #print (txt)
         s = prosody.process_shatr(txt)
-        assert s.bahr.aname == out
+        assert s.bahr.name["arabic"] == out
