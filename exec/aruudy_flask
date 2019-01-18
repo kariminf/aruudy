@@ -19,7 +19,9 @@
 # limitations under the License.
 
 
-from flask import Flask, render_template, request
+from flask import Flask
+#from flask import render_template, request
+from flask import render_template_string, request
 
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -32,9 +34,57 @@ app.register_blueprint(aruudy_api)
 
 app.config["JSON_AS_ASCII"] = False
 
+res = u"""
+<html>
+  <head>
+    <title>Testing Aruudy</title>
+    <meta charset="UTF-8">
+    <style></style>
+  </head>
+  <body>
+
+      <h1>Arabic prosody</h1>
+
+      <h2>Info about available meters</h2>
+      <p>
+          Using <b>"$host/ls"</b>.
+          <br>Try this:
+          <a href="./ls" target="_blank">
+              {{ host }}ls
+          </a>
+      </p>
+
+      <h2>Info about a specific meter</h2>
+      <p>
+          Using <b>"$host/info/[name]"</b>.
+          The name can be in Arabic or English.
+          <br>Try this:
+          <a href="./info/long" target="_blank">
+              {{ host }}info/long
+          </a>
+          <br>Or, this:
+          <a href="./info/كامل" target="_blank">
+              {{ host }}info/كامل
+          </a>
+      </p>
+
+      <h2>Processing a verse's part (shatr)</h2>
+      <p>
+          Using <b>"$host/shatr/[text]"</b>.
+          <br>Try this:
+          <a href="./shatr/أَسِرْبَ%20القَطا%20هَلْ%20مَنْ%20يُعِيْرُ%20جَناحَهُ" target="_blank">
+              {{ host }}shatr/أَسِرْبَ%20القَطا%20هَلْ%20مَنْ%20يُعِيْرُ%20جَناحَهُ
+          </a>
+      </p>
+
+  </body>
+</html>
+"""
+
 @app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template("index.htm", host = request.host_url)
+    #return render_template("index.htm", host = request.host_url)
+    return render_template_string(res, host = request.host_url)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
