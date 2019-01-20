@@ -1,1 +1,1 @@
-sphinx_automodapi.automodapi
+sphinx_automodapi
