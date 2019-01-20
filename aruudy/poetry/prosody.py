@@ -33,6 +33,22 @@ ILLA = u"[اىوي]"
 
 
 def normalize(text):
+    """Normalize a given text, by:
+        - deleting non Arabic characters.
+        - Deleting Tatweel (a character used as ligature )
+        - Vocalize and correct letters
+
+    Parameters
+    ----------
+    text : str
+        The text you want to normalize.
+
+    Returns
+    -------
+    str
+        A normalized text.
+
+    """
     res = text #result
 
     # Filtering
