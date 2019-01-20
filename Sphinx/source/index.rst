@@ -10,17 +10,5 @@ Aruudy documentation!
     :maxdepth: 2
     :caption: Contents:
 
-Module poetry.prosody
-==================================
-
-.. automodule:: poetry.prosody
-    :members:
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. automodapi:: poetry.prosody
+    :no-inheritance-diagram:
