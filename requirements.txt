@@ -1,2 +1,3 @@
 python-levenshtein
 lang-trans
+sphinx_automodapi.automodapi
