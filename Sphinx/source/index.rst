@@ -10,5 +10,5 @@ Aruudy documentation!
     :maxdepth: 2
     :caption: Contents:
 
-.. automodapi:: poetry.prosody
+.. automodapi:: aruudy.poetry.prosody
     :no-inheritance-diagram:
