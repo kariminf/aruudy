@@ -3,12 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Aruudy documentation!
-==================================
-
-.. toctree::
-    :maxdepth: 2
-    :caption: Contents:
-
 .. automodapi:: aruudy.poetry.prosody
+    :no-inheritance-diagram:
+
+
+.. automodapi:: aruudy.poetry.meter
+    :no-inheritance-diagram:
+
+
+.. automodapi:: aruudy.poetry.foot
     :no-inheritance-diagram:
