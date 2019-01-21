@@ -84,7 +84,7 @@ KASHF: u"كشف"
 
 class Tafiila(object):
 
-    def init(self, var):
+    def _init(self, var):
         self.afeet = [] # allowed feet
         for foot in self.feet:
             if foot["type"] in var:
@@ -141,7 +141,7 @@ class WSWWS(Tafiila):
             "emeter": "--"
         }
         ]
-        self.init(var)
+        self._init(var)
 
 # فَعُولُنْ
 class WWSWS(Tafiila):
@@ -174,7 +174,7 @@ class WWSWS(Tafiila):
             "emeter": "u-:"
         }
         ]
-        self.init(var)
+        self._init(var)
 
 # مَفَاعِيلُنْ
 class WWSWSWS(Tafiila):
@@ -202,7 +202,7 @@ class WWSWSWS(Tafiila):
             "emeter": "u--"
         }
         ]
-        self.init(var)
+        self._init(var)
 
 # مُسْتَفْعِلُنْ
 class WSWSWWS(Tafiila):
@@ -240,7 +240,7 @@ class WSWSWWS(Tafiila):
             "emeter": "---"
         }
         ]
-        self.init(var)
+        self._init(var)
 
 # مُتَفَاعِلُنْ
 class WWWSWWS(Tafiila):
@@ -288,7 +288,7 @@ class WWWSWWS(Tafiila):
             "emeter": "--"
         }
         ]
-        self.init(var)
+        self._init(var)
 
 # مُفَاعَلَتُنْ
 class WWSWWWS(Tafiila):
@@ -321,7 +321,7 @@ class WWSWWWS(Tafiila):
             "emeter": "u--"
         }
         ]
-        self.init(var)
+        self._init(var)
 
 # فَاعِلَاتُنْ
 class WSWWSWS(Tafiila):
@@ -369,7 +369,7 @@ class WSWWSWS(Tafiila):
             "emeter": "-u-:"
         }
         ]
-        self.init(var)
+        self._init(var)
 
 # مَفْعُولَاتُ
 class WSWSWSW(Tafiila):
@@ -408,4 +408,4 @@ class WSWSWSW(Tafiila):
         }
 
         ]
-        self.init(var)
+        self._init(var)

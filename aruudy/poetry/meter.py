@@ -22,15 +22,33 @@
 import re
 from aruudy.poetry import foot as f
 
-is_haraka = re.compile(u"[\u064E\u064F\u0650\u0653]").search
+re_haraka = re.compile(u"[\u064E\u064F\u0650\u0653]")
 
 def get_ameter (text):
+    """Get the Arabic meter of a given text.
+    Produces the Arabic meter of a given text in prosody form.
+    The Arabic meter is composed of two letters:
+    - "w" watad (peg) which are vocalized letters
+    - "s" sabab (cord) which are vowels and unvocalized letters
+
+    Parameters
+    ----------
+    text : str
+        Arabic text in prosody form.
+
+    Returns
+    -------
+    str
+        Arabic meter of the input text.
+        A string composed of "w" and "s".
+
+    """
     ameter = ""
     parts = []
     buf = ""
     for c in text:
         buf += c
-        if is_haraka(c):
+        if re_haraka.search(c):
             if buf[: -2].strip():
                 ameter += "s" #sabab
                 parts.append(buf[: -2])
@@ -45,18 +63,77 @@ def get_ameter (text):
     return ameter, parts
 
 def a2e_meter (ameter):
+    """Transforms an Arabic meter to an English one.
+    The Arabic meter uses vocalization as a basis:
+    - "w" watad (peg) which are vocalized letters
+    - "s" sabab (cord) which are vowels and unvocalized letters
+    While English meter uses syllables:
+    - "-" for long syllables, equivalent to "ws" in the Arabic one
+    - "u" for short syllables, equivalent to "w" in the Arabic one.
+
+    Parameters
+    ----------
+    ameter : str
+        The Arabic meter using the two letters: "w" and "s".
+
+    Returns
+    -------
+    str
+        The English meter using the two characters: "-" and "u".
+
+    """
     res = ameter
     res = res.replace("ws", "-")
     res = res.replace("w", "u")
     return res
 
 def e2a_meter (emeter):
+    """Transforms an English meter to an Arabic one.
+    The English meter uses syllables as a basis:
+    - "-" for long syllables, equivalent to "ws" in the Arabic one
+    - "u" for short syllables, equivalent to "w" in the Arabic one.
+    While the Arabic meter uses vocalization:
+    - "w" watad (peg) which are vocalized letters
+    - "s" sabab (cord) which are vowels and unvocalized letters
+
+    Parameters
+    ----------
+    emeter : str
+        The English meter using the two characters: "-" and "u".
+
+    Returns
+    -------
+    str
+        The Arabic meter using the two letters: "w" and "s".
+
+    """
     res = emeter
     res = res.replace("-", "ws")
     res = res.replace("u", "w")
     return res
 
 def extract_meter(feet, used=True):
+    """Extract the meter description from a list of :class:`~aruudy.poetry.foot.Tafiila` objects.
+
+    Parameters
+    ----------
+    feet : list(Tafiila)
+        A list of :class:`~aruudy.poetry.foot.Tafiila` objects describing the meter.
+    used : bool
+        Meters, in Arabic, can have used forms different than standard ones.
+        if True: the result is used form.
+        Otherwise, it is standard form
+
+    Returns
+    -------
+    dict
+        A dictionary object describing the meter represented by the feet.
+        The dictionary contains these elements:
+        - type: a string describing the type of each foot (tafiila)
+        - mnemonic: a string describing the mnemonic of each foot.
+        - emeter: a string describing the English meter of each foot.
+
+    """
     res = {
         "type": "",
         "mnemonic": "",
@@ -77,6 +154,14 @@ def extract_meter(feet, used=True):
 buhuur = []
 
 class BahrError (Exception):
+    """Exception when :class:`~aruudy.poetry.meter.Bahr` does not have a specif attribute.
+
+    Parameters
+    ----------
+    name : str
+        The name of the attribute in question.
+
+    """
     def __init__(self, name):
         Exception.__init__(self, "Bahr does not have an attribute called: " + name)
 
@@ -139,7 +224,6 @@ class Bahr(object):
             if res:
                 return res
         return None
-
 
 tawiil = Bahr({
     "name": {
@@ -406,6 +490,7 @@ mutadaarik = Bahr({
     "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"
 })
 
+
 def name_type(name):
     if re.match("^[a-zA-Z]", name):
         return "english"
@@ -416,7 +501,7 @@ def get_bahr(name, dic=True):
 
     Parameters
     ----------
-    name : string
+    name : str
         name of the poetry Bahr (meter).
     dic : bool
         True(default): it returns a dict object with all information.
@@ -424,7 +509,7 @@ def get_bahr(name, dic=True):
 
     Returns
     -------
-    type
+    dict
         dict: containing the information.
         or a Bahr object.
         or None

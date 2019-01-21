@@ -5,6 +5,7 @@
 [![PyPI](https://img.shields.io/pypi/v/aruudy.svg?style=plastic)](https://pypi.python.org/pypi/aruudy)
 [![Downloads](https://img.shields.io/pypi/dm/aruudy.svg?style=plastic)](https://pypi.org/project/aruudy/)
 [![Python version](https://img.shields.io/pypi/pyversions/aruudy.svg?style=plastic)](https://pypi.org/project/aruudy/)
+[![Documentation Status](https://readthedocs.org/projects/aruudy/badge/?version=latest)](https://aruudy.readthedocs.io/en/latest/?badge=latest)
 [![Travis](https://img.shields.io/travis/kariminf/aruudy.svg?style=plastic)](https://travis-ci.org/kariminf/aruudy)
 [![Codecov](https://img.shields.io/codecov/c/github/kariminf/aruudy.svg?style=plastic)](https://codecov.io/gh/kariminf/aruudy)
 [![CodeFactor](https://www.codefactor.io/repository/github/kariminf/aruudy/badge/master)](https://www.codefactor.io/repository/github/kariminf/aruudy/overview/master)
@@ -254,16 +255,21 @@ b = shatr.bahr
 ```
 
 You can process a text with sub-functions (without using **meter.process_shatr** which uses them all):
-- **meter.normalize(text)**: returns a normalized text; deletes tatweel and fix some diacretics problems
-- **meter.prosody_form(text)**: returns the prosody writing (الكتابة العروضية) of the text
+- **prosody.normalize(text)**: returns a normalized text; deletes tatweel and fix some diacretics problems
+- **prosody.prosody_form(text)**: returns the prosody writing (الكتابة العروضية) of the text
 - **meter.get_ameter(text)**: returns a string of arabic meter  with "v" as haraka "c" as sukuun
 
-**TODO**: edit a full doc about the api
+To read the API documentation (chack Aruudy on readthedocs)[https://aruudy.readthedocs.io/en/latest/]
 
 ## Recommendations
 
-To detect the meter, the poem's part must be fully vocalized (has diacritics).
-To this end, It is recommended to use [Mishkal](https://github.com/linuxscout/mishkal)
+To detect the meter, the verse's part must be fully vocalized (has diacritics).
+This program can detect and infer some common unvolization patterns, such as the first letter of a word if it is not an alif (must be vocalized).
+In this case, it marks a letter as vocalized without giving the right vocalization: if it is damma, kasra or fatha.
+
+If the text is not vocalized at all, you must vocalize it manually or automatically.
+A project you can use is [Mishkal](https://github.com/linuxscout/mishkal).
+When you use it with Aruudy, you have to keep in mind that Aruudy is Apache-2 licensed while [Mishkal](https://github.com/linuxscout/mishkal) is GPL-3 licensed.
 
 
 ## License
