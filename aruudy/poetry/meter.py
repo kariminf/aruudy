@@ -20,7 +20,8 @@
 #
 
 import re
-from aruudy.poetry import foot as f
+from aruudy.poetry import foot
+from aruudy.poetry.foot import FootType as FT
 
 re_haraka = re.compile(u"[\u064E\u064F\u0650\u0653]")
 
@@ -28,6 +29,7 @@ def get_ameter (text):
     """Get the Arabic meter of a given text.
     Produces the Arabic meter of a given text in prosody form.
     The Arabic meter is composed of two letters:
+
     - "w" watad (peg) which are vocalized letters
     - "s" sabab (cord) which are vowels and unvocalized letters
 
@@ -65,9 +67,12 @@ def get_ameter (text):
 def a2e_meter (ameter):
     """Transforms an Arabic meter to an English one.
     The Arabic meter uses vocalization as a basis:
+
     - "w" watad (peg) which are vocalized letters
     - "s" sabab (cord) which are vowels and unvocalized letters
+
     While English meter uses syllables:
+
     - "-" for long syllables, equivalent to "ws" in the Arabic one
     - "u" for short syllables, equivalent to "w" in the Arabic one.
 
@@ -90,9 +95,12 @@ def a2e_meter (ameter):
 def e2a_meter (emeter):
     """Transforms an English meter to an Arabic one.
     The English meter uses syllables as a basis:
+
     - "-" for long syllables, equivalent to "ws" in the Arabic one
     - "u" for short syllables, equivalent to "w" in the Arabic one.
+
     While the Arabic meter uses vocalization:
+
     - "w" watad (peg) which are vocalized letters
     - "s" sabab (cord) which are vowels and unvocalized letters
 
@@ -129,6 +137,7 @@ def extract_meter(feet, used=True):
     dict
         A dictionary object describing the meter represented by the feet.
         The dictionary contains these elements:
+
         - type: a string describing the type of each foot (tafiila)
         - mnemonic: a string describing the mnemonic of each foot.
         - emeter: a string describing the English meter of each foot.
@@ -143,7 +152,7 @@ def extract_meter(feet, used=True):
     sep = ""
     for foot in feet:
         meter = foot.get_meter(used)
-        res["type"] += sep + f.ZUHAF_ILLA[meter["type"]]
+        res["type"] += sep + meter["type"].ar
         res["mnemonic"] += sep + meter["mnemonic"]
         res["emeter"] += sep + meter["emeter"]
         if not sep:
@@ -233,10 +242,10 @@ tawiil = Bahr({
     },
     "meter": [
         [
-        f.WWSWS([f.SALIM, f.QABDH]),
-        f.WWSWSWS([f.SALIM, f.QABDH, f.KAFF]),
-        f.WWSWS([f.SALIM, f.QABDH]),
-        f.WWSWSWS([f.QABDH]),
+        foot.WWSWS([FT.SALIM, FT.QABDH]),
+        foot.WWSWSWS([FT.SALIM, FT.QABDH, FT.KAFF]),
+        foot.WWSWS([FT.SALIM, FT.QABDH]),
+        foot.WWSWSWS([FT.QABDH]),
         ]
     ],
     "key": u"طويلٌ له دون البحور فضائلٌ  فعولن مفاعيلن فعولن مفاعلن"
@@ -250,9 +259,9 @@ madiid = Bahr({
     },
     "meter": [
         [
-        f.WSWWSWS([f.SALIM, f.KHABN]),
-        f.WSWWS([f.SALIM, f.KHABN]),
-        f.WSWWSWS([f.SALIM, f.KHABN])
+        foot.WSWWSWS([FT.SALIM, FT.KHABN]),
+        foot.WSWWS([FT.SALIM, FT.KHABN]),
+        foot.WSWWSWS([FT.SALIM, FT.KHABN])
         ]
     ],
     "key": u"لمديد الشعر عندي صفاتُ  فاعلاتن فاعلن فاعلاتن"
@@ -266,15 +275,15 @@ basiit = Bahr({
     },
     "meter": [
         [
-        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI]),
-        f.WSWWS([f.SALIM, f.KHABN]),
-        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI]),
-        f.WSWWS([f.KHABN, f.QATE]),
+        foot.WSWSWWS([FT.SALIM, FT.KHABN, FT.TAI]),
+        foot.WSWWS([FT.SALIM, FT.KHABN]),
+        foot.WSWSWWS([FT.SALIM, FT.KHABN, FT.TAI]),
+        foot.WSWWS([FT.KHABN, FT.QATE]),
         ],
         [
-        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI]),
-        f.WSWWS([f.SALIM, f.KHABN]),
-        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI, f.QATE, f.TADIIL]),
+        foot.WSWSWWS([FT.SALIM, FT.KHABN, FT.TAI]),
+        foot.WSWWS([FT.SALIM, FT.KHABN]),
+        foot.WSWSWWS([FT.SALIM, FT.KHABN, FT.TAI, FT.QATE, FT.TADIIL]),
         ],
     ],
     "key": u"إن البسيط لديه يبسط الأملُ  مستفعلن فعلن مستفعلن فعلن"
@@ -288,9 +297,9 @@ wafir = Bahr({
     },
     "meter": [
         [
-        f.WWSWWWS([f.SALIM, f.ASAB]),
-        f.WWSWWWS([f.SALIM, f.ASAB]),
-        f.WWSWS([f.SALIM]),
+        foot.WWSWWWS([FT.SALIM, FT.ASAB]),
+        foot.WWSWWWS([FT.SALIM, FT.ASAB]),
+        foot.WWSWS([FT.SALIM]),
         ]
     ],
     "key": u"بحور الشعر وافرها جميل  مفاعلتن مفاعلتن فعولن"
@@ -304,13 +313,13 @@ kaamil = Bahr({
     },
     "meter": [
         [
-        f.WWWSWWS([f.SALIM, f.IDHMAR]),
-        f.WWWSWWS([f.SALIM, f.IDHMAR]),
-        f.WWWSWWS([f.SALIM, f.IDHMAR])
+        foot.WWWSWWS([FT.SALIM, FT.IDHMAR]),
+        foot.WWWSWWS([FT.SALIM, FT.IDHMAR]),
+        foot.WWWSWWS([FT.SALIM, FT.IDHMAR])
         ],
         [
-        f.WWWSWWS([f.SALIM, f.IDHMAR]),
-        f.WWWSWWS([f.SALIM, f.IDHMAR])
+        foot.WWWSWWS([FT.SALIM, FT.IDHMAR]),
+        foot.WWWSWWS([FT.SALIM, FT.IDHMAR])
         ],
     ],
     "key": u"كمل الجمال من البحور الكامل متفاعلن متفاعلن متفاعلن"
@@ -324,8 +333,8 @@ hazj = Bahr({
     },
     "meter": [
         [
-        f.WWSWSWS([f.SALIM, f.KAFF]),
-        f.WWSWSWS([f.SALIM, f.KAFF])
+        foot.WWSWSWS([FT.SALIM, FT.KAFF]),
+        foot.WWSWSWS([FT.SALIM, FT.KAFF])
         ]
     ],
     "key": u"على الأهزاج تسهيل      مفاعيلن مفاعيلن"
@@ -339,9 +348,9 @@ rajz = Bahr({
     },
     "meter": [
         [
-        f.WSWSWWS([f.SALIM, f.KHABN]),
-        f.WSWSWWS([f.SALIM, f.KHABN]),
-        f.WSWSWWS([f.SALIM, f.KHABN])
+        foot.WSWSWWS([FT.SALIM, FT.KHABN]),
+        foot.WSWSWWS([FT.SALIM, FT.KHABN]),
+        foot.WSWSWWS([FT.SALIM, FT.KHABN])
         ]
     ],
     "key": u"في أبحر الأرجاز بحرٌ يسهل   مستفعلن مستفعلن مستفعلن"
@@ -355,9 +364,9 @@ raml = Bahr({
     },
     "meter": [
         [
-        f.WSWWSWS([f.SALIM, f.KHABN]),
-        f.WSWWSWS([f.SALIM, f.KHABN]),
-        f.WSWWSWS([f.SALIM, f.KHABN])
+        foot.WSWWSWS([FT.SALIM, FT.KHABN]),
+        foot.WSWWSWS([FT.SALIM, FT.KHABN]),
+        foot.WSWWSWS([FT.SALIM, FT.KHABN])
         ]
     ],
     "key": u"رمل الأبحر ترويه الثقات فاعلاتن فاعلاتن فاعلاتن"
@@ -371,9 +380,9 @@ sariie = Bahr({
     },
     "meter": [
         [
-        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI, f.KHABL]),
-        f.WSWSWWS([f.SALIM, f.KHABN, f.TAI, f.KHABL]),
-        f.WSWWS([f.SALIM])
+        foot.WSWSWWS([FT.SALIM, FT.KHABN, FT.TAI, FT.KHABL]),
+        foot.WSWSWWS([FT.SALIM, FT.KHABN, FT.TAI, FT.KHABL]),
+        foot.WSWWS([FT.SALIM])
         ]
     ],
     "key": u"بحرٌ سريع ماله ساحل مستفعلن مستفعلن فاعلن"
@@ -387,9 +396,9 @@ munsarih = Bahr({
     },
     "meter": [
         [
-        f.WSWSWWS([f.SALIM, f.KHABN]),
-        f.WSWSWSW([f.SALIM, f.TAI]),
-        f.WSWSWWS([f.TAI])
+        foot.WSWSWWS([FT.SALIM, FT.KHABN]),
+        foot.WSWSWSW([FT.SALIM, FT.TAI]),
+        foot.WSWSWWS([FT.TAI])
         ]
     ],
     "key": u"منسرح فيه يضرب المثل    مستفعلن مفعولات مفتعلن"
@@ -403,9 +412,9 @@ khafiif = Bahr({
     },
     "meter": [
         [
-        f.WSWWSWS([f.SALIM, f.KHABN, f.KAFF]),
-        f.WSWSWWS([f.SALIM]),
-        f.WSWWSWS([f.SALIM, f.KHABN, f.SHAKL])
+        foot.WSWWSWS([FT.SALIM, FT.KHABN, FT.KAFF]),
+        foot.WSWSWWS([FT.SALIM]),
+        foot.WSWWSWS([FT.SALIM, FT.KHABN, FT.SHAKL])
         ]
     ],
     "key": u"يا خفيفاً خفّت به الحركات   فاعلاتن مستفعلن فاعلاتن"
@@ -419,8 +428,8 @@ mudharie = Bahr({
     },
     "meter": [
         [
-        f.WWSWSWS([f.SALIM, f.QABDH,f.KAFF]),
-        f.WSWWSWS([f.SALIM])
+        foot.WWSWSWS([FT.SALIM, FT.QABDH,FT.KAFF]),
+        foot.WSWWSWS([FT.SALIM])
         ]
     ],
     "key": u"تعدّ المضارعات  مفاعيلُ فاعلاتن"
@@ -434,8 +443,8 @@ muqtadhib = Bahr({
     },
     "meter": [
         [
-        f.WSWSWSW([f.SALIM, f.KHABN]),
-        f.WSWSWWS([f.TAI])
+        foot.WSWSWSW([FT.SALIM, FT.KHABN]),
+        foot.WSWSWWS([FT.TAI])
         ]
     ],
     "key": u"اقتضب كما سألوا مفعلات مفتعلن"
@@ -449,8 +458,8 @@ mujdath = Bahr({
     },
     "meter": [
         [
-        f.WSWSWWS([f.SALIM, f.KHABN]),
-        f.WSWWSWS([f.SALIM, f.KHABN])
+        foot.WSWSWWS([FT.SALIM, FT.KHABN]),
+        foot.WSWWSWS([FT.SALIM, FT.KHABN])
         ]
     ],
     "key": u"أن جثت الحركات  مستفعلن فاعلاتن"
@@ -464,10 +473,10 @@ mutaqaarib = Bahr({
     },
     "meter": [
         [
-        f.WWSWS([f.SALIM, f.QABDH]),
-        f.WWSWS([f.SALIM, f.QABDH]),
-        f.WWSWS([f.SALIM, f.QABDH]),
-        f.WWSWS([f.SALIM, f.QABDH])
+        foot.WWSWS([FT.SALIM, FT.QABDH]),
+        foot.WWSWS([FT.SALIM, FT.QABDH]),
+        foot.WWSWS([FT.SALIM, FT.QABDH]),
+        foot.WWSWS([FT.SALIM, FT.QABDH])
         ]
     ],
     "key": u"عن المتقارب قال الخليل      فعولن فعولن فعولن فعول"
@@ -481,10 +490,10 @@ mutadaarik = Bahr({
     },
     "meter": [
         [
-        f.WSWWS([f.SALIM, f.KHABN, f.QATE]),
-        f.WSWWS([f.SALIM, f.KHABN, f.QATE]),
-        f.WSWWS([f.SALIM, f.KHABN, f.QATE]),
-        f.WSWWS([f.SALIM, f.KHABN, f.QATE])
+        foot.WSWWS([FT.SALIM, FT.KHABN, FT.QATE]),
+        foot.WSWWS([FT.SALIM, FT.KHABN, FT.QATE]),
+        foot.WSWWS([FT.SALIM, FT.KHABN, FT.QATE]),
+        foot.WSWWS([FT.SALIM, FT.KHABN, FT.QATE])
         ]
     ],
     "key": u"حركات المحدث تنتقل  فعلن فعلن فعلن فعل"

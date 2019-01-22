@@ -21,66 +21,43 @@
 
 import re, copy
 
-SALIM = 0
-# zuhaf 2nd
-IDHMAR = 1
-WAQS = 2
-KHABN = 3
-# zuhaf 4th
-TAI = 4
-# zuhaf 5th
-ASAB = 5
-AQL = 6
-QABDH = 7
-# zuhaf 7th
-KAFF = 8
-# zuhaf 2nd + 4th
-KHABL = 9
-# zuhaf 2nd + 4th
-KHAZL = 10
-# zuhaf 2nd + 7th
-SHAKL = 11
-# zuhaf 5th + 7th
-NAQS = 12
-#illa
-TARFIIL = 13
-IDALA = TADIIL = 14
-ISBAGH = 15
-HADF = 16
-QATE = 17
-BATR = 18
-QASR = 19
-QATF = 20
-HADAD = 21
-SALAM = 22
-KASHF = 23
+class ZuhafIlla(object):
+    def __init__(self, en, ar):
+        self.en = en
+        self.ar = ar
+    def __repr__(self):
+        return self.en
 
-ZUHAF_ILLA = {
-SALIM: u"سالم",
-IDHMAR: u"إضمار",
-WAQS: u"وقص",
-KHABN: u"خبن",
-TAI: u"طيّ",
-ASAB: u"عصب",
-AQL: u"عقل",
-QABDH: u"قبض",
-KAFF: u"كفّ",
-KHABL: u"خبْل",
-KHAZL: u"خزل",
-SHAKL: u"شكل",
-NAQS: u"نقص",
-TARFIIL: u"ترفيل",
-IDALA: u"تذييل",
-ISBAGH: u"إسباغ",
-HADF: u"حذف",
-QATE: u"قطع",
-BATR: u"بتر",
-QASR: u"قصر",
-QATF: u"قطف",
-HADAD: u"حذذ",
-SALAM: u"صلم",
-KASHF: u"كشف"
-}
+class FootType(object):
+    """Short summary.
+    """
+
+    #: SALIM type
+    SALIM = ZuhafIlla("SALIM", u"سالم")
+    IDHMAR = ZuhafIlla("IDHMAR", u"إضمار")
+    WAQS = ZuhafIlla("WAQS", u"وقص")
+    KHABN = ZuhafIlla("KHABN", u"خبن")
+    TAI = ZuhafIlla("TAI", u"طيّ")
+    ASAB = ZuhafIlla("ASAB", u"عصب")
+    AQL = ZuhafIlla("AQL", u"عقل")
+    QABDH = ZuhafIlla("QABDH", u"قبض")
+    KAFF = ZuhafIlla("KAFF", u"كفّ")
+    KHABL = ZuhafIlla("KHABL", u"خبْل")
+    KHAZL = ZuhafIlla("KHAZL", u"خزل")
+    SHAKL = ZuhafIlla("SHAKL", u"شكل")
+    NAQS = ZuhafIlla("NAQS", u"نقص")
+    TARFIIL = ZuhafIlla("TARFIIL", u"ترفيل")
+    TADIIL = ZuhafIlla("TADIIL", u"تذييل")
+    ISBAGH = ZuhafIlla("ISBAGH", u"إسباغ")
+    HADF = ZuhafIlla("HADF", u"حذف")
+    QATE = ZuhafIlla("QATE", u"قطع")
+    BATR = ZuhafIlla("BATR", u"بتر")
+    QASR = ZuhafIlla("QASR", u"قصر")
+    QATF = ZuhafIlla("QATF", u"قطف")
+    HADAD = ZuhafIlla("HADAD", u"حذذ")
+    SALAM = ZuhafIlla("SALAM", u"صلم")
+    KASHF = ZuhafIlla("KASHF", u"كشف")
+
 
 class Tafiila(object):
 
@@ -113,30 +90,30 @@ class Tafiila(object):
 # فَاعِلُنْ
 class WSWWS(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
         },
         {
-            "type": KHABN,
+            "type": FootType.KHABN,
             "mnemonic": u"فَعِلُنْ",
             "emeter": "uu-"
         },
         {
-            "type": TARFIIL,
+            "type": FootType.TARFIIL,
             "mnemonic": u"فَاعِلَاتُنْ",
             "emeter": "-u--"
         },
         {
-            "type": IDALA,
+            "type": FootType.TADIIL,
             "mnemonic": u"فَاعِلَانْ",
             "emeter": "-u-:"
         },
         {
-            "type": QATE,
+            "type": FootType.QATE,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
         }
@@ -146,30 +123,30 @@ class WSWWS(Tafiila):
 # فَعُولُنْ
 class WWSWS(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
         },
         {
-            "type": QABDH,
+            "type": FootType.QABDH,
             "mnemonic": u"فَعُولُ",
             "emeter": "u-u"
         },
         {
-            "type": HADF,
+            "type": FootType.HADF,
             "mnemonic": u"فِعَلْ",
             "emeter": "u-"
         },
         {
-            "type": BATR,
+            "type": FootType.BATR,
             "mnemonic": u"فِعْ",
             "emeter": "-"
         },
         {
-            "type": QASR,
+            "type": FootType.QASR,
             "mnemonic": u"فَعُولْ",
             "emeter": "u-:"
         }
@@ -179,25 +156,25 @@ class WWSWS(Tafiila):
 # مَفَاعِيلُنْ
 class WWSWSWS(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"مَفَاعِيلُنْ",
             "emeter": "u---"
         },
         {
-            "type": QABDH,
+            "type": FootType.QABDH,
             "mnemonic": u"مَفَاعِلُنْ",
             "emeter": "u-u-"
         },
         {
-            "type": KAFF,
+            "type": FootType.KAFF,
             "mnemonic": u"مَفَاعِيلُ",
             "emeter": "u--u"
         },
         {
-            "type": HADF,
+            "type": FootType.HADF,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
         }
@@ -207,35 +184,35 @@ class WWSWSWS(Tafiila):
 # مُسْتَفْعِلُنْ
 class WSWSWWS(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"مُسْتَفْعِلُنْ",
             "emeter": "--u-"
         },
         {
-            "type": KHABN,
+            "type": FootType.KHABN,
             "mnemonic": u"مُتَفْعِلُنْ",
             "emeter": "u-u-"
         },
         {
-            "type": TAI,
+            "type": FootType.TAI,
             "mnemonic": u"مُسْتَعِلُنْ",
             "emeter": "-uu-"
         },
         {
-            "type": KHABL,
+            "type": FootType.KHABL,
             "mnemonic": u"مُتَعِلُنْ",
             "emeter": "uuu-"
         },
         {
-            "type": IDALA,
+            "type": FootType.TADIIL,
             "mnemonic": u"مُسْتَفْعِلَانْ",
             "emeter": "--u-:"
         },
         {
-            "type": QATE,
+            "type": FootType.QATE,
             "mnemonic": u"مَفْعُولُنْ",
             "emeter": "---"
         }
@@ -245,45 +222,45 @@ class WSWSWWS(Tafiila):
 # مُتَفَاعِلُنْ
 class WWWSWWS(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"مُتَفَاعِلُنْ",
             "emeter": "uu-u-"
         },
         {
-            "type": IDHMAR,
+            "type": FootType.IDHMAR,
             "mnemonic": u"مُتْفَاعِلُنْ",
             "emeter": "--u-"
         },
         {
-            "type": WAQS,
+            "type": FootType.WAQS,
             "mnemonic": u"مُفَاعِلُنْ",
             "emeter": "u-u-"
         },
         {
-            "type": KHAZL,
+            "type": FootType.KHAZL,
             "mnemonic": u"مُتْفَعِلُنْ",
             "emeter": "u--"
         },
         {
-            "type": TARFIIL,
+            "type": FootType.TARFIIL,
             "mnemonic": u"مُتَفَاعِلَاتُنْ",
             "emeter": "uu-u--"
         },
         {
-            "type": TADIIL,
+            "type": FootType.TADIIL,
             "mnemonic": u"مُتَفَاعِلَانْ",
             "emeter": "uu-u-:"
         },
         {
-            "type": QATE,
+            "type": FootType.QATE,
             "mnemonic": u"مُتَفَاعِلْ",
             "emeter": "uu--:"
         },
         {
-            "type": HADAD,
+            "type": FootType.HADAD,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
         }
@@ -293,30 +270,30 @@ class WWWSWWS(Tafiila):
 # مُفَاعَلَتُنْ
 class WWSWWWS(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"مُفَاعَلَتُنْ",
             "emeter": "u-uu-"
         },
         {
-            "type": ASAB,
+            "type": FootType.ASAB,
             "mnemonic": u"مُفَاعَلْتُنْ",
             "emeter": "u---"
         },
         {
-            "type": AQL,
+            "type": FootType.AQL,
             "mnemonic": u"مُفَاعَتُنْ",
             "emeter": "u-u-"
         },
         {
-            "type": NAQS,
+            "type": FootType.NAQS,
             "mnemonic": u"مُفَاعَلْتُ",
             "emeter": "u--u"
         },
         {
-            "type": QATF,
+            "type": FootType.QATF,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
         }
@@ -326,45 +303,45 @@ class WWSWWWS(Tafiila):
 # فَاعِلَاتُنْ
 class WSWWSWS(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"فَاعِلَاتُنْ",
             "emeter": "-u--"
         },
         {
-            "type": KHABN,
+            "type": FootType.KHABN,
             "mnemonic": u"فَعِلَاتُنْ",
             "emeter": "uu--"
         },
         {
-            "type": KAFF,
+            "type": FootType.KAFF,
             "mnemonic": u"فَاعِلَاتُ",
             "emeter": "-u-u"
         },
         {
-            "type": ISBAGH,
+            "type": FootType.ISBAGH,
             "mnemonic": u"فَاعِلَاتَانْ",
             "emeter": "-u--:"
         },
         {
-            "type": HADF,
+            "type": FootType.HADF,
             "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
         },
         {
-            "type": SHAKL,
+            "type": FootType.SHAKL,
             "mnemonic": u"فَعِلَاتُ",
             "emeter": "uu-u"
         },
         {
-            "type": BATR,
+            "type": FootType.BATR,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
         },
         {
-            "type": QASR,
+            "type": FootType.QASR,
             "mnemonic": u"فَاعِلَانْ",
             "emeter": "-u-:"
         }
@@ -374,35 +351,35 @@ class WSWWSWS(Tafiila):
 # مَفْعُولَاتُ
 class WSWSWSW(Tafiila):
     #varation
-    def __init__(self, var=[SALIM]):
+    def __init__(self, var=[FootType.SALIM]):
         self.feet = [
         {
-            "type": SALIM,
+            "type": FootType.SALIM,
             "mnemonic": u"مَفْعُولَاتُ",
             "emeter": "---u"
         },
         {
-            "type": KHABN,
+            "type": FootType.KHABN,
             "mnemonic": u"مَعُولَاتُ",
             "emeter": "u--u"
         },
         {
-            "type": TAI,
+            "type": FootType.TAI,
             "mnemonic": u"مَفْعُلَاتُ",
             "emeter": "-u-u"
         },
         {
-            "type": KHABL,
+            "type": FootType.KHABL,
             "mnemonic": u"مَعُلَاتُ",
             "emeter": "-u-u"
         },
         {
-            "type": SALAM,
+            "type": FootType.SALAM,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
         },
         {
-            "type": KASHF,
+            "type": FootType.KASHF,
             "mnemonic": u"مَفْعُولُنْ",
             "emeter": "---"
         }
