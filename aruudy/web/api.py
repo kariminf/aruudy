@@ -61,7 +61,7 @@ def xor_in(elem, set_elem, bool):
 @aruudy_api.route("/shatr/<text>", methods=["GET", "POST"])
 @aruudy_api.route("/shatr/<text>/<opt>", methods=["GET", "POST"])
 def process_shatr(text, opt=None):
-    s = prosody.process_shatr(text).to_dict(bahr=True)
+    s = prosody.process_shatr(text).to_dict(bahr=True, parts=True)
     res = 200
     if not s["bahr"]:
         res = 404

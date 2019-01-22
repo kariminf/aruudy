@@ -22,14 +22,18 @@
 import re, copy
 
 class ZuhafIlla(object):
-    def __init__(self, en, ar):
-        self.en = en
+    def __init__(self, id, ar):
+        self.id = id
         self.ar = ar
     def __repr__(self):
-        return self.en
+        return self.id
+    def __html__(self):
+        return self.ar
 
-class FootType(object):
-    """Short summary.
+class TafiilaType(object):
+    """A class with different anomalies (Zuhaf and Illa) happening to the Foot.
+
+    This class can be considered as an enum
     """
 
     #: SALIM type
@@ -58,31 +62,38 @@ class FootType(object):
     SALAM = ZuhafIlla("SALAM", u"صلم")
     KASHF = ZuhafIlla("KASHF", u"كشف")
 
+class TafiilaComp(object):
+    def __init__(self, comp):
+        self.type = comp["type"]
+        self.mnemonic = comp["mnemonic"]
+        self.emeter = comp["emeter"]
+    def copy(self):
+        return TafiilaComp(self.__dict__)
 
 class Tafiila(object):
 
     def _init(self, var):
-        self.afeet = [] # allowed feet
-        for foot in self.feet:
-            if foot["type"] in var:
-                self.afeet.append(foot)
+        self.aforms = [] # allowed feet
+        for form in self.forms:
+            if form.type in var:
+                self.aforms.append(form)
 
     def process(self, text_emeter):
-        for foot in self.afeet:
-            if text_emeter.startswith(foot["emeter"]):
-                text_foot = copy.deepcopy(foot)
-                return text_foot, text_emeter[len(foot["emeter"]):]
+        for form in self.aforms:
+            if text_emeter.startswith(form.emeter):
+                text_foot = form.copy()
+                return text_foot, text_emeter[len(form.emeter):]
         return None, None
 
-    def get_meter(self, used=True):
+    def get_form(self, used=True):
         if used:
-            return self.afeet[0].copy()
-        return self.feet[0].copy()
+            return self.aforms[0].copy()
+        return self.forms[0].copy()
 
     def to_dict(used=False):
         if used:
-            return self.afeet[0]
-        return self.feet[0]
+            return self.aforms[0]
+        return self.forms[0]
 
 
 # https://sites.google.com/site/mihfadha/aroudh/14
@@ -90,299 +101,299 @@ class Tafiila(object):
 # فَاعِلُنْ
 class WSWWS(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
-        },
-        {
-            "type": FootType.KHABN,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KHABN,
             "mnemonic": u"فَعِلُنْ",
             "emeter": "uu-"
-        },
-        {
-            "type": FootType.TARFIIL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.TARFIIL,
             "mnemonic": u"فَاعِلَاتُنْ",
             "emeter": "-u--"
-        },
-        {
-            "type": FootType.TADIIL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.TADIIL,
             "mnemonic": u"فَاعِلَانْ",
             "emeter": "-u-:"
-        },
-        {
-            "type": FootType.QATE,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QATE,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
-        }
+        })
         ]
         self._init(var)
 
 # فَعُولُنْ
 class WWSWS(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
-        },
-        {
-            "type": FootType.QABDH,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QABDH,
             "mnemonic": u"فَعُولُ",
             "emeter": "u-u"
-        },
-        {
-            "type": FootType.HADF,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.HADF,
             "mnemonic": u"فِعَلْ",
             "emeter": "u-"
-        },
-        {
-            "type": FootType.BATR,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.BATR,
             "mnemonic": u"فِعْ",
             "emeter": "-"
-        },
-        {
-            "type": FootType.QASR,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QASR,
             "mnemonic": u"فَعُولْ",
             "emeter": "u-:"
-        }
+        })
         ]
         self._init(var)
 
 # مَفَاعِيلُنْ
 class WWSWSWS(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"مَفَاعِيلُنْ",
             "emeter": "u---"
-        },
-        {
-            "type": FootType.QABDH,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QABDH,
             "mnemonic": u"مَفَاعِلُنْ",
             "emeter": "u-u-"
-        },
-        {
-            "type": FootType.KAFF,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KAFF,
             "mnemonic": u"مَفَاعِيلُ",
             "emeter": "u--u"
-        },
-        {
-            "type": FootType.HADF,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.HADF,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
-        }
+        })
         ]
         self._init(var)
 
 # مُسْتَفْعِلُنْ
 class WSWSWWS(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"مُسْتَفْعِلُنْ",
             "emeter": "--u-"
-        },
-        {
-            "type": FootType.KHABN,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KHABN,
             "mnemonic": u"مُتَفْعِلُنْ",
             "emeter": "u-u-"
-        },
-        {
-            "type": FootType.TAI,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.TAI,
             "mnemonic": u"مُسْتَعِلُنْ",
             "emeter": "-uu-"
-        },
-        {
-            "type": FootType.KHABL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KHABL,
             "mnemonic": u"مُتَعِلُنْ",
             "emeter": "uuu-"
-        },
-        {
-            "type": FootType.TADIIL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.TADIIL,
             "mnemonic": u"مُسْتَفْعِلَانْ",
             "emeter": "--u-:"
-        },
-        {
-            "type": FootType.QATE,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QATE,
             "mnemonic": u"مَفْعُولُنْ",
             "emeter": "---"
-        }
+        })
         ]
         self._init(var)
 
 # مُتَفَاعِلُنْ
 class WWWSWWS(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"مُتَفَاعِلُنْ",
             "emeter": "uu-u-"
-        },
-        {
-            "type": FootType.IDHMAR,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.IDHMAR,
             "mnemonic": u"مُتْفَاعِلُنْ",
             "emeter": "--u-"
-        },
-        {
-            "type": FootType.WAQS,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.WAQS,
             "mnemonic": u"مُفَاعِلُنْ",
             "emeter": "u-u-"
-        },
-        {
-            "type": FootType.KHAZL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KHAZL,
             "mnemonic": u"مُتْفَعِلُنْ",
             "emeter": "u--"
-        },
-        {
-            "type": FootType.TARFIIL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.TARFIIL,
             "mnemonic": u"مُتَفَاعِلَاتُنْ",
             "emeter": "uu-u--"
-        },
-        {
-            "type": FootType.TADIIL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.TADIIL,
             "mnemonic": u"مُتَفَاعِلَانْ",
             "emeter": "uu-u-:"
-        },
-        {
-            "type": FootType.QATE,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QATE,
             "mnemonic": u"مُتَفَاعِلْ",
             "emeter": "uu--:"
-        },
-        {
-            "type": FootType.HADAD,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.HADAD,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
-        }
+        })
         ]
         self._init(var)
 
 # مُفَاعَلَتُنْ
 class WWSWWWS(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"مُفَاعَلَتُنْ",
             "emeter": "u-uu-"
-        },
-        {
-            "type": FootType.ASAB,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.ASAB,
             "mnemonic": u"مُفَاعَلْتُنْ",
             "emeter": "u---"
-        },
-        {
-            "type": FootType.AQL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.AQL,
             "mnemonic": u"مُفَاعَتُنْ",
             "emeter": "u-u-"
-        },
-        {
-            "type": FootType.NAQS,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.NAQS,
             "mnemonic": u"مُفَاعَلْتُ",
             "emeter": "u--u"
-        },
-        {
-            "type": FootType.QATF,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QATF,
             "mnemonic": u"فَعُولُنْ",
             "emeter": "u--"
-        }
+        })
         ]
         self._init(var)
 
 # فَاعِلَاتُنْ
 class WSWWSWS(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"فَاعِلَاتُنْ",
             "emeter": "-u--"
-        },
-        {
-            "type": FootType.KHABN,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KHABN,
             "mnemonic": u"فَعِلَاتُنْ",
             "emeter": "uu--"
-        },
-        {
-            "type": FootType.KAFF,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KAFF,
             "mnemonic": u"فَاعِلَاتُ",
             "emeter": "-u-u"
-        },
-        {
-            "type": FootType.ISBAGH,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.ISBAGH,
             "mnemonic": u"فَاعِلَاتَانْ",
             "emeter": "-u--:"
-        },
-        {
-            "type": FootType.HADF,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.HADF,
             "mnemonic": u"فَاعِلُنْ",
             "emeter": "-u-"
-        },
-        {
-            "type": FootType.SHAKL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.SHAKL,
             "mnemonic": u"فَعِلَاتُ",
             "emeter": "uu-u"
-        },
-        {
-            "type": FootType.BATR,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.BATR,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
-        },
-        {
-            "type": FootType.QASR,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.QASR,
             "mnemonic": u"فَاعِلَانْ",
             "emeter": "-u-:"
-        }
+        })
         ]
         self._init(var)
 
 # مَفْعُولَاتُ
 class WSWSWSW(Tafiila):
     #varation
-    def __init__(self, var=[FootType.SALIM]):
-        self.feet = [
-        {
-            "type": FootType.SALIM,
+    def __init__(self, var=[TafiilaType.SALIM]):
+        self.forms = [
+        TafiilaComp({
+            "type": TafiilaType.SALIM,
             "mnemonic": u"مَفْعُولَاتُ",
             "emeter": "---u"
-        },
-        {
-            "type": FootType.KHABN,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KHABN,
             "mnemonic": u"مَعُولَاتُ",
             "emeter": "u--u"
-        },
-        {
-            "type": FootType.TAI,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.TAI,
             "mnemonic": u"مَفْعُلَاتُ",
             "emeter": "-u-u"
-        },
-        {
-            "type": FootType.KHABL,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KHABL,
             "mnemonic": u"مَعُلَاتُ",
             "emeter": "-u-u"
-        },
-        {
-            "type": FootType.SALAM,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.SALAM,
             "mnemonic": u"فِعْلُنْ",
             "emeter": "--"
-        },
-        {
-            "type": FootType.KASHF,
+        }),
+        TafiilaComp({
+            "type": TafiilaType.KASHF,
             "mnemonic": u"مَفْعُولُنْ",
             "emeter": "---"
-        }
+        })
 
         ]
         self._init(var)

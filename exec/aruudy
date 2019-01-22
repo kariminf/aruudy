@@ -77,7 +77,7 @@ def lst(lang):
         print("aruudy [-l, --list] [a|e|t]")
         exit(1)
     lang = langs[lang]
-    ls = meter._get_values("name", lang)
+    ls = meter.get_names(lang)
     print("List of meters:")
     for l in ls:
         print(l)

@@ -287,15 +287,9 @@ class Shatr(object):
         self.prosody = prosody_form(self.norm)
         self.ameter, units = meter.get_ameter(self.prosody)
         self.emeter = meter.a2e_meter(self.ameter)
-        self.bahr, self.parts = meter.search_bahr(self.emeter)
-        if self.parts:
-            for part in self.parts:
-                l = len(meter.e2a_meter(part["emeter"]))
-                part["part"] = "".join(units[:l])
-                units = units[l:]
-                part["type"] = part["type"].ar
+        self.bahr, self.parts = meter.search_bahr(self.emeter, units)
 
-    def to_dict(self, bahr=False):
+    def to_dict(self, bahr=False, parts=False):
         """Generates a dict object of the Bahr.
 
         Parameters
@@ -311,17 +305,20 @@ class Shatr(object):
             A dictionary object describing the Shatr.
 
         """
+
         res = {
             "norm": self.norm,
             "prosody": self.prosody,
             "ameter": self.ameter,
             "emeter": self.emeter,
-            "bahr": self.bahr,
+            "bahr": self.bahr.to_dict() if bahr else self.bahr,
             "parts": self.parts
         }
-        if bahr:
-            if self.bahr:
-                res["bahr"] = self.bahr.to_dict()
+
+        if parts:
+            res["parts"] = []
+            for part in self.parts:
+                res["parts"].append(part.to_dict())
         return res
 
 
