@@ -11,7 +11,7 @@
 #
 #  Copyright 2015-2017 Abdelkrime Aries <kariminfo0@gmail.com>
 #  Copyright 2014 DzCoding group <dzcoding@googlegroups.com>
-#  
+#
 #  ---- AUTHORS ----
 #  2014-2017    Abdelkrime Aries <kariminfo0@gmail.com>
 #
@@ -710,12 +710,12 @@ def getPattern(word):
 			tmpPattern += u'x'
 
 		elif char == u'آ':
-			if len(tmpPattern)>0 and tmpPattern[-1]== u'C':
+			if tmpPattern and tmpPattern[-1]== u'C':
 				tmpPattern += u'3'
 			tmpPattern += u'30'
 
 		elif char == u'ا' or char == u'ى':
-			if len(tmpPattern)>0 and tmpPattern[-1]== u'C':
+			if tmpPattern and tmpPattern[-1]== u'C':
 				tmpPattern += u'3'
 			tmpPattern += u'0'
 

@@ -19,11 +19,28 @@
 # limitations under the License.
 #
 
-import re, copy
+import re
 
 class ZuhafIlla(object):
-    def __init__(self, id, ar):
-        self.id = id
+    """Short summary.
+
+    Parameters
+    ----------
+    the_id : str
+        The ID of the type (anomaly).
+    ar : str
+        The name of the type in Arabic.
+
+    Attributes
+    ----------
+    id : str
+        The ID of the type (anomaly)..
+    ar : str
+        The name of the type in Arabic.
+
+    """
+    def __init__(self, the_id, ar):
+        self.id = the_id
         self.ar = ar
     def __repr__(self):
         return self.id
@@ -33,7 +50,7 @@ class ZuhafIlla(object):
 class TafiilaType(object):
     """A class with different anomalies (Zuhaf and Illa) happening to the Foot.
 
-    This class can be considered as an enum
+    This class can be considered as an enum.
     """
 
     #: SALIM type
@@ -63,14 +80,49 @@ class TafiilaType(object):
     KASHF = ZuhafIlla("KASHF", u"كشف")
 
 class TafiilaComp(object):
+    """Tafiila (foot) components.
+
+    Parameters
+    ----------
+    comp : dict
+        A dictionary of the forme:
+
+        - type (TafiilaType): the type of the foot
+        - mnemonic (str): the mnemonic describing the foot
+        - emeter (str): the English meter
+
+    Attributes
+    ----------
+    type : TafiilaType
+        the type of the foot.
+    mnemonic : str
+        the mnemonic describing the foot.
+    emeter : str
+        the English meter.
+
+    """
     def __init__(self, comp):
         self.type = comp["type"]
         self.mnemonic = comp["mnemonic"]
         self.emeter = comp["emeter"]
+
     def copy(self):
+        """Create a copy of this object.
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+        TafiilaComp
+            A copy of this object.
+
+        """
         return TafiilaComp(self.__dict__)
 
 class Tafiila(object):
+    """A class describing the foot."""
 
     def _init(self, var):
         self.aforms = [] # allowed feet
@@ -79,6 +131,25 @@ class Tafiila(object):
                 self.aforms.append(form)
 
     def process(self, text_emeter):
+        """Process a given emeter to decide if it starts with this foot.
+
+        Parameters
+        ----------
+        text_emeter : str
+            The English meter of the text we want to process.
+
+        Returns
+        -------
+        tuple(TafiilaComp, str)
+            If the text's emeter starts with one of this foot's forms,
+            this function will return a tuple of:
+
+            - The form (TafiilaComp) which the emeter starts with.
+            - The rest of the emeter
+
+            Otherwise, it returns (None, None)
+
+        """
         for form in self.aforms:
             if text_emeter.startswith(form.emeter):
                 text_foot = form.copy()
@@ -86,14 +157,23 @@ class Tafiila(object):
         return None, None
 
     def get_form(self, used=True):
+        """Get the form of this Tafiila (foot).
+
+        Parameters
+        ----------
+        used : bool
+            if True, it will return the used form.
+            Otherwise, it will return the standard one.
+
+        Returns
+        -------
+        TafiilaComp
+            The from describing this Tafiila (foot).
+
+        """
         if used:
             return self.aforms[0].copy()
         return self.forms[0].copy()
-
-    def to_dict(used=False):
-        if used:
-            return self.aforms[0]
-        return self.forms[0]
 
 
 # https://sites.google.com/site/mihfadha/aroudh/14

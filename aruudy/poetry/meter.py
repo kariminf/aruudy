@@ -124,19 +124,45 @@ def e2a_meter (emeter):
 
 buhuur = []
 
-"""
-class BahrError (Exception):
-    def __init__(self, name):
-        Exception.__init__(self, "Bahr does not have an attribute called: " + name)
-"""
 
 class Part(TafiilaComp):
+    """The text's part description.
+
+    Parameters
+    ----------
+    tafiila_comp : TafiilaComp
+        The description of the Foot which this part is based on.
+
+    Attributes
+    ----------
+    ameter : str
+        The Arabic meter.
+    emeter : type
+        The english meter.
+    text : type
+        The part of text following that meter.
+
+    """
     def __init__(self, tafiila_comp):
         TafiilaComp.__init__(self, tafiila_comp.__dict__)
         self.ameter = e2a_meter(self.emeter)
         self.text = ""
 
     def extract(self, units=[]):
+        """Extracts the part of text following the meter.
+
+        Parameters
+        ----------
+        units : list(str)
+            A list of vocallized and unvocalized elements,
+            generated from the text.
+
+        Returns
+        -------
+        str
+            the text following the meter.
+
+        """
         l = len(self.emeter)
         if not units or len(units) < l:
             return None
@@ -144,6 +170,24 @@ class Part(TafiilaComp):
         return units[l:]
 
     def to_dict(self):
+        """Transforms this object to a dictionary.
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+        dict
+            The dictionary will contin:
+
+            - type (TafiilaComp): the type of the foot
+            - emeter (str): the English meter
+            - ameter (str): the Arabic meter
+            - mnemonic (str): the mnemonic describing the meter
+            - text (str): the text following the meter
+
+        """
         return {
             "type": self.type,
             "emeter": self.emeter,
@@ -153,11 +197,42 @@ class Part(TafiilaComp):
         }
 
 class BahrForm(object):
+    """The form of a Bahr (meter).
+
+    For a given Arabic meter (Bahr), there may be multiple forms.
+
+    Parameters
+    ----------
+    feet : list(Tafiila)
+        A list of feet describing the meter.
+
+    Attributes
+    ----------
+    feet: list(Tafiila)
+        A list of feet describing the meter.
+
+    """
 
     def __init__(self, feet):
         self.feet = feet
 
     def validate(self, emeter, units=[]):
+        """Chacks if an emeter follows this meter's form.
+
+        Parameters
+        ----------
+        emeter : str
+            The English meter of the text.
+        units : list(str)
+            A list of vocallized and unvocalized elements,
+            generated from the text.
+
+        Returns
+        -------
+        Part
+            The part object.
+
+        """
         parts = []
         text_emeter = emeter
         units_cp = list(units)
@@ -229,13 +304,24 @@ class Bahr(object):
         - english: its name in English
         - trans: its Arabic name's transliteration.
     used_scansion : dict
-        Description of attribute `used_scansion`.
-    meter : list(list(Tafiila))
-        Description of attribute `meter`.
+        The most used scansion.
+        The dictionary contains these elements:
 
+        - type: a string describing the type of each foot (tafiila)
+        - mnemonic: a string describing the mnemonic of each foot.
+        - emeter: a string describing the English meter of each foot.
+        - ameter: a string describing the Arabic meter of each foot.
 
+    meter : list(BahrForm)
+        A list of meter's forms.
     std_scansion : dict
-        Description of attribute `std_scansion`.
+        the standard scansion.
+        The dictionary contains these elements:
+
+        - type: a string describing the type of each foot (tafiila)
+        - mnemonic: a string describing the mnemonic of each foot.
+        - emeter: a string describing the English meter of each foot.
+        - ameter: a string describing the Arabic meter of each foot.
 
     """
     def __init__(self, info):
@@ -254,12 +340,57 @@ class Bahr(object):
         return str(self.get_names())
 
     def get_names(self):
+        """Get the names of the meter.
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+        dict
+            Bahr's name, which is composed of:
+
+            - arabic: its name in Arabic
+            - english: its name in English
+            - trans: its Arabic name's transliteration.
+
+        """
         return self.get_value("name")
 
     def test_name(self, key, value):
+        """Test if .
+
+        Parameters
+        ----------
+        key : str
+            can be "arabic", "english" or "trans".
+        value : str
+            The name we are looking for.
+
+        Returns
+        -------
+        bool
+            True, if this meter have the name specified by "value"
+
+        """
         return value == self.name[key]
 
     def to_dict(self):
+        """Transform the bahr to a dictionary.
+
+        Parameters
+        ----------
+
+
+        Returns
+        -------
+        dict
+            The dictionary has three components "name", "used_scansion" and
+            "std_scansion" which are dictionaries too.
+            They are described in the attributes section.
+
+        """
         dic = {
             "name": self.name,
             "used_scansion": self.used_scansion,
@@ -269,6 +400,24 @@ class Bahr(object):
         return dic
 
     def validate(self, emeter, units=[]):
+        """Validate a given emeter into one of the forms.
+
+        Search for a form which the given emeter follows.
+
+        Parameters
+        ----------
+        emeter : str
+            English meter.
+        units : list(str)
+            A list of vocallized and unvocalized elements,
+            generated from the text.
+
+        Returns
+        -------
+        Part
+            the part object.
+
+        """
         for form in self.meter: # different forms
             parts = form.validate(emeter, units)
             if parts:
@@ -542,6 +691,19 @@ mutadaarik = Bahr({
 
 
 def name_type(name):
+    """decides if a name is in English or Arabic.
+
+    Parameters
+    ----------
+    name : str
+        The name we want to test.
+
+    Returns
+    -------
+    str
+        "english" or "arabic".
+
+    """
     if re.match("^[a-zA-Z]", name):
         return "english"
     return "arabic"
@@ -575,6 +737,20 @@ def get_bahr(name, dic=True):
 
 
 def get_names(lang=None):
+    """get a list of meters names.
+
+    Parameters
+    ----------
+    lang : str
+        If not specified: the result will be all available names.
+
+
+    Returns
+    -------
+    list(Union[str, dict])
+        A list of names.
+
+    """
     names = []
     for bahr in buhuur:
         if lang:
@@ -584,6 +760,23 @@ def get_names(lang=None):
     return names
 
 def search_bahr(emeter, units=[]):
+    """Search for Bahr of a given English meter.
+
+    Parameters
+    ----------
+    emeter : str
+        English meter.
+    units : list(str)
+        A list of vocallized and unvocalized elements,
+        generated from the text.
+
+    Returns
+    -------
+    tuple(Bahr, Part)
+        A tuple of the found meter and the part's description.
+        If not found, it will return (None, None)
+
+    """
     for b in buhuur:
         res = b.validate(emeter, units)
         if res:

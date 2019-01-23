@@ -4,12 +4,12 @@
    contain the root `toctree` directive.
 
 .. automodapi:: aruudy.poetry.prosody
-    :no-inheritance-diagram:
+   :no-inheritance-diagram:
 
 
 .. automodapi:: aruudy.poetry.meter
-    :no-inheritance-diagram:
+   :no-inheritance-diagram:
 
 
 .. automodapi:: aruudy.poetry.foot
-    :no-inheritance-diagram:
+   :no-inheritance-diagram:
