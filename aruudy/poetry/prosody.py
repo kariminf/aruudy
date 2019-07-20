@@ -30,6 +30,7 @@ This module is used for prosody tasks:
 
 import re
 from aruudy.poetry import meter, foot
+from aruudy.lists import change
 
 # sun letters in arabic
 SUN = u"([تثدذرزسشصضطظلن])"
@@ -206,7 +207,7 @@ def _prosody_add(text):
 
 def _prosody_change(text):
     res = text
-
+    res = re.sub(u"([^\s]+)", lambda m: change.modify(m.group(1)) , res)
     return res
 
 #TODO trait these
@@ -248,7 +249,7 @@ def prosody_form(text):
     res = text
     res = _prosody_del(text)
     res = _prosody_add(res)
-    #res = _prosody_change(res)
+    res = _prosody_change(res)
     return res
 
 

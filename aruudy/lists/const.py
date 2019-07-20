@@ -18,26 +18,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
-from aruudy.lists import const
+TASHKIIL = [u'ِ', u'ُ', u'َ', u'ْ']
+TANWIIN = [u'ٍ', u'ٌ', u'ً']
 
-CHANGE_LST = {
-    u"هذا": u"هَاذَا",
-    u"هذه": u"هَاذِه",
-    u"هذان": u"هَاذَان",
-    u"هذين": u"هَاذَين",
-    u"ذلك": u"ذَالِك",
-    u"ذلكما": u"ذَالِكُمَا",
-    u"ذلكم": u"ذَالِكُم",
-    u"الله": u"أَللَاه",
-    u"إله": u"إِلَاه",
-    u"لإله": u"لإِلَاه",
-}
-
-
-def modify(word):
-    res = word
-    nodiac = re.sub(ur'[%s]' % const.DIAC, "", word)
-    if nodiac in CHANGE_LST:
-        res = CHANGE_LST[nodiac]
-    return res
+DIAC = u'ّ'.join(TASHKIIL).join(TANWIIN)
