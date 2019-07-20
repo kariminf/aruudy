@@ -87,7 +87,7 @@
       xmlhttp.send();
 
       xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        if (xmlhttp.readyState == 4 ) {//&& xmlhttp.status == 200
           var res = xmlhttp.responseText;
           var obj = JSON.parse(res);
           var txt = "<table border=\"0\">";
@@ -104,6 +104,7 @@
           txt += "<td>" + obj.emeter + "</td></tr>";
 
           txt += "<tr><th>Parts</th>";
+
           if (obj.bahr == "None"){
               txt += "<td >Not found</td></tr>";
           }else{
@@ -128,8 +129,6 @@
               txt += "<button onclick=\"info2('" + obj.bahr.english
               txt += "')\" class=\"k-button\">Info</button></td></tr>";
           }
-
-
 
           txt += "</table>"
           document.getElementById("out").innerHTML = txt;

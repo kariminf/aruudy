@@ -204,6 +204,11 @@ def _prosody_add(text):
 
     return res
 
+def _prosody_change(text):
+    res = text
+
+    return res
+
 #TODO trait these
 """
 زيادة حرف الواو في بعض الأسماء، مثل : (طاوس، دَاود)، تكتب عروضيا هكذا : دَأوُود، طَأوُوس.
@@ -243,6 +248,7 @@ def prosody_form(text):
     res = text
     res = _prosody_del(text)
     res = _prosody_add(res)
+    #res = _prosody_change(res)
     return res
 
 
@@ -322,11 +328,11 @@ class Shatr(object):
             "prosody": self.prosody,
             "ameter": self.ameter,
             "emeter": self.emeter,
-            "bahr": self.bahr.to_dict() if bahr else self.bahr,
+            "bahr": self.bahr.to_dict() if self.bahr and bahr else self.bahr,
             "parts": self.parts
         }
 
-        if parts:
+        if self.parts and parts:
             res["parts"] = []
             for part in self.parts:
                 res["parts"].append(part.to_dict())
