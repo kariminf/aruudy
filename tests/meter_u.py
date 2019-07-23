@@ -26,7 +26,7 @@ import pytest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from aruudy.poetry import meter
-from aruudy.poetry.meter import Bahr, BahrError
+from aruudy.poetry.meter import Bahr
 
 
 def test_name_type():
@@ -41,21 +41,17 @@ def test_get_bahr():
     assert meter.get_bahr("aaa") == None
 
 def test_get_names():
-    assert meter.arabic_names()[0] == u"طويل"
-    assert meter.english_names()[0] == "long"
-    assert meter.trans_names()[0] == u"ṭawīl"
+    assert meter.get_names("arabic")[0] == u"طويل"
+    assert meter.get_names("english")[0] == "long"
+    assert meter.get_names("trans")[0] == u"ṭawīl"
     assert meter.get_names()[0]["trans"] == u"ṭawīl"
 
 def test_bahr():
     b = meter.get_bahr("overtaking", dic=False)
 
-    assert b.test_property("name", u"mutadārik", "trans")
-    assert not b.test_property("name", u"kamil", "trans")
-    with pytest.raises(BahrError):
-        b.test_property("transliterate", u"kamil")
-
-    assert b.get_value("name", "trans") == u"mutadārik"
-    with pytest.raises(BahrError):
-        b.get_value("transliterate")
+    assert b.test_name("trans", u"mutadārik")
+    assert not b.test_name("trans", u"kamil")
+    #with pytest.raises(BahrError):
+    #    b.test_property("transliterate", u"kamil")
 
     assert b.to_dict() == meter.mutadaarik.to_dict()

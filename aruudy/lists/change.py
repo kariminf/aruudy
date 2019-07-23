@@ -31,13 +31,16 @@ CHANGE_LST = {
     u"ذلكم": u"ذَالِكُم",
     u"الله": u"أَللَاه",
     u"إله": u"إِلَاه",
-    u"لإله": u"لإِلَاه",
+    u"الإله": u"الإِلَاه",
 }
 
-
 def modify(word):
-    res = word
-    nodiac = re.sub(ur'[%s]' % const.DIAC, "", word)
-    if nodiac in CHANGE_LST:
-        res = CHANGE_LST[nodiac]
-    return res
+    m = re.match(u"((?:%s)?)(.*)([%s]?)" % (const.SPREP, const.DIAC), word)
+    begining = m.group(1)
+    nodiac = re.sub(u"[%s]" % const.DIAC , "", m.group(2))
+    ending = m.group(3)
+    res = CHANGE_LST.get(nodiac, "")
+    if res:
+        return begining + res + ending
+
+    return word

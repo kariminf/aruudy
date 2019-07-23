@@ -30,17 +30,7 @@ This module is used for prosody tasks:
 
 import re
 from aruudy.poetry import meter, foot
-from aruudy.lists import change
-
-# sun letters in arabic
-SUN = u"([تثدذرزسشصضطظلن])"
-# alif in the middle of sentence
-# DORJ = spaces or (bi-, li-)kasra? or (ka-, fa-, wa-)fatha?
-DORJ = u"([^\\s]\\s+|[\u0644\u0628][\u0650]?|[\u0643\u0641\u0648][\u064E]?)"
-
-# ahruf al3illa: alif, alif maqsura, waw, yaa
-ILLA = u"[اىوي]"
-
+from aruudy.lists import change, const
 
 def normalize(text):
     """Normalize a given text.
@@ -102,10 +92,10 @@ def normalize(text):
         res = re.sub(u"([^\u064B-\u0652\\s])\u064A([^\u064B-\u0652]|$)", u"\\1\u0650\u064A\\2", res)
 
     # add Shadda to shamsi characters after al-
-    res = re.sub(u"(^|\\s)\u0627\u0644" + SUN + u"([^\u0651])", u"\\1\u0627\u0644\\2\u0651\\3", res)
+    res = re.sub(u"(^|\\s)\u0627(\u064E?)\u0644(%s)([^\u0651])" % const.SUN, u"\\1\u0627\\2\u0644\\3\u0651\\4", res)
 
     # add madda to other characters after al-
-    res = re.sub(u"((?:^|\\s)\u0627\u0644[^\u0651])([^\u064E-\u0651])", u"\\1\u0653\\2", res)
+    res = re.sub(u"((?:^|\\s)\u0627\u0644[^\u0651])([^\u064E-\u0651])", u"\\1%s\\2" % const.UHARAKA, res)
 
     # add kasra to li
     res = re.sub(u"(^|\\s)\u0644([^\u064E-\u0652])", u"\\1\u0644\u0650\\2", res)
@@ -120,19 +110,19 @@ def normalize(text):
     res = re.sub(u"(^|\\s)\u0648([^\u064E-\u0652])", u"\\1\u0648\u064E\\2", res)
 
     # madda over alif with no vocalization
-    res = re.sub(u"\u0623([^\u064B-\u0653\\s])", u"\u0623\u0653\\1", res)
+    res = re.sub(u"\u0623([^\u064B-\u0653\\s])", u"\u0623%s\\1" % const.UHARAKA, res)
 
     # hamza under alif with no kasra
     res = re.sub(u"\u0625([^\u0650])", u"\u0625\u0650\\1", res)
 
     #shadda not followed by a diacritic: add a madda above
-    res = res = re.sub(u"\u0651([^\u064B-\u0650])", u"\u0651\u0653\\1", res)
+    res = res = re.sub(u"\u0651([^\u064B-\u0650])", u"\u0651%s\\1" % const.UHARAKA, res)
 
     #add madda to any leading letter except alif
-    res = res = re.sub(u"(^|\\s)([^\u0627])([^\u064E-\u0653])", u"\\1\\2\u0653\\3", res)
+    res = res = re.sub(u"(^|\\s)([^\u0627])([^\u064E-\u0653])", u"\\1\\2%s\\3" % const.UHARAKA, res)
 
     #after sukuun must be a haraka
-    res = res = re.sub(u"\u0652([^\\s])([^\u064B-\u0650\\s])", u"\u0652\\1\u0653\\2", res)
+    res = res = re.sub(u"\u0652([^\\s])([^\u064B-\u0650\\s])", u"\u0652\\1%s\\2" % const.UHARAKA, res)
 
     return res
 
@@ -140,23 +130,23 @@ def normalize(text):
 
 def _prosody_del(text):
     res = text
-
     # Replace al- with sun character (it can be preceded by prepositions bi- li-)
     # والصِّدق، والشَّمس ---> وصصِدق، وَششَمس
-    res = re.sub(DORJ + u"\u0627\u0644" + SUN , u"\\1\\2", res)
+    res = re.sub(u"(%s)\u0627\u0644(%s)" % (const.DORJ, const.SUN) , u"\\1\\2", res)
+    res = re.sub(u"\u0627\u064E\u0644(%s)" % const.SUN , u"\u0627\u064E\\1", res)
 
     # Replace al- with l otherwise
     # # والكتاب، فالعلم ---> وَلكتاب، فَلعِلم
-    res = re.sub(DORJ + u"\u0627(\u0644[^\u064E-\u0650])", u"\\1\\2", res)
+    res = re.sub(u"(%s)\u0627(\u0644[^\u064E-\u0650])" % const.DORJ, u"\\1\\2", res)
 
 
     # delete first alif of a word in the middle of sentence
     # فاستمعَ، وافهم، واستماعٌ، وابنٌ، واثنان ---> فَستَمَعَ، وَفهَم، وَستِماعُن، وَبنُن، وَثنانِ
-    res = re.sub(DORJ + u"\u0627([^\\s][^\u064B-\u0651\u0653])" , u"\\1\\2", res)
+    res = re.sub(u"(%s)\u0627([^\\s][^\u064B-\u0651\u0653])" % const.DORJ , u"\\1\\2", res)
 
     # delete ending alif, waw and yaa preceeding a sakin
     # أتى المظلوم إلى القاضي فأنصفه قاضي العدل ---> أتَ لمظلوم إلَ لقاضي فأنصفه قاضِ لعدل.
-    res = re.sub(ILLA + u"\\s+(.[^\u064B-\u0651\u0653])", u" \\1", res)
+    res = re.sub(const.ILLA + u"\\s+(.[^\u064B-\u0651\u0653])", u" \\1", res)
 
     # delete alif of plural masculin conjugation
     # رجعوا ---> رجعو
@@ -170,12 +160,6 @@ def _prosody_del(text):
     #تحذف الألف الأخيرة من الأدوات والحروف والأسماء الآتية إذا وليها ساكن : إذا، لماذا، هذا، كذا، إلا، ما، إذما، حاشا، خلا، عدا، كلا، لما
 
     return res
-
-tatweel = {
-    u"\u064E": u"\u064E\u0627",
-    u"\u064F": u"\u064F\u0648",
-    u"\u0650": u"\u0650\u064A",
-}
 
 def _prosody_add(text):
     res = text
@@ -201,13 +185,13 @@ def _prosody_add(text):
     # hamza mamduuda --> alif-hamza + fatha + alif + sukuun
     res = re.sub(u"\u0622", u"\u0623\u064E\u0627\u0652", res)
 
-    res = re.sub(u"([\u064E-\u0650])$", lambda m: tatweel[m.group(1)], res)
+    res = re.sub(u"([\u064E-\u0650])$", lambda m: const.TATWEEL[m.group(1)], res)
 
     return res
 
 def _prosody_change(text):
     res = text
-    res = re.sub(u"([^\s]+)", lambda m: change.modify(m.group(1)) , res)
+    res = re.sub(u"([^\s]+)", lambda m: change.modify(m.group(1)), res)
     return res
 
 #TODO trait these
@@ -247,9 +231,9 @@ def prosody_form(text):
 
     """
     res = text
-    res = _prosody_del(text)
-    res = _prosody_add(res)
     res = _prosody_change(res)
+    res = _prosody_del(res)
+    res = _prosody_add(res)
     return res
 
 
