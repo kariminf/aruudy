@@ -33,7 +33,7 @@ SUN = u"[تثدذرزسشصضطظلن]"
 
 # Sticky prepositions (bi-, li-)kasra? or (ka-, fa-, wa-)fatha?
 # kasra and fatha can be madda in case there is no tashkiil
-SPREP = "[\u0644\u0628][\u0650%s]?|[\u0643\u0641\u0648][\u064E%s]?" % (UHARAKA, UHARAKA)
+SPREP = u"[\u0644\u0628][\u0650%s]?|[\u0643\u0641\u0648][\u064E%s]?" % (UHARAKA, UHARAKA)
 
 # alif in the middle of sentence
 # DORJ = spaces or (bi-, li-)kasra? or (ka-, fa-, wa-)fatha?
