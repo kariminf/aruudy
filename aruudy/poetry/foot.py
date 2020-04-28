@@ -180,7 +180,7 @@ class Tafiila(object):
 
 # فَاعِلُنْ
 class WSWWS(Tafiila):
-    #varation
+    #variation
     def __init__(self, var=[TafiilaType.SALIM]):
         self.forms = [
         TafiilaComp({
@@ -201,7 +201,7 @@ class WSWWS(Tafiila):
         TafiilaComp({
             "type": TafiilaType.TADIIL,
             "mnemonic": u"فَاعِلَانْ",
-            "emeter": "-u-:"
+            "emeter": "-u-" #"-u-:"
         }),
         TafiilaComp({
             "type": TafiilaType.QATE,
@@ -239,7 +239,7 @@ class WWSWS(Tafiila):
         TafiilaComp({
             "type": TafiilaType.QASR,
             "mnemonic": u"فَعُولْ",
-            "emeter": "u-:"
+            "emeter": "u-" #"u-:"
         })
         ]
         self._init(var)
@@ -300,7 +300,7 @@ class WSWSWWS(Tafiila):
         TafiilaComp({
             "type": TafiilaType.TADIIL,
             "mnemonic": u"مُسْتَفْعِلَانْ",
-            "emeter": "--u-:"
+            "emeter": "--u-" # "--u-:"
         }),
         TafiilaComp({
             "type": TafiilaType.QATE,
@@ -343,12 +343,12 @@ class WWWSWWS(Tafiila):
         TafiilaComp({
             "type": TafiilaType.TADIIL,
             "mnemonic": u"مُتَفَاعِلَانْ",
-            "emeter": "uu-u-:"
+            "emeter": "uu-u-" # "uu-u-:"
         }),
         TafiilaComp({
             "type": TafiilaType.QATE,
             "mnemonic": u"مُتَفَاعِلْ",
-            "emeter": "uu--:"
+            "emeter": "uu--" # "uu--:"
         }),
         TafiilaComp({
             "type": TafiilaType.HADAD,
@@ -414,7 +414,7 @@ class WSWWSWS(Tafiila):
         TafiilaComp({
             "type": TafiilaType.ISBAGH,
             "mnemonic": u"فَاعِلَاتَانْ",
-            "emeter": "-u--:"
+            "emeter": "-u--" #"-u--:"
         }),
         TafiilaComp({
             "type": TafiilaType.HADF,
@@ -434,7 +434,7 @@ class WSWWSWS(Tafiila):
         TafiilaComp({
             "type": TafiilaType.QASR,
             "mnemonic": u"فَاعِلَانْ",
-            "emeter": "-u-:"
+            "emeter": "-u-" # "-u-:"
         })
         ]
         self._init(var)

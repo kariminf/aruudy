@@ -3,6 +3,7 @@
 ## 0.5.0
 
 * Improved API
+* Fix words which change 
 
 ## 0.4.0 (2019-01-18)
 

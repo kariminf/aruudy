@@ -236,7 +236,7 @@ class BahrForm(object):
         parts = []
         text_emeter = emeter
         units_cp = list(units)
-        for foot in self.feet: # diffeennt feet of the variant
+        for foot in self.feet: # different feet of the variant
             text_foot, text_emeter = foot.process(text_emeter)
             if not text_foot:
                 return None
@@ -633,7 +633,7 @@ muqtadhib = Bahr({
     },
     "meter": [
         BahrForm([
-        foot.WSWSWSW([FT.SALIM, FT.KHABN]),
+        foot.WSWSWSW([FT.SALIM]),# FT.KHABN
         foot.WSWSWWS([FT.TAI])
         ])
     ],
@@ -666,11 +666,12 @@ mutaqaarib = Bahr({
         foot.WWSWS([FT.SALIM, FT.QABDH]),
         foot.WWSWS([FT.SALIM, FT.QABDH]),
         foot.WWSWS([FT.SALIM, FT.QABDH]),
-        foot.WWSWS([FT.SALIM, FT.QABDH])
+        foot.WWSWS([FT.SALIM, FT.QABDH, FT.QASR])
         ])
     ],
     "key": u"عن المتقارب قال الخليل      فعولن فعولن فعولن فعول"
 })
+
 
 mutadaarik = Bahr({
     "name": {

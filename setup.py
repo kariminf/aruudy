@@ -30,7 +30,7 @@ with io.open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name = "aruudy",
-    version = "0.4.1",
+    version = "0.5",
     author = "Abdelkrime Aries",
     author_email = "kariminfo0@gmail.com",
     description = ("Arabic poetry package"),
