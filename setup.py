@@ -30,14 +30,14 @@ with io.open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
 
 setup(
     name = "aruudy",
-    version = "0.5",
+    version = "0.5.1",
     author = "Abdelkrime Aries",
     author_email = "kariminfo0@gmail.com",
     description = ("Arabic poetry package"),
     license = "Apache-2.0",
     keywords = "arabic nlp languages poetry prosody",
     url = "https://github.com/kariminf/aruudy",
-    packages=["aruudy", "aruudy.poetry", "aruudy.web"],
+    packages=["aruudy", "aruudy.poetry", "aruudy.web", "aruudy.lists"],
     scripts=["exec/aruudy", "exec/aruudy_flask"],
     long_description=long_description,
     long_description_content_type="text/markdown",
