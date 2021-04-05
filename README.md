@@ -235,7 +235,7 @@ from aruudy.poetry import prosody
 
 text = u'أَسِرْبَ القَطا هَلْ مَنْ يُعِيْرُ جَناحَهُ'
 
-shatr = meter.process_shatr(text)
+shatr = prosody.process_shatr(text)
 
 #Normalized text
 print("normalized: " + shatr.norm)
