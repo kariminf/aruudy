@@ -356,7 +356,7 @@ class Bahr(object):
             - trans: its Arabic name's transliteration.
 
         """
-        return self.get_value("name")
+        return self.name
 
     def test_name(self, key, value):
         """Test if .
