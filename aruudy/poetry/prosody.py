@@ -270,7 +270,6 @@ class Shatr(object):
         self.prosody = prosody_form(self.norm)
         self.ameter, units = meter.get_ameter(self.prosody)
         self.emeter = meter.a2e_meter(self.ameter)
-        print(self.emeter)
         self.bahr, self.parts = meter.search_bahr(self.emeter, units)
 
     def to_dict(self, bahr=False, parts=False):
